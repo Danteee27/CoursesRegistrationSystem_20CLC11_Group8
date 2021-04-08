@@ -71,3 +71,8 @@ int WStringtoNum(wstring k)
 	}
 	return sum;
 }
+
+wofstream& operator<<(wofstream& ofstream, const Date& date) {
+	ofstream << date.day << "/" << date.month << "/" << date.year;
+	return ofstream;
+}

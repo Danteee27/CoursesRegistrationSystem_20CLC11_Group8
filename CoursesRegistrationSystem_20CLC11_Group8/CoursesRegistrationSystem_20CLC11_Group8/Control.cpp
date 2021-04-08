@@ -1,5 +1,20 @@
 #include "Control.h"
 
+void OutputStudent(Student* head, string name) {
+	Vietlanguage();
+	wofstream Write(name + ".csv");
+	while (head != nullptr) {
+		Write << head->Num << ",";
+		Write << head->ID << ",";
+		Write << head->Lastname << ",";
+		Write << head->Firstname << ",";
+		Write << head->Gender << ",";
+		Write << head->Birthday << ",";
+		Write << head->SocialID << endl;
+		head = head->next;
+	}
+	ASCIIlanguage();
+}
 
 void CreateClass(Class* first, string name) {
 	Class* newClass = new Class;
@@ -18,15 +33,18 @@ void CreateClass(Class* first, string name) {
 	}
 	cur->next = newClass;
 	newClass->prev = previous;
+	wfstream Output( name + ".csv");
 }
 
 void AddInClass(Class* head, Student* first) {
 
 LABEL:
 	int check = 0;
-	char ID[8];
+	wstring ID;
 	cout << "Give me the ID: ";
-	cin >> ID;
+	Vietlanguage();
+	wcin >> ID;
+	ASCIIlanguage();
 	while (first->next != nullptr) {
 		if (ID == first->ID) break;
 	}
@@ -53,4 +71,7 @@ LABEL:
 	head->Stu->next = first;
 	head->Stu->next->prev = previous;
 	head->Stu->next = nullptr;
+	OutputStudent(head->Stu, head->classCode + ".csv");
 }
+
+

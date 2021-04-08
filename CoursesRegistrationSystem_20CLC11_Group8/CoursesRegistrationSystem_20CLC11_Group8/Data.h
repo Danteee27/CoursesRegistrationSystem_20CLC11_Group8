@@ -1,4 +1,7 @@
 #pragma once
+
+#include "SubFunction.h"
+#include "Control.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,27 +9,32 @@
 #include <Windows.h>
 #include <fcntl.h>
 #include <io.h>
+#include <locale>
+#include <codecvt>
+#include <ctime>
+#include<corecrt_wstring.h> 
+
 using namespace std;
 
 struct Date {
-	int date, month, year;
+	int day, month, year;
 };
 
 struct Student {
-	int Num;
-	string ID;
+	wstring Num;
+	wstring ID;
 	wstring Lastname;
 	wstring Firstname;
-	string Gender;
+	wstring Gender;
 	Date Birthday;
-	string SocialID;
+	wstring SocialID;
 	Student* next, * prev;
 };
 
 struct Semester {
 	int No;
 	string startDate, endDate;
-	Courses* Course;
+	Courses* Course; // 5 courses per semester ->
 	Semester* next, * prev;
 };
 
@@ -45,11 +53,8 @@ struct Courses {
 	Courses* next, * prev;
 };
 
+Student* ReadStudent(string k);
 
+Student* FindStudent(string k);
 
-
-
-
-
-
-
+	
