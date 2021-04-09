@@ -1,46 +1,49 @@
-#include "Control.h"
+#include"Control.h"
+#include"SubFunction.h"
+#include<fstream>
 
 void OutputStudent(Student* head, string name) {
 	Vietlanguage();
-	wofstream Write(name + ".csv");
+	std::wfstream Write(name + ".csv",ios::out);
 	while (head != nullptr) {
 		Write << head->Num << ",";
 		Write << head->ID << ",";
 		Write << head->Lastname << ",";
 		Write << head->Firstname << ",";
 		Write << head->Gender << ",";
-		Write << head->Birthday << ",";
+		Write << head->birthday.day << '/' << head->birthday.month <<
+			'/' << head->birthday.year << ",";
 		Write << head->SocialID << endl;
 		head = head->next;
 	}
 	ASCIIlanguage();
 }
 
-void CreateClass(Class* first, string name) {
-	Class* newClass = new Class;
-	newClass->classCode = name;
-	newClass->next = nullptr;
+void CreateClass(Classs* first, string name) {
+	Classs* newClasss = new Classs;
+	newClasss->classCode = name;
+	newClasss->next = nullptr;
 	if (first == nullptr) {
-		first = newClass;
+		first = newClasss;
 		first->prev = nullptr;
 		return;
 	}
-	Class* cur = first;
-	Class* previous = nullptr;
+	Classs* cur = first;
+	Classs* previous = nullptr;
 	while (cur->next != nullptr) {
 		previous = cur;
 		cur = cur->next;
 	}
-	cur->next = newClass;
-	newClass->prev = previous;
+	cur->next = newClasss;
+	newClasss->prev = previous;
 	wfstream Output( name + ".csv");
 }
 
-void AddInClass(Class* head, Student* first) {
+void AddInClass(Classs* head, Student* first) {
 
 LABEL:
 	int check = 0;
-	wstring ID;
+	std::wstring ID;
 	cout << "Give me the ID: ";
 	Vietlanguage();
 	wcin >> ID;

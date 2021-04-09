@@ -1,19 +1,22 @@
-#include "Data.h"
-
-
+#include"Data.h"
+#include<fstream>
+#include<locale.h>
+#include<codecvt>
+#include<string>
+#include"SubFunction.h"
+using namespace std;
 Student* ReadStudent(string k)
 {
-	wifstream List;
-	List.open(k);
-	List.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::generate_header>));
+	wfstream List(k, wfstream::in);
+	List.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
 	if (List.fail())
 	{
 		cout << "File is not existed";
+		return nullptr;
 	}
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
-	wstring x;
-	wchar_t a = ',';
+	std::wstring x;
 	while (!List.eof())
 	{
 		if (pHead == nullptr)
@@ -26,15 +29,15 @@ Student* ReadStudent(string k)
 			pCur->next = new Student;
 			pCur = pCur->next;
 		}
-		getline(List, x, a);
+		getline(List, x, L',');
 		pCur->Num = x;
-		getline(List, x, a);
+		getline(List, x, L',');
 		pCur->ID = x;
-		getline(List, pCur->Lastname, a);
-		getline(List, pCur->Firstname, a);
-		getline(List, pCur->Gender, a);
-		getline(List, x, a);
-		pCur->Birthday = Birthday(x);
+		getline(List, pCur->Lastname,L',');
+		getline(List, pCur->Firstname, L',');
+		getline(List, pCur->Gender, L',');
+		getline(List, x, L',');
+		pCur->birthday = Birthday(x);
 		getline(List, x);
 		pCur->SocialID = x;
 		pCur->next = nullptr;
@@ -43,12 +46,9 @@ Student* ReadStudent(string k)
 	return pHead;
 }
 
-Student* FindStudent(Student* head, wstring ID) {
-	while (head->next != nullptr) {
-		if (ID == head->ID) {
-			break;
-		}
+Student* FindStudent(Student* head, std::wstring ID) {
+	while (head!= nullptr && head->ID!=ID) {
 		head = head->next;
 	}
-	
+	return head;
 }

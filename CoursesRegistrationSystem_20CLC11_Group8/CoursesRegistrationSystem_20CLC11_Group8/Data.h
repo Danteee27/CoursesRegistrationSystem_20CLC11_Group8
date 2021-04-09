@@ -1,22 +1,10 @@
-#pragma once
+#ifndef _DataFunc
+#define _DataFunc
 
-#include "SubFunction.h"
-#include "Control.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <iomanip>
-#include <Windows.h>
-#include <fcntl.h>
-#include <io.h>
-#include <locale>
-#include <codecvt>
-#include <ctime>
-#include<corecrt_wstring.h> 
 
+#include<iostream>
 using namespace std;
-
-struct Date {
+struct date {
 	int day, month, year;
 };
 
@@ -26,22 +14,15 @@ struct Student {
 	wstring Lastname;
 	wstring Firstname;
 	wstring Gender;
-	Date Birthday;
+	date birthday;
 	wstring SocialID;
 	Student* next, * prev;
 };
 
-struct Semester {
-	int No;
-	string startDate, endDate;
-	Courses* Course; // 5 courses per semester ->
-	Semester* next, * prev;
-};
-
-struct Class {
+struct Classs {
 	string classCode;
 	Student* Stu;
-	Class* next, * prev;
+	Classs* next, * prev;
 };
 
 struct Courses {
@@ -53,8 +34,15 @@ struct Courses {
 	Courses* next, * prev;
 };
 
+struct Semester {
+	int No;
+	string startDate, endDate;
+	Courses* Course;
+	Semester* next, * prev;
+};
+
 Student* ReadStudent(string k);
 
-Student* FindStudent(string k);
+Student* FindStudent(Student* head, std::wstring ID);
 
-	
+#endif // !_Func

@@ -1,26 +1,26 @@
 #include "SubFunction.h"
-
-Date Birthday(wstring k)
+#include<Windows.h>
+#include <fcntl.h>  
+#include <io.h>
+date Birthday(wstring k)
 {
-	int day = 0;
-	int month = 0;
-	int year = 0;
+	date d{ 0,0,0 };
 	int i = 0;
 	for (i = 0; i < k.length() && k[i] != 47; i++)
 	{
-		day = day * 10 + k[i] - '0';
+		d.day = d.day * 10 + k[i] - '0';
 	}
 	i++;
 	for (i; i < k.length() && k[i] != 47; i++)
 	{
-		month = month * 10 + k[i] - '0';
+		d.month = d.month * 10 + k[i] - '0';
 	}
 	i++;
 	for (i; i < k.length() && k[i] != 47; i++)
 	{
-		year = year * 10 + k[i] - '0';
+		d.year = d.year * 10 + k[i] - '0';
 	}
-	return Date{ day,month,year };
+	return d;
 }
 
 void RealTime()
@@ -70,9 +70,4 @@ int WStringtoNum(wstring k)
 		sum = sum * 10 + (k[i] - '0');
 	}
 	return sum;
-}
-
-wofstream& operator<<(wofstream& ofstream, const Date& date) {
-	ofstream << date.day << "/" << date.month << "/" << date.year;
-	return ofstream;
 }

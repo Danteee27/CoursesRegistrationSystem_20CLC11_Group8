@@ -1,7 +1,9 @@
-#pragma once
-#include "Data.h"
+#ifndef _SubFunc
+#define _SubFunc
 
-Date Birthday(wstring k);
+#include"Data.h"
+
+date Birthday(wstring k);
 
 void RealTime();
 
@@ -15,4 +17,4 @@ int StringtoNum(string k);
 
 int WStringtoNum(wstring k);
 
-wofstream& operator<<(wofstream& ofstream, const Date& date);
+#endif // !_Func
