@@ -19,19 +19,20 @@ struct Student {
 	Student* next, * prev;
 };
 
-struct Classs {
+struct Class {
 	string classCode;
 	Student* Stu;
-	Classs* next, * prev;
+	Class* next, * prev;
 };
 
 struct Courses {
-	string teacher;
-	string startDate, endDate;
-	string Session;
+	wstring teacher;
+	date startDate, endDate;
+	char*** Session;
+	wstring courseName;
 	string courseCode;
 	Student* Stu;
-	Courses* next, * prev;
+	Courses* next=nullptr, * prev=nullptr;
 };
 
 struct Semester {

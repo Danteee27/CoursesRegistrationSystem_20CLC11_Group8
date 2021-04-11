@@ -17,7 +17,10 @@ Student* ReadStudent(string k)
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
 	std::wstring x;
-	while (!List.eof())
+	List.seekg(-1, ios_base::end);
+	int end = List.tellg();
+	List.seekg(0, ios_base::beg);
+	while (List.tellg()<end)
 	{
 		if (pHead == nullptr)
 		{

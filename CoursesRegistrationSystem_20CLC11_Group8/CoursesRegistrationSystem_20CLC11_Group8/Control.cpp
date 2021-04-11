@@ -1,6 +1,10 @@
 #include"Control.h"
 #include"SubFunction.h"
 #include<fstream>
+#include"Data.h"
+#include<string>
+#include<locale>
+#include<codecvt>
 
 void OutputStudent(Student* head, string name) {
 	Vietlanguage();
@@ -19,27 +23,27 @@ void OutputStudent(Student* head, string name) {
 	ASCIIlanguage();
 }
 
-void CreateClass(Classs* first, string name) {
-	Classs* newClasss = new Classs;
-	newClasss->classCode = name;
-	newClasss->next = nullptr;
+void CreateClass(Class* first, string name) {
+	Class* newClass = new Class;
+	newClass->classCode = name;
+	newClass->next = nullptr;
 	if (first == nullptr) {
-		first = newClasss;
+		first = newClass;
 		first->prev = nullptr;
 		return;
 	}
-	Classs* cur = first;
-	Classs* previous = nullptr;
+	Class* cur = first;
+	Class* previous = nullptr;
 	while (cur->next != nullptr) {
 		previous = cur;
 		cur = cur->next;
 	}
-	cur->next = newClasss;
-	newClasss->prev = previous;
+	cur->next = newClass;
+	newClass->prev = previous;
 	wfstream Output( name + ".csv");
 }
 
-void AddInClass(Classs* head, Student* first) {
+void AddInClass(Class* head, Student* first) {
 
 LABEL:
 	int check = 0;
@@ -77,4 +81,78 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
+Courses* InputCourses(Courses*& pHead)
+{
+	Courses* pCur = nullptr;
+	int t = -1;
+	while (t != 0)
+	{
+		if (pHead == nullptr)
+		{
+			pHead = new Courses;
+			pCur = pHead;
+		}
+		else
+		{
+			pCur->next = new Courses;
+			pCur->next->prev = pCur;
+			pCur = pCur->next;
+		}
+		cin.ignore(1000, '\n');
+		Vietlanguage();
+		wcout << "Input course name:";
+		getline(wcin, pCur->courseName, L'\n');
+		wcout << "Input teacher name:";
+		getline(wcin, pCur->teacher, L'\n');
+		ASCIIlanguage();
+		cout << "Input course ID:";
+		cin >> pCur->courseCode;
+		pCur->Session = new char** [2];
+		for (int i = 0; i < 2; i++)
+		{
+			cout << "Learn date?(Mon,Tue,Wed,Thu,Fri,Sat,Sun):";
+			pCur->Session[i] = new char* [2];
+			pCur->Session[i][0] = new char[3];
+			pCur->Session[i][1] = new char[4];
+			cin >> pCur->Session[i][1];
+			cout << "Session?(S1,S2,S3,S4):";
+			cin >> pCur->Session[i][0];
+			pCur->Session[i][0][2] = '\0';
+			pCur->Session[i][1][3] = '\0';
+		}
+		cout << "Input start date:";
+		cin >> pCur->startDate.day >> pCur->startDate.month >> pCur->startDate.year;
+		cout << "Input end date:";
+		cin >> pCur->endDate.day >> pCur->endDate.month >> pCur->endDate.year;
+		cout << "1 to continue, 0 to end:";
+		cin >> t;
+	}
+	return pHead;
+}
 
+void CoursesSaveFile(string k, Courses* pHead)
+{
+	Vietlanguage();
+	wfstream CourseList(k, wfstream::out);
+	CourseList << wchar_t(237) << wchar_t(187) << wchar_t(191);
+	CourseList.imbue(std::locale(CourseList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
+	Courses* pRun = pHead;
+	while (pRun != nullptr)
+	{
+		wchar_t* temp = StringtoLongChar(pRun->courseCode);
+		CourseList << temp << ",";
+		delete[] temp;
+		CourseList << pRun->courseName << ",";
+		CourseList << pRun->teacher << ",";
+		CourseList << pRun->startDate.day << pRun->startDate.month << pRun->startDate.year << ",";
+		CourseList << pRun->endDate.day << pRun->endDate.month << pRun->endDate.year << ",";
+		for (int i = 0; i < 2; i++)
+		{
+			CourseList << pRun->Session[i][1] << "," << pRun->Session[i][0] << ",";
+		}
+		CourseList << L'\n';
+		pRun = pRun->next;
+	}
+	ASCIIlanguage();
+	CourseList.close();
+}

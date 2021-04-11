@@ -3,8 +3,8 @@
 #include"Data.h"
 
 void OutputStudent(Student* head, string name);
-void CreateClass(Classs* first, string name);
-void AddInClass(Classs* head, Student* first);
+void CreateClass(Class* first, string name);
+void AddInClass(Class* head, Student* first);
 
 
 #endif // !_ControlFunc
