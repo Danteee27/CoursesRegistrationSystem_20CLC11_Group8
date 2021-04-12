@@ -156,3 +156,37 @@ void CoursesSaveFile(string k, Courses* pHead)
 	ASCIIlanguage();
 	CourseList.close();
 }
+
+void ouputCoursesbyID(Courses*& pHead, string cID) {
+	Courses* pCur = pHead;
+	Vietlanguage();
+	while (pCur && pCur->courseCode != cID) {
+		pCur = pCur->next;
+		if (pCur) {
+			wcout << "Course name: " << pCur->courseName << endl;
+			wcout << "Teacher name: " << pCur->teacher << endl;
+			ASCIIlanguage();
+			cout << "Course ID: " << pCur->courseCode << endl;
+			cout << "Session: " << pCur->Session << endl;
+			cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
+			cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+		}
+	}
+}
+
+void ouputAllCourses(Courses*& pHead, string cID) {
+	Courses* pCur = pHead;
+	int count = 0;
+	while (pCur) {
+		count += 1;
+		cout << count << " )" << endl;
+		wcout << "Course name: " << pCur->courseName << endl;
+		wcout << "Teacher name: " << pCur->teacher << endl;
+		ASCIIlanguage();
+		cout << "Course ID: " << pCur->courseCode << endl;
+		cout << "Session: " << pCur->Session << endl;
+		cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
+		cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+		pCur = pCur->next;
+	}
+}
