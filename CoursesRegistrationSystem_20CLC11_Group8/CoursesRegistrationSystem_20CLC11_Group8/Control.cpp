@@ -83,7 +83,7 @@ LABEL:
 
 Courses* InputCourses(Courses*& pHead)
 {
-	Courses* pCur = nullptr;
+	Courses* pCur = pHead;
 	int t = -1;
 	while (t != 0)
 	{
@@ -134,8 +134,8 @@ void CoursesSaveFile(string k, Courses* pHead)
 {
 	Vietlanguage();
 	wfstream CourseList(k, wfstream::out);
-	CourseList << wchar_t(237) << wchar_t(187) << wchar_t(191);
-	CourseList.imbue(std::locale(CourseList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
+	CourseList.imbue(std::locale(CourseList.getloc(), new std::codecvt_utf8<wchar_t>));
+	CourseList << wchar_t(0xfeff);
 	Courses* pRun = pHead;
 	while (pRun != nullptr)
 	{
@@ -144,8 +144,8 @@ void CoursesSaveFile(string k, Courses* pHead)
 		delete[] temp;
 		CourseList << pRun->courseName << ",";
 		CourseList << pRun->teacher << ",";
-		CourseList << pRun->startDate.day << pRun->startDate.month << pRun->startDate.year << ",";
-		CourseList << pRun->endDate.day << pRun->endDate.month << pRun->endDate.year << ",";
+		CourseList << pRun->startDate.day << "/" << pRun->startDate.month << "/" << pRun->startDate.year << ",";
+		CourseList << pRun->endDate.day << "/" << pRun->endDate.month << "/" << pRun->endDate.year << ",";
 		for (int i = 0; i < 2; i++)
 		{
 			CourseList << pRun->Session[i][1] << "," << pRun->Session[i][0] << ",";
@@ -155,4 +155,55 @@ void CoursesSaveFile(string k, Courses* pHead)
 	}
 	ASCIIlanguage();
 	CourseList.close();
+}
+
+Courses* InputCoursesCSV(Courses*& pHead, string k)
+{
+	Courses* pCur = pHead;
+	wfstream CoursesCSV(k, wfstream::in);
+	CoursesCSV.imbue(std::locale(CoursesCSV.getloc(), new std::codecvt_utf8<wchar_t>));
+	if (CoursesCSV.fail())
+	{
+		cout << "File is not existed";
+		return nullptr;
+	}
+	CoursesCSV.seekg(-2, ios_base::end); 
+	int end = CoursesCSV.tellg();
+	CoursesCSV.seekg(0, ios_base::beg);
+	wstring x;
+	while (CoursesCSV.tellg() < end)
+	{
+		if (pHead == nullptr)
+		{
+			pHead = new Courses;
+			pCur = pHead;
+		}
+		else
+		{
+			pCur->next = new Courses;
+			pCur->next->prev = pCur;
+			pCur = pCur->next;
+		}
+		getline(CoursesCSV, x, L',');
+		pCur->courseCode = WstringToString(x);
+		getline(CoursesCSV, pCur->courseName, L',');
+		getline(CoursesCSV, pCur->teacher, L',');
+		getline(CoursesCSV, x, L',');
+		pCur->startDate = Birthday(x);
+		getline(CoursesCSV, x, L',');
+		pCur->endDate = Birthday(x);
+		pCur->Session = new char** [2];
+		for (int i = 0; i < 2; i++) {
+			pCur->Session[i] = new char* [2];
+			pCur->Session[i][0] = new char[3];
+			pCur->Session[i][0][2] = '\0';
+			pCur->Session[i][1] = new char[4];
+			pCur->Session[i][1][3] = '\0';
+			getline(CoursesCSV, x, L',');
+			WstringToString(x).copy(pCur->Session[i][1], 3, 0);
+			getline(CoursesCSV, x, L',');
+			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
+		}
+	}
+	return pHead;
 }

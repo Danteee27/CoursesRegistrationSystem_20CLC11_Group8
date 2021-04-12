@@ -75,11 +75,20 @@ int WStringtoNum(wstring k)
 wchar_t* StringtoLongChar(string k)
 {
 	int temp = k.length();
-	wchar_t* p = new wchar_t[temp+1];
+	wchar_t* p = new wchar_t[temp + 1];
 	for (int i = 0; i < temp; i++)
 	{
 		p[i] = k[i];
 	}
 	p[temp] = '\0';
 	return p;
+}
+
+string WstringToString(wstring k) {
+	string temp;
+	temp.resize(k.size());
+	for (int i = 0; i < k.length(); i++) {
+		temp[i] = k[i];
+	}
+	return temp;
 }

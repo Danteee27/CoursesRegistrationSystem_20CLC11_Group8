@@ -19,4 +19,6 @@ int WStringtoNum(wstring k);
 
 wchar_t* StringtoLongChar(string k);
 
+string WstringToString(wstring k);
+
 #endif // !_Func
