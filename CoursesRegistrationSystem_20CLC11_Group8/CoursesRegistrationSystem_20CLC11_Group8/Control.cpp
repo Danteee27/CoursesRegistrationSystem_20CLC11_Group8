@@ -5,6 +5,7 @@
 #include<string>
 #include<locale>
 #include<codecvt>
+using namespace std;
 
 void OutputStudent(Student* head, string name) {
 	Vietlanguage();
@@ -156,7 +157,6 @@ void CoursesSaveFile(string k, Courses* pHead)
 	ASCIIlanguage();
 	CourseList.close();
 }
-
 Courses* InputCoursesCSV(Courses*& pHead, string k)
 {
 	Courses* pCur = pHead;
@@ -167,7 +167,7 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 		cout << "File is not existed";
 		return nullptr;
 	}
-	CoursesCSV.seekg(-2, ios_base::end); 
+	CoursesCSV.seekg(-2, ios_base::end);
 	int end = CoursesCSV.tellg();
 	CoursesCSV.seekg(0, ios_base::beg);
 	wstring x;
@@ -206,4 +206,37 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 		}
 	}
 	return pHead;
+}
+void ouputCoursesbyID(Courses*& pHead, string cID) {
+	Courses* pCur = pHead;
+	Vietlanguage();
+	while (pCur && pCur->courseCode != cID) {
+		pCur = pCur->next;
+		if (pCur) {
+			wcout << "Course name: " << pCur->courseName << endl;
+			wcout << "Teacher name: " << pCur->teacher << endl;
+			ASCIIlanguage();
+			cout << "Course ID: " << pCur->courseCode << endl;
+			cout << "Session: " << pCur->Session << endl;
+			cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
+			cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+		}
+	}
+}
+
+void ouputAllCourses(Courses*& pHead, string cID) {
+	Courses* pCur = pHead;
+	int count = 0;
+	while (pCur) {
+		count += 1;
+		cout << count << " )" << endl;
+		wcout << "Course name: " << pCur->courseName << endl;
+		wcout << "Teacher name: " << pCur->teacher << endl;
+		ASCIIlanguage();
+		cout << "Course ID: " << pCur->courseCode << endl;
+		cout << "Session: " << pCur->Session << endl;
+		cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
+		cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+		pCur = pCur->next;
+	}
 }
