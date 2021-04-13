@@ -17,7 +17,7 @@ Student* ReadStudent(string k)
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
 	std::wstring x;
-	List.seekg(-1, ios_base::end);
+	List.seekg(-2, ios_base::end);
 	int end = List.tellg();
 	List.seekg(0, ios_base::beg);
 	while (List.tellg()<end)
