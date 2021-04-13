@@ -1,5 +1,4 @@
 #include "Data.h"
 
-void Login() {
+void Login();
 
-}

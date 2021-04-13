@@ -21,4 +21,5 @@ wchar_t* StringtoLongChar(string k);
 
 string WstringToString(wstring k);
 
+wstring getpass();
 #endif // !_Func

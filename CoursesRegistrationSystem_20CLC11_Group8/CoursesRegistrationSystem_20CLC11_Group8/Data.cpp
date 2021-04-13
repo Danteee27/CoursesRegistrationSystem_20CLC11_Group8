@@ -5,7 +5,7 @@
 #include<string>
 #include"SubFunction.h"
 using namespace std;
-Student* ReadStudent(string k)
+void ReadStudent(string k)
 {
 	wfstream List(k, wfstream::in);
 	List.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
@@ -17,7 +17,7 @@ Student* ReadStudent(string k)
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
 	std::wstring x;
-	List.seekg(-2, ios_base::end);
+	List.seekg(-1, ios_base::end);
 	int end = List.tellg();
 	List.seekg(0, ios_base::beg);
 	while (List.tellg()<end)
@@ -47,7 +47,7 @@ Student* ReadStudent(string k)
 		pCur->next = nullptr;
 	}
 	List.close();
-	return pHead;
+
 }
 
 Student* FindStudent(Student* head, std::wstring ID) {

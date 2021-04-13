@@ -85,3 +85,42 @@ string WstringToString(wstring k) {
 	}
 	return temp;
 }
+
+wstring getpass()
+{
+	const char BACKSPACE = 8;
+	const char RETURN = 13;
+
+	wstring password;
+	unsigned char ch = 0;
+
+
+	DWORD con_mode;
+	DWORD dwRead;
+
+	HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+
+	GetConsoleMode(hIn, &con_mode);
+	SetConsoleMode(hIn, con_mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
+
+	while (ReadConsoleA(hIn, &ch, 1, &dwRead, NULL) && ch != RETURN)
+	{
+		if (ch == BACKSPACE)
+		{
+			if (password.length() != 0)
+			{
+				
+				cout << "\b \b";
+				password.resize(password.length() - 1);
+			}
+		}
+		else
+		{
+			password += ch;
+				cout << '*';
+		}
+	}
+	cout << endl;
+	return password;
+}
+
