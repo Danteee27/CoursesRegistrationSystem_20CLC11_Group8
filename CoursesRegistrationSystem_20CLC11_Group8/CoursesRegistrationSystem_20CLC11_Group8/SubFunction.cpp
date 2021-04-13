@@ -23,14 +23,7 @@ date Birthday(wstring k)
 	return d;
 }
 
-void RealTime()
-{
-	__time32_t k = time(0);
-	tm s;
-	_localtime32_s(&s, &k);
-	cout << s.tm_year + 1900 << "  " << s.tm_mon + 1 << "  " << s.tm_mday << "\n";
-	cout << s.tm_hour << ": " << s.tm_min << ": " << s.tm_sec;
-}
+
 
 void GotoXY(int x, int y)
 {

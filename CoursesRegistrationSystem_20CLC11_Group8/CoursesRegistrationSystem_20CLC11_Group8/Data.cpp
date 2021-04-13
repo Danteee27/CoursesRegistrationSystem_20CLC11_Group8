@@ -41,6 +41,7 @@ Student* ReadStudent(string k)
 		getline(List, pCur->Gender, L',');
 		getline(List, x, L',');
 		pCur->birthday = Birthday(x);
+		pCur->password = to_wstring(pCur->birthday.day) + to_wstring(pCur->birthday.month) + to_wstring(pCur->birthday.year);
 		getline(List, x);
 		pCur->SocialID = x;
 		pCur->next = nullptr;
@@ -50,8 +51,10 @@ Student* ReadStudent(string k)
 }
 
 Student* FindStudent(Student* head, std::wstring ID) {
-	while (head!= nullptr && head->ID!=ID) {
+	while (head!= nullptr && head->ID!=ID) 
 		head = head->next;
+	if (head == nullptr) {
+		cout << "The ID is not existed !" << endl;
 	}
 	return head;
 }

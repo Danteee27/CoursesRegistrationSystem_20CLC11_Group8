@@ -1,12 +1,27 @@
 #ifndef _DataFunc
 #define _DataFunc
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <Windows.h>
+#include <fcntl.h>
+#include <io.h>
+#include<string>
+#include<locale>
+#include<codecvt>
+#include <filesystem>
+#include "SubFunction.h"
 
-#include<iostream>
 using namespace std;
 struct date {
 	int day, month, year;
 };
+
+
 
 struct Student {
 	wstring Num;
@@ -16,6 +31,7 @@ struct Student {
 	wstring Gender;
 	date birthday;
 	wstring SocialID;
+	wstring password;
 	Student* next, * prev;
 };
 
@@ -42,7 +58,13 @@ struct Semester {
 	Semester* next, * prev;
 };
 
-Student* ReadStudent(string k);
+struct Schoolyear {
+	string year;
+	Courses* _course;
+	Schoolyear* next, * prev;
+};
+
+void ReadStudent(string k);
 
 Student* FindStudent(Student* head, std::wstring ID);
 

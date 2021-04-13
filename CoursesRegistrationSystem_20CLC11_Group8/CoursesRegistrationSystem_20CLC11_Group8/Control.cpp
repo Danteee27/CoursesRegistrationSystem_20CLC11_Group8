@@ -6,9 +6,41 @@
 #include<locale>
 #include<codecvt>
 
+void CreateSchoolYear(Schoolyear*& head) {
+	string name;
+	cout << "Give me the schoolyear: ";
+	cin >> name;
+	if (head == nullptr) {
+		head = new Schoolyear;
+		head->year = name;
+		head->_course = nullptr;
+		head->next = nullptr;
+		head->prev = nullptr;
+	}
+	else {
+		Schoolyear* cur = head;
+		while (cur->next != nullptr) 
+			cur = cur->next;
+		cur->next = new Schoolyear;
+		cur->next->prev = cur;
+		cur->next->next = nullptr;
+		cur->_course = nullptr;
+		cur->year = name;
+	}
+	fstream Open(name + ".txt");
+}
+
+void AddInCourses(Schoolyear*& head) {
+	InputCourses(head->_course);
+}
+
+
+
 void OutputStudent(Student* head, string name) {
 	Vietlanguage();
 	std::wfstream Write(name + ".csv",ios::out);
+	Write << wchar_t(237) << wchar_t(187) << wchar_t(191);
+	Write.imbue(std::locale(Write.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 	while (head != nullptr) {
 		Write << head->Num << ",";
 		Write << head->ID << ",";
@@ -18,13 +50,17 @@ void OutputStudent(Student* head, string name) {
 		Write << head->birthday.day << '/' << head->birthday.month <<
 			'/' << head->birthday.year << ",";
 		Write << head->SocialID << endl;
+		Write << L'\n';
 		head = head->next;
 	}
 	ASCIIlanguage();
 }
 
-void CreateClass(Class* first, string name) {
+void CreateClass(Class* first) {
 	Class* newClass = new Class;
+	string name;
+	cout << "Class code: ";
+	cin >> name;
 	newClass->classCode = name;
 	newClass->next = nullptr;
 	if (first == nullptr) {
@@ -81,9 +117,9 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
-Courses* InputCourses(Courses*& pHead)
+void InputCourses(Courses*& pHead)
 {
-	Courses* pCur = nullptr;
+	Courses* pCur = pHead;
 	int t = -1;
 	while (t != 0)
 	{
@@ -127,7 +163,6 @@ Courses* InputCourses(Courses*& pHead)
 		cout << "1 to continue, 0 to end:";
 		cin >> t;
 	}
-	return pHead;
 }
 
 void CoursesSaveFile(string k, Courses* pHead)
@@ -174,7 +209,7 @@ void ouputCoursesbyID(Courses*& pHead, string cID) {
 	}
 }
 
-void ouputAllCourses(Courses*& pHead, string cID) {
+void ouputAllCourses(Courses*& pHead) {
 	Courses* pCur = pHead;
 	int count = 0;
 	while (pCur) {
