@@ -64,7 +64,7 @@ struct Schoolyear {
 	Schoolyear* next, * prev;
 };
 
-void ReadStudent(string k);
+Student* ReadStudent(string k);
 
 Student* FindStudent(Student* head, std::wstring ID);
 

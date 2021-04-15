@@ -13,7 +13,6 @@ Courses* InputCourses(Courses*& pHead);
 void CoursesSaveFile(string k, Courses* pHead);
 Courses* InputCoursesCSV(Courses*& pHead, string k);
 
-void InputCourses(Courses*& pHead);
 
 void CoursesSaveFile(string k, Courses* pHead);
 
