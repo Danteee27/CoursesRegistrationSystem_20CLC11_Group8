@@ -347,3 +347,18 @@ void UpdateCourses(Courses*& pHead) {
 	}
 }
 
+void deleteCoursesbyID(Courses*& pHead, string cID) {
+	Courses* pCur = pHead;
+	if (pHead == nullptr) return;
+	while (pCur && pCur->courseCode != cID) {
+		pCur = pCur->next;
+		if (pCur) {
+			Courses* temp = pCur;
+			pCur->prev->next = pCur->next;
+			pCur->next->prev = pCur->prev;
+			pCur = pCur->next;
+			delete temp;
+		}
+	}
+}
+
