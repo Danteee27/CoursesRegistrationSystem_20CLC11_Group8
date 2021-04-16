@@ -362,3 +362,18 @@ void deleteCoursesbyID(Courses*& pHead, string cID) {
 	}
 }
 
+void deleteCurrCourses(Courses*& pCur) {
+	if (pCur == pHead) {
+		Courses* temp = pCur;
+		pHead = pHead->next;
+		pHead->prev = nullptr;
+		pCur = pHead;
+		delete temp;
+	}
+	Courses* temp = pCur;
+	pCur->prev->next = pCur->next;
+	pCur->next->prev = pCur->prev;
+	pCur = pCur->next;
+	delete temp;
+}
+
