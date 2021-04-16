@@ -7,7 +7,7 @@
 #include<codecvt>
 using namespace std;
 
-void CreateSchoolYear(Schoolyear*& head) {
+void CreateSchoolYear(Schoolyear*& head,string name) {
 	string name;
 	cout << "Give me the schoolyear: ";
 	cin >> name;
@@ -124,7 +124,7 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
-void InputCourses(Courses*& pHead)
+Courses *InputCourses(Courses*& pHead)
 {
 	Courses* pCur = pHead;
 	int t = -1;
@@ -170,6 +170,7 @@ void InputCourses(Courses*& pHead)
 		cout << "1 to continue, 0 to end:";
 		cin >> t;
 	}
+	return pCur;
 }
 
 void CoursesSaveFile(string k, Courses* pHead)
