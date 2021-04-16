@@ -283,7 +283,12 @@ void ouputAllCourses(Courses*& pHead) {
 		wcout << "Teacher name: " << pCur->teacher << endl;
 		ASCIIlanguage();
 		cout << "Course ID: " << pCur->courseCode << endl;
-		cout << "Session: " << pCur->Session << endl;
+		for (int i = 0; i < 2; i++) {
+			cout << "Date: "
+				for (int j = 0; j < 3, j++) { cout << pCur->Session[i][1][j]; }
+			cout << endl << "Lesson: ";
+			for (int h = 0; h < 2; h++) { cout << pCur->Session[i][0][h]; }
+		}
 		cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
 		cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
 		pCur = pCur->next;
