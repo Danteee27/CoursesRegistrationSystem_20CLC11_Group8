@@ -1,5 +1,7 @@
+
 #ifndef _DataFunc
 #define _DataFunc
+
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -17,10 +19,10 @@
 #include "SubFunction.h"
 
 using namespace std;
+
 struct date {
 	int day, month, year;
 };
-
 
 
 struct Student {
@@ -29,13 +31,18 @@ struct Student {
 	wstring Lastname;
 	wstring Firstname;
 	wstring Gender;
-	date birthday;
+	date Birthday;
 	wstring SocialID;
-	wstring password;
+	Score* score;
 	Student* next, * prev;
 };
 
-struct Class {
+struct User {
+	wstring ID;
+	wstring password;
+};
+
+struct Class{
 	string classCode;
 	Student* Stu;
 	Class* next, * prev;
@@ -62,6 +69,14 @@ struct Schoolyear {
 	string year;
 	Courses* _course;
 	Schoolyear* next, * prev;
+};
+
+struct Score {
+	string courseCode;
+	float mid = 0;
+	float final = 0;
+	float gpa = 0;
+	Score* next, * prev;
 };
 
 void ReadStudent(string k);

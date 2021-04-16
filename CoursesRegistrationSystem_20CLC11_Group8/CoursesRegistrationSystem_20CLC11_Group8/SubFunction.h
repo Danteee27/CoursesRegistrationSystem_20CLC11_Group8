@@ -1,9 +1,15 @@
 #ifndef _SubFunc
 #define _SubFunc
 
+
 #include"Data.h"
 
-date Birthday(wstring k);
+#include <string>
+
+using namespace std;
+
+date OutputBirthday(wstring k);
+
 
 void RealTime();
 
@@ -22,4 +28,7 @@ wchar_t* StringtoLongChar(string k);
 string WstringToString(wstring k);
 
 wstring getpass();
+
+int CountCourses(Student* stu);
+
 #endif // !_Func

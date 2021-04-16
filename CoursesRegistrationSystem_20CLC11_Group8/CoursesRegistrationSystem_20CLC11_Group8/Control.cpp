@@ -35,9 +35,17 @@ void AddInCourses(Schoolyear*& head) {
 	InputCourses(head->_course);
 }
 
+void OutputAllStudent(Student* head) {
+	while (head->prev != nullptr) head = head->prev;
+	while (head != nullptr) {
+		Vietlanguage();
+		wcout << head->Num + L" " + head->ID + L" " + head->Lastname + L" " + head->Firstname + L" " + head->Gender + L" ";
+		cout << head->Birthday.day + "/" + head->Birthday.month << "/" + head->Birthday.year;
+	}
+	ASCIIlanguage();
+}
 
-
-void OutputStudent(Student* head, string name) {
+void OutputStudentFile(Student* head, string name) {
 	Vietlanguage();
 	std::wfstream Write(name + ".csv",ios::out);
 	Write << wchar_t(237) << wchar_t(187) << wchar_t(191);
@@ -48,8 +56,8 @@ void OutputStudent(Student* head, string name) {
 		Write << head->Lastname << ",";
 		Write << head->Firstname << ",";
 		Write << head->Gender << ",";
-		Write << head->birthday.day << '/' << head->birthday.month <<
-			'/' << head->birthday.year << ",";
+		Write << head->Birthday.day << '/' << head->Birthday.month <<
+			'/' << head->Birthday.year << ",";
 		Write << head->SocialID << endl;
 		Write << L'\n';
 		head = head->next;
@@ -57,11 +65,9 @@ void OutputStudent(Student* head, string name) {
 	ASCIIlanguage();
 }
 
-void CreateClass(Class* first) {
+
+void CreateClass(Class* first, string name) {
 	Class* newClass = new Class;
-	string name;
-	cout << "Class code: ";
-	cin >> name;
 	newClass->classCode = name;
 	newClass->next = nullptr;
 	if (first == nullptr) {
@@ -224,9 +230,9 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 		getline(CoursesCSV, pCur->courseName, L',');
 		getline(CoursesCSV, pCur->teacher, L',');
 		getline(CoursesCSV, x, L',');
-		pCur->startDate = Birthday(x);
+		pCur->startDate = OutputBirthday(x);
 		getline(CoursesCSV, x, L',');
-		pCur->endDate = Birthday(x);
+		pCur->endDate = OutputBirthday(x);
 		pCur->Session = new char** [2];
 		for (int i = 0; i < 2; i++) {
 			pCur->Session[i] = new char* [2];
@@ -242,6 +248,7 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 	}
 	return pHead;
 }
+
 void ouputCoursesbyID(Courses*& pHead, string cID) {
 	Courses* pCur = pHead;
 	Vietlanguage();
@@ -259,6 +266,7 @@ void ouputCoursesbyID(Courses*& pHead, string cID) {
 	}
 }
 
+
 void ouputAllCourses(Courses*& pHead) {
 	Courses* pCur = pHead;
 	int count = 0;
@@ -275,3 +283,66 @@ void ouputAllCourses(Courses*& pHead) {
 		pCur = pCur->next;
 	}
 }
+
+	void OutputStudent(Student * head, string name) {
+		Vietlanguage();
+		wofstream Write(name + ".csv", ios::out);
+		while (head != nullptr) {
+			Write << head->Num << ",";
+			Write << head->ID << ",";
+			Write << head->Lastname << ",";
+			Write << head->Firstname << ",";
+			Write << head->Gender << ",";
+			Write << head->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << ",";
+			Write << head->SocialID << endl;
+			head = head->next;
+		}
+		ASCIIlanguage();
+	}
+
+void UpdateCourses(Courses*& pHead) {
+	int choice;
+	cout << "Updateable: " << endl;
+	wcout << "1. Teacher name: " << pHead->teacher << endl;
+	wcout << "2. Starting date: " << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << endl;
+	wcout << "3. End date: " << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << endl;
+	wcout << "4.  Course name: " << pHead->courseName << endl;
+	cout << "5. Course code: " << pHead->courseCode << endl;
+	cout << "Update: (1-5)" << endl;
+	cin >> choice;
+	wstring temp;
+	string temp2;
+	switch (choice) {
+	case 1:
+		cout << "New teacher name: ";
+		wcin >> temp;
+		pHead->teacher = temp;
+		wcout << "Course teacher name changed to: " << pHead->teacher;
+		break;
+	case 2: 
+		cout << "New starting date: (dd/mm/yyyy): ";
+		wcin >> temp;
+		pHead->startDate = OutputBirthday(temp);
+		cout << "Start date changed to" << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << endl;
+		break;
+	case 3:
+		cout << "New ending date: (dd/mm/yyyy): ";
+		wcin >> temp;
+		pHead->endDate = OutputBirthday(temp);
+		cout << "End date changed to" << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << endl;
+		break;
+	case 4:
+		cout << "New course name: ";
+		wcin >> temp;
+		pHead->courseName = temp;
+		wcout << "Course name changed to: " << pHead->courseName;
+		break;
+	case 5:
+		cout << "New course code: ";
+		cin >> temp2;
+		pHead->courseCode = temp2;
+		cout << "Course code changed to: " << pHead->courseCode;
+		break;
+	}
+}
+

@@ -12,7 +12,7 @@ void ReadStudent(string k)
 	if (List.fail())
 	{
 		cout << "File is not existed";
-		return nullptr;
+		return;
 	}
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
@@ -36,12 +36,20 @@ void ReadStudent(string k)
 		pCur->Num = x;
 		getline(List, x, L',');
 		pCur->ID = x;
+
 		getline(List, pCur->Lastname,L',');
 		getline(List, pCur->Firstname, L',');
 		getline(List, pCur->Gender, L',');
 		getline(List, x, L',');
-		pCur->birthday = Birthday(x);
+		pCur->birthday = OutputBirthday(x);
 		pCur->password = to_wstring(pCur->birthday.day) + to_wstring(pCur->birthday.month) + to_wstring(pCur->birthday.year);
+
+		getline(List, pCur->Lastname, a);
+		getline(List, pCur->Firstname, a);
+		getline(List, pCur->Gender, a);
+		getline(List, x, a);
+		pCur->Birthday = OutputBirthday(x);
+
 		getline(List, x);
 		pCur->SocialID = x;
 		pCur->next = nullptr;

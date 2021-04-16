@@ -2,7 +2,10 @@
 #include<Windows.h>
 #include <fcntl.h>  
 #include <io.h>
-date Birthday(wstring k)
+
+
+
+date OutputBirthday(wstring k)
 {
 	date d{ 0,0,0 };
 	int i = 0;
@@ -65,6 +68,7 @@ int WStringtoNum(wstring k)
 	return sum;
 }
 
+
 wchar_t* StringtoLongChar(string k)
 {
 	int temp = k.length();
@@ -123,4 +127,14 @@ wstring getpass()
 	cout << endl;
 	return password;
 }
+
+int CountCourses(Student* stu) {
+	int count = 0;
+	while (stu->score->prev != nullptr) stu->score = stu->score->prev;
+	while (stu->score != nullptr) {
+		stu = stu->next;
+		count++;
+	}	return count;
+}
+
 
