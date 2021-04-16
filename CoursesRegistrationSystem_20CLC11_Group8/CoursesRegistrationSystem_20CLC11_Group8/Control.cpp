@@ -261,8 +261,8 @@ void ouputCoursesbyID(Courses*& pHead, string cID) {
 			ASCIIlanguage();
 			cout << "Course ID: " << pCur->courseCode << endl;
 			for (int i = 0; i < 2; i++) {
-				cout << "Date: "
-				for (int j = 0; j < 3, j++) { cout << pCur->Session[i][1][j]; }
+				cout << "Date: ";
+				for (int j = 0; j < 3; j++) { cout << pCur->Session[i][1][j]; }
 				cout << endl << "Lesson: ";
 				for (int h = 0; h < 2; h++) { cout << pCur->Session[i][0][h]; }
 			}
@@ -284,8 +284,8 @@ void ouputAllCourses(Courses*& pHead) {
 		ASCIIlanguage();
 		cout << "Course ID: " << pCur->courseCode << endl;
 		for (int i = 0; i < 2; i++) {
-			cout << "Date: "
-				for (int j = 0; j < 3, j++) { cout << pCur->Session[i][1][j]; }
+			cout << "Date: ";
+			for (int j = 0; j < 3; j++) { cout << pCur->Session[i][1][j]; }
 			cout << endl << "Lesson: ";
 			for (int h = 0; h < 2; h++) { cout << pCur->Session[i][0][h]; }
 		}
@@ -372,7 +372,7 @@ void deleteCoursesbyID(Courses*& pHead, string cID) {
 	}
 }
 
-void deleteCurrCourses(Courses*& pCur) {
+void deleteCurrCourses(Courses*& pHead, Courses*& pCur) {
 	if (pCur == pHead) {
 		Courses* temp = pCur;
 		pHead = pHead->next;
@@ -385,5 +385,21 @@ void deleteCurrCourses(Courses*& pCur) {
 	pCur->next->prev = pCur->prev;
 	pCur = pCur->next;
 	delete temp;
+}
+
+void printSameSession(Courses*& pHead) {
+	Courses* pCur = pHead;
+	if (pHead == nullptr) return;
+	Courses* pNext = new Courses;
+	while (pCur) {
+		pNext = pCur->next;
+		while (pNext) {
+			if (pNext->Session[0][0][1] == pCur->Session[0][0][1] && pNext->Session[0][1][0] == pCur->Session[0][1][0] && pNext->Session[0][1][1] == pCur->Session[0][1][1]) {
+				wcout << "Same Session: " << pCur->courseName << " & " << pNext->courseName << endl;
+			}
+			pNext = pNext->next;
+		}
+		pCur = pCur->next;
+	}
 }
 
