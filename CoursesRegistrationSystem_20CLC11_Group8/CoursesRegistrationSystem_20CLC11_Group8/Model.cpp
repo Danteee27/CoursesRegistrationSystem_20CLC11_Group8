@@ -1,5 +1,5 @@
 #include "Model.h"
-
+#include "SubFunction.h"
 
 void StudentMenu(Student*& head) { // Havent done
 	wcout << "Student ID: " << head->ID << endl;

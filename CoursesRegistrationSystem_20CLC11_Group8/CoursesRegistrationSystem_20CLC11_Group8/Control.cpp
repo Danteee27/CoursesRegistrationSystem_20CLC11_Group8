@@ -8,7 +8,6 @@
 using namespace std;
 
 void CreateSchoolYear(Schoolyear*& head,string name) {
-	string name;
 	cout << "Give me the schoolyear: ";
 	cin >> name;
 	if (head == nullptr) {

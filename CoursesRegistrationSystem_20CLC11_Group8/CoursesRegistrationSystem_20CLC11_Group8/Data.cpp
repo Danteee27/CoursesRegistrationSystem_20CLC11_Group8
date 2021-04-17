@@ -12,7 +12,7 @@ Student* ReadStudent(string k)
 	if (List.fail())
 	{
 		cout << "File is not existed";
-		return;
+		return nullptr;
 	}
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;

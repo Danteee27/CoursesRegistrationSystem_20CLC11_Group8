@@ -6,17 +6,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <iomanip>
 #include <Windows.h>
 #include <fcntl.h>
 #include <io.h>
-#include<string>
-#include<locale>
-#include<codecvt>
 #include <filesystem>
-#include "SubFunction.h"
 
 using namespace std;
 
@@ -24,6 +19,13 @@ struct Date {
 	int day, month, year;
 };
 
+struct Score {
+	string courseCode;
+	float mid = 0;
+	float final = 0;
+	float gpa = 0;
+	Score* next, * prev;
+};
 
 struct Student {
 	wstring Num;
@@ -51,7 +53,7 @@ struct Class{
 
 struct Courses {
 	wstring teacher;
-	date startDate, endDate;
+	Date startDate, endDate;
 	char*** Session;
 	wstring courseName;
 	string courseCode;
@@ -71,15 +73,6 @@ struct Schoolyear {
 	string year;
 	Courses* _course;
 	Schoolyear* next, * prev;
-};
-
-
-struct Score {
-	string courseCode;
-	float mid = 0;
-	float final = 0;
-	float gpa = 0;
-	Score* next, * prev;
 };
 
 
