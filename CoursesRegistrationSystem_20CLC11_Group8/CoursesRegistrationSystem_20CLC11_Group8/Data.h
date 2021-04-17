@@ -20,7 +20,7 @@
 
 using namespace std;
 
-struct date {
+struct Date {
 	int day, month, year;
 };
 
@@ -31,8 +31,9 @@ struct Student {
 	wstring Lastname;
 	wstring Firstname;
 	wstring Gender;
-	date Birthday;
+	Date Birthday;
 	wstring SocialID;
+	wstring password;
 	Score* score;
 	Student* next, * prev;
 };
@@ -54,6 +55,7 @@ struct Courses {
 	char*** Session;
 	wstring courseName;
 	string courseCode;
+	int credit;
 	Student* Stu;
 	Courses* next=nullptr, * prev=nullptr;
 };

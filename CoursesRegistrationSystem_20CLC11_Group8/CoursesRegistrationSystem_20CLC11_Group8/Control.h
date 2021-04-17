@@ -24,7 +24,7 @@ Courses* InputCoursesCSV(Courses*& pHead, string k);
 
 void CoursesSaveFile(string k, Courses* pHead);
 
-void ouputCoursesbyID(Courses*& pHead, string cID);
+Courses* ouputCoursesbyID(Courses*& pHead, string cID);
 
 void ouputAllCourses(Courses*& pHead);
 

@@ -243,33 +243,31 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 			pCur->Session[i][1][3] = '\0';
 			getline(CoursesCSV, x, L',');
 			WstringToString(x).copy(pCur->Session[i][1], 3, 0);
-			getline(CoursesCSV, x, L',');
+			if (i == 0) getline(CoursesCSV, x, L',');
+			else getline(CoursesCSV, x);
 			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
 	}
 	return pHead;
 }
 
-void ouputCoursesbyID(Courses*& pHead, string cID) {
+Courses *ouputCoursesbyID(Courses*& pHead, string cID) {
 	Courses* pCur = pHead;
-	Vietlanguage();
 	while (pCur && pCur->courseCode != cID) {
 		pCur = pCur->next;
 		if (pCur) {
+			Vietlanguage();
 			wcout << "Course name: " << pCur->courseName << endl;
 			wcout << "Teacher name: " << pCur->teacher << endl;
 			ASCIIlanguage();
 			cout << "Course ID: " << pCur->courseCode << endl;
-			for (int i = 0; i < 2; i++) {
-				cout << "Date: ";
-				for (int j = 0; j < 3; j++) { cout << pCur->Session[i][1][j]; }
-				cout << endl << "Lesson: ";
-				for (int h = 0; h < 2; h++) { cout << pCur->Session[i][0][h]; }
-			}
+			cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << endl;
 			cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
 			cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+			return pCur;
 		}
 	}
+	return nullptr;
 }
 
 
@@ -283,12 +281,7 @@ void ouputAllCourses(Courses*& pHead) {
 		wcout << "Teacher name: " << pCur->teacher << endl;
 		ASCIIlanguage();
 		cout << "Course ID: " << pCur->courseCode << endl;
-		for (int i = 0; i < 2; i++) {
-			cout << "Date: ";
-			for (int j = 0; j < 3; j++) { cout << pCur->Session[i][1][j]; }
-			cout << endl << "Lesson: ";
-			for (int h = 0; h < 2; h++) { cout << pCur->Session[i][0][h]; }
-		}
+		cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << endl;
 		cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
 		cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
 		pCur = pCur->next;
@@ -403,3 +396,91 @@ void printSameSession(Courses*& pHead) {
 	}
 }
 
+void Deallocate(Courses* pHead)
+{
+	Courses* pCur = pHead;
+	while (pCur != nullptr)
+	{
+		Courses* pTemp = pCur;
+		pCur = pCur->next;
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				delete[] pTemp->Session[i][j];
+			}
+			delete[] pTemp->Session[i];
+		}
+		delete[] pTemp->Session;
+		delete pTemp;
+	}
+}
+
+void EditCourses(Courses* pHead)
+{
+	string k;
+	cin >> k;
+	InputCoursesCSV(pHead, k);
+	ouputAllCourses(pHead);
+	string Id;
+	cin >> Id;
+	Courses* pTemp = ouputCoursesbyID(pHead, Id);
+	int t = -1;
+	cout << "1.Course ID" << endl << "2.Course Name" << endl << "3.Teacher Name" << endl << "4.Session" << endl << "5.Credits" << endl << "6.Start date" << endl << "7.End date" << "0.End\n";
+	while (t != 0)
+	{
+		string a;
+		wstring b;
+		int c;
+		cout << "chose: ";
+		cin >> t;
+		switch (t)
+		{
+		case 1: cout << "Course ID:";
+			cin >> a;
+			pTemp->courseCode = a; break;
+		case 2: cout << "Course Name:";
+			cin.ignore(1000, '\n');
+			Vietlanguage();
+			getline(wcin, pTemp->courseName, L'\n');
+			ASCIIlanguage(); break;
+		case 3: cout << "Teacher name:";
+			cin.ignore(1000, '\n');
+			Vietlanguage();
+			getline(wcin, pTemp->teacher, L'\n');
+			ASCIIlanguage(); break;
+		case 4: cout << "Session:";
+			for (int i = 0; i < 2; i++)
+			{
+				cout << "Learn date?(Mon,Tue,Wed,Thu,Fri,Sat,Sun):";
+				cin >> pTemp->Session[i][1];
+				cout << "Session?(S1,S2,S3,S4):";
+				pTemp->Session[i][0][2] = '\0';
+				pTemp->Session[i][1][3] = '\0';
+			}
+			break;
+		case 5: cout << "Credits:";
+			cin >> c;
+			pTemp->credit = c; break;
+		case 6: cout << "Start date:";
+			cin >> c;
+			pTemp->startDate.day = c;
+			cin >> c;
+			pTemp->startDate.month = c;
+			cin >> c;
+			pTemp->startDate.year = c;
+			break;
+		case 7: cout << "End date:";
+			cin >> c;
+			pTemp->startDate.day = c;
+			cin >> c;
+			pTemp->startDate.month = c;
+			cin >> c;
+			pTemp->startDate.year = c;
+			break;
+		}
+	}
+	cout << "save file: ";
+	cin >> k;
+	CoursesSaveFile(k, pHead);
+}
