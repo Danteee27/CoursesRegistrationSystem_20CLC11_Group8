@@ -190,9 +190,8 @@ void CoursesSaveFile(string k, Courses* pHead)
 		CourseList << pRun->endDate.day << "/" << pRun->endDate.month << "/" << pRun->endDate.year << ",";
 		for (int i = 0; i < 2; i++)
 		{
-			CourseList << pRun->Session[i][1] << "," << pRun->Session[i][0] << ",";
+			CourseList << pRun->Session[i][1] << L"," << pRun->Session[i][0]; if (i == 0) CourseList << L","; else CourseList << endl;
 		}
-		CourseList << L'\n';
 		pRun = pRun->next;
 	}
 	ASCIIlanguage();
@@ -208,11 +207,12 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 		cout << "File is not existed";
 		return nullptr;
 	}
-	CoursesCSV.seekg(-2, ios_base::end);
+	CoursesCSV.seekg(0, ios_base::end);
 	int end = CoursesCSV.tellg();
 	CoursesCSV.seekg(0, ios_base::beg);
+	CoursesCSV.ignore(1i64, wchar_t(0xfeff));
 	wstring x;
-	while (CoursesCSV.tellg() < end)
+	while (CoursesCSV.tellg() != end)
 	{
 		if (pHead == nullptr)
 		{
