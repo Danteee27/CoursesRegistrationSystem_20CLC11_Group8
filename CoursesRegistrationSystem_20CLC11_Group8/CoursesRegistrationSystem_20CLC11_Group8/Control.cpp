@@ -365,6 +365,7 @@ void deleteCoursesbyID(Courses*& pHead, string cID) {
 }
 
 void deleteCurrCourses(Courses*& pHead, Courses*& pCur) {
+	if (pHead == nullptr) return;
 	if (pCur == pHead) {
 		Courses* temp = pCur;
 		pHead = pHead->next;
