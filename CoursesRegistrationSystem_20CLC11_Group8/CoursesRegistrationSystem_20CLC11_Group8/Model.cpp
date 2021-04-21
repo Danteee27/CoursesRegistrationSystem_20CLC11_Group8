@@ -35,8 +35,10 @@ void Login(Student* head) { // Havent done
 	}
 }
 
-void PrintToChoose(Courses* pCur)
+void PrintToChoose(Courses* pHead)
 {
+	int y = 0;
+	Courses* pCur = pHead;
 	Vietlanguage();
 	wcout << pCur->courseName;
 	wcout << " - " << pCur->teacher;
@@ -46,12 +48,36 @@ void PrintToChoose(Courses* pCur)
 	cout << " - " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1];
 	cout << " - " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year;
 	cout << " - " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year;
+
 }
 
-Courses* AttendCoursesMenu(Courses* pHead)
+bool CheckDup(Courses** check, Courses* source, int n) 
 {
-	int y = 0;
+	if (n == 0) return true;
+	for (int i = 0; i < n; i++) {
+		if (check[i] == source)return false;
+	}
+	return true;
+}
+
+bool CheckSession(Courses** check, Courses* source, int n)
+{
+	if (n == 0) return true;
+	for (int i = 0; i < n; i++) {
+		if (
+			(strcmp(check[i]->Session[0][0], source->Session[0][0]) == 0 && strcmp(check[i]->Session[0][1], source->Session[0][1]) == 0) ||
+			(strcmp(check[i]->Session[0][0], source->Session[1][0]) == 0 && strcmp(check[i]->Session[0][1], source->Session[1][1]) == 0) ||
+			(strcmp(check[i]->Session[1][0], source->Session[0][0]) == 0 && strcmp(check[i]->Session[1][1], source->Session[0][1]) == 0) ||
+			(strcmp(check[i]->Session[1][0], source->Session[1][0]) == 0 && strcmp(check[i]->Session[1][1], source->Session[1][1]) == 0) // may be :)))
+			)return false;
+	}
+	return true;
+}
+
+void AttendCoursesMenu(Courses* pHead, Student* stu)
+{
 	Courses* pCur = pHead;
+	int y = 0;
 	while (pCur != nullptr)
 	{
 		GotoXY(0, y);
@@ -63,46 +89,108 @@ Courses* AttendCoursesMenu(Courses* pHead)
 	pCur = pHead;
 	GotoXY(0, y);
 	cout << "->";
-	PrintToChoose(pCur);
 	char a;
 	a = _getwch();
-	while (a != 13)
+	int t = 0;
+	//stu->score = nullptr;
+	//Score* CourseAdd = stu->score;
+	//Score* HeadAdd = CourseAdd;
+
+	Courses** add = new Courses * [5];
+	while (t < 5)//chac la se doi dk o day de tui no con xoa Course xai bien a
 	{
-		if (tolower(a) == 'w' && pCur->prev != nullptr)
+		if (tolower(a) == 'e')
 		{
-			GotoXY(0, y);
-			PrintToChoose(pCur); cout << "  ";
-			pCur = pCur->prev;
-			y -= 1;
-			GotoXY(0, y);
-			cout << "->";
-			PrintToChoose(pCur);
+			//luu trong day
+			for (int i = 0; i < t; i++) {
+				if (stu->score == nullptr) {
+					stu->score = new Score;
+					stu->score->courseCode = add[i]->courseCode;
+					stu->score->next = nullptr;
+					stu->score->prev = nullptr;
+				}
+				else
+				{
+					stu->score->next = new Score;
+					stu->score->next->prev = stu->score;
+					stu->score = stu->score->next;
+					stu->score->courseCode = add[i]->courseCode;
+				}
+			}
+			//luu trong courses ?
+			return;
 		}
-		if (tolower(a) == 's' && pCur->next != nullptr)
+		while (a != 13 && a != 8)
 		{
-			GotoXY(0, y);
-			PrintToChoose(pCur); cout << "  ";
-			pCur = pCur->next;
-			y += 1;
-			GotoXY(0, y);
-			cout << "->";
-			PrintToChoose(pCur);
+			if (tolower(a) == 'e')
+			{
+				//luu trong day
+				for (int i = 0; i < t; i++) {
+					if (stu->score == nullptr) {
+						stu->score = new Score;
+						stu->score->courseCode = add[i]->courseCode;
+						stu->score->next = nullptr;
+						stu->score->prev = nullptr;
+					}
+					else {
+						stu->score->next = new Score;
+						stu->score->next->prev = stu->score;
+						stu->score = stu->score->next;
+						stu->score->courseCode = add[i]->courseCode;
+					}
+				}
+				return;
+			}
+			if (tolower(a) == 'w' && pCur->prev != nullptr)
+			{
+				GotoXY(0, y);
+				PrintToChoose(pCur); cout << "  ";
+				pCur = pCur->prev;
+				y -= 1;
+				GotoXY(0, y);
+				cout << "->";
+				PrintToChoose(pCur);
+			}
+			if (tolower(a) == 's' && pCur->next != nullptr)
+			{
+				GotoXY(0, y);
+				PrintToChoose(pCur); cout << "  ";
+				pCur = pCur->next;
+				y += 1;
+				GotoXY(0, y);
+				cout << "->";
+				PrintToChoose(pCur);
+			}
+			a = _getwch();
+		}
+		if (a == 8 && pCur != nullptr && CheckDup(add, pCur, t) != 1)
+		{
+			//do trong mang xem thang muon xoa o dau
+			for (int i = 0; i < t; i++)
+			{
+				if (add[i]->courseCode.compare(pCur->courseCode) == 0)
+				{
+					add[i] = add[t - 1];
+					t -= 1;
+					cout << "delete";
+					break;
+				}
+			}
+		}
+		if (a == 13 && CheckDup(add, pCur, t) && CheckSession(add, pCur, t))
+		{
+			cout << "done";
+			if (add == nullptr)
+			{
+				add[t] = pCur;
+				t++;
+			}
+			else
+			{
+				add[t] = pCur;
+				t++;
+			}
 		}
 		a = _getwch();
 	}
-	return pCur;
 }
-/*
-void AttendCourses(Courses* pHead)
-{
-	string k;
-	cin >> k;
-	InputCoursesCSV(pHead, k);
-	Courses* pTemp = AttendCoursesMenu(pHead);
-	struct TempCourseNode
-	{
-		string ID;
-		TempCourseNode* pNext = nullptr, * pPrev = nullptr;
-	}; // luu tam de dem 5 mon hoc dang ki?
-	pTemp->Stu->ID; // luu vo file cai nay
-}*/
