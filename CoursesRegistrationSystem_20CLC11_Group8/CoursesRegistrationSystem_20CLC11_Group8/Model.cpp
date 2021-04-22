@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "SubFunction.h"
+#include <fstream>
 
 void StudentMenu(Student*& head) { // Havent done
 	wcout << "Student ID: " << head->ID << endl;
@@ -74,6 +75,34 @@ bool CheckSession(Courses** check, Courses* source, int n)
 	return true;
 }
 
+int StudentLimit(wstring k)
+{
+	wfstream CourseStudentList(k, ios_base::in);
+	int line;
+	wstring lines;
+
+	for (line = 0; getline(CourseStudentList, lines); line++);
+	return line;
+}
+
+void SuccessAttend(Courses* a[5], int t)
+{
+	int y = 20;
+	for (int i = 0; i < 5; i++)
+	{
+		GotoXY(0, y);
+		cout << "                                         ";
+		y++;
+	}
+	y = 20;
+	for (int i = 0; i < t; i++)
+	{
+		GotoXY(0, y);
+		cout << a[i]->courseCode << "Accepted";
+		y++;
+	}
+}
+
 void AttendCoursesMenu(Courses* pHead, Student* stu)
 {
 	Courses* pCur = pHead;
@@ -92,55 +121,12 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 	char a;
 	a = _getwch();
 	int t = 0;
-	//stu->score = nullptr;
-	//Score* CourseAdd = stu->score;
-	//Score* HeadAdd = CourseAdd;
 
 	Courses** add = new Courses * [5];
-	while (t < 5)//chac la se doi dk o day de tui no con xoa Course xai bien a
+	while (a != 'e')
 	{
-		if (tolower(a) == 'e')
-		{
-			//luu trong day
-			for (int i = 0; i < t; i++) {
-				if (stu->score == nullptr) {
-					stu->score = new Score;
-					stu->score->courseCode = add[i]->courseCode;
-					stu->score->next = nullptr;
-					stu->score->prev = nullptr;
-				}
-				else
-				{
-					stu->score->next = new Score;
-					stu->score->next->prev = stu->score;
-					stu->score = stu->score->next;
-					stu->score->courseCode = add[i]->courseCode;
-				}
-			}
-			//luu trong courses ?
-			return;
-		}
 		while (a != 13 && a != 8)
 		{
-			if (tolower(a) == 'e')
-			{
-				//luu trong day
-				for (int i = 0; i < t; i++) {
-					if (stu->score == nullptr) {
-						stu->score = new Score;
-						stu->score->courseCode = add[i]->courseCode;
-						stu->score->next = nullptr;
-						stu->score->prev = nullptr;
-					}
-					else {
-						stu->score->next = new Score;
-						stu->score->next->prev = stu->score;
-						stu->score = stu->score->next;
-						stu->score->courseCode = add[i]->courseCode;
-					}
-				}
-				return;
-			}
 			if (tolower(a) == 'w' && pCur->prev != nullptr)
 			{
 				GotoXY(0, y);
@@ -172,25 +158,84 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 				{
 					add[i] = add[t - 1];
 					t -= 1;
-					cout << "delete";
+					SuccessAttend(add, t);
 					break;
 				}
 			}
 		}
-		if (a == 13 && CheckDup(add, pCur, t) && CheckSession(add, pCur, t))
+		if (a == 13 && CheckDup(add, pCur, t) && CheckSession(add, pCur, t) /*&& StudentLimit(pCur->courseName + L".csv")<50*/)
 		{
-			cout << "done";
 			if (add == nullptr)
 			{
 				add[t] = pCur;
 				t++;
+				SuccessAttend(add, t);
 			}
 			else
 			{
 				add[t] = pCur;
 				t++;
+				SuccessAttend(add, t);
 			}
 		}
 		a = _getwch();
 	}
+
+	for (int i = 0; i < t; i++)
+	{
+		if (stu->score == nullptr)
+		{
+			stu->score = new Score;
+			stu->score->courseCode = add[i]->courseCode;
+			stu->score->next = nullptr;
+			stu->score->prev = nullptr;
+		}
+		else
+		{
+			stu->score->next = new Score;
+			stu->score->next->prev = stu->score;
+			stu->score = stu->score->next;
+			stu->score->courseCode = add[i]->courseCode;
+		}
+	}
+
+	//luu file
+	pCur = pHead;
+	while (pCur != nullptr)
+	{
+		wfstream CourseStudentList(pCur->courseName + L".csv", ios_base::app);
+		CourseStudentList << stu->ID;
+		CourseStudentList.close();
+		pCur = pCur->next;
+	}
+
+	pCur = pHead;
+	wfstream AllStudentScore;
+	AllStudentScore.open("Allstudent.csv");
+	Student* pStart = nullptr;
+	Student* pRun = pStart;
+	AllStudentScore.seekg(0, ios_base::end);
+	int end = AllStudentScore.tellg();
+	AllStudentScore.seekg(0, ios_base::beg);
+
+	while (AllStudentScore.tellg() != end);
+	{
+		if (pStart == nullptr)
+		{
+			pStart = new Student;
+			pRun = pStart;
+		}
+		else
+		{
+			pRun->next = new Student;
+			pRun->next->prev = pRun;
+			pRun = pRun->next;
+		}
+		getline(AllStudentScore, pRun->ID);
+	}
+	AllStudentScore.close();
+
+	pRun = pStart;
+	while (stu->ID.compare(pRun->ID) != 0) pRun = pRun->next;
+	//quy dinh stt cua tung mon de luu vao ds All thi them 1 bien thu tu nua dc k cho de luu
 }
