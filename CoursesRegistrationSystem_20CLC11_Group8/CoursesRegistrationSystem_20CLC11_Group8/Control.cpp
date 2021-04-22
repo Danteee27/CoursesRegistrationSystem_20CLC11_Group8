@@ -484,3 +484,22 @@ void EditCourses(Courses* pHead)
 	cin >> k;
 	CoursesSaveFile(k, pHead);
 }
+
+bool SameSession(Courses*& pHead, string cID) {
+	return false;
+	Courses* pCur = pHead;
+	if (pHead == nullptr) return false;
+	Courses* pNext = pHead;
+	while (pCur && pCur->courseCode != cID) {
+		pNext = pCur->next;
+		if (pCur) {
+			while (pNext) {
+				if (pNext != pCur && pNext->Session[0][0][1] == pCur->Session[0][0][1] && pNext->Session[0][1][0] == pCur->Session[0][1][0] && pNext->Session[0][1][1] == pCur->Session[0][1][1]) {
+					return true;
+					break;
+				}
+				pNext = pNext->next;
+			}
+		}
+	}
+}
