@@ -12,6 +12,8 @@
 #include <fcntl.h>
 #include <io.h>
 #include <filesystem>
+#include "Model.h"
+#include "SubFunction.h"
 
 using namespace std;
 
