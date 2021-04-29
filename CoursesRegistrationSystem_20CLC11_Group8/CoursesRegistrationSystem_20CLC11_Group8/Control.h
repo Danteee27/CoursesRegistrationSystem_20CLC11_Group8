@@ -2,14 +2,15 @@
 #define _ControlFunc
 #include"Data.h"
 
-void CreateSchoolYear(Schoolyear* head, string name);
-
-void OutputStudent(Student* head, string name);
-
 #include <string>
 
 using namespace std;
 
+void CreateSchoolYear(Schoolyear* head, string name);
+
+void OutputStudent(Student* head, string name);
+
+void StudentInfo(Student* head);
 
 void CreateClass(Class* first, string name);
 

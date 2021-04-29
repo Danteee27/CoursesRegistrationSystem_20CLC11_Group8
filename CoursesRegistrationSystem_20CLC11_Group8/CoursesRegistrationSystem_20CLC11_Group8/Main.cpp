@@ -7,7 +7,7 @@
 int main() {
 	Student* first = nullptr;
 	first = ReadStudent("StudentTest.csv");
-	wcout << first->Lastname;
+	Login(first);
 
 	OutputStudent(first, "ListStudent");
 }

@@ -1,8 +1,7 @@
 #include "Model.h"
-#include "SubFunction.h"
 #include <fstream>
 
-void StudentMenu(Student*& head) { // Havent done
+void StudentMenu(Student* head) { // Havent done
 	wcout << "Student ID: " << head->ID << endl;
 	Vietlanguage();
 	wcout << "Student name: " << head->Firstname << " " << head->Lastname << endl;
@@ -14,6 +13,20 @@ void StudentMenu(Student*& head) { // Havent done
 	cout << "1. Edit student's information." << endl;
 	cout << "2. View courses." << endl;
 	cout << "3. View class." << endl;
+	int choice;
+	cin >> choice;
+	switch (choice) {
+	case 1:
+		break;
+	case 2:
+		int count = 1;
+		while (head->score->prev != nullptr) head->score = head->score->prev;
+		while (head->score != nullptr) {
+			cout << count << ". " << head->score->courseCode << endl;
+			count++;
+		}
+		
+	}
 }
 
 void Login(Student* head) { // Havent done
@@ -29,7 +42,7 @@ void Login(Student* head) { // Havent done
 	const wstring correct_password = L"1";
 	if (password == correct_password) {
 		cout << "Welcome to the system";
-		system("cls");
+	
 	}
 	else {
 		cout << "Incorrect password. ";
