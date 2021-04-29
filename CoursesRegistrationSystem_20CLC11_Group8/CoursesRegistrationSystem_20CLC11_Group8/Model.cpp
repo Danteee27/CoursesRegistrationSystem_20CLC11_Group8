@@ -1,5 +1,6 @@
 #include "Model.h"
 #include <fstream>
+#include "SubFunction.h"
 
 void StudentMenu(Student* head) { // Havent done
 	wcout << "Student ID: " << head->ID << endl;
@@ -127,6 +128,20 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		pCur = pCur->next;
 		y = y + 1;
 	}
+
+	GotoXY(10, y + 2);
+	cout << "Instruction";
+	GotoXY(10, y + 3);
+	cout << "W move up";
+	GotoXY(10, y + 4);
+	cout << "S move down";
+	GotoXY(10, y + 5);
+	cout << "Enter to choose";
+	GotoXY(10, y + 6);
+	cout << "Backspace to unchoose";
+	GotoXY(10, y + 7);
+	cout << "E to exit and save" << endl;
+
 	y = 0;
 	pCur = pHead;
 	GotoXY(0, y);
