@@ -8,7 +8,7 @@
 
 using namespace std;
 
-date OutputBirthday(wstring k);
+Date OutputBirthday(wstring k);
 
 
 void RealTime();
@@ -31,6 +31,6 @@ wstring getpass();
 
 int CountCourses(Student* stu);
 
-int CountStudent(Student* stu)
+void FixConsoleWindow();
 
 #endif // !_Func

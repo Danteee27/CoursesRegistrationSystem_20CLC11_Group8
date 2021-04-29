@@ -21,10 +21,11 @@ void CoursesSaveFile(string k, Courses* pHead);
 
 Courses* InputCoursesCSV(Courses*& pHead, string k);
 
+Courses* InputCourses(Courses*& pHead);
 
 void CoursesSaveFile(string k, Courses* pHead);
 
-void ouputCoursesbyID(Courses*& pHead, string cID);
+Courses* ouputCoursesbyID(Courses*& pHead, string cID);
 
 void ouputAllCourses(Courses*& pHead);
 

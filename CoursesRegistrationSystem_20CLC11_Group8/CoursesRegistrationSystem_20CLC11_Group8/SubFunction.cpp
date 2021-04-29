@@ -5,9 +5,9 @@
 
 
 
-date OutputBirthday(wstring k)
+Date OutputBirthday(wstring k)
 {
-	date d{ 0,0,0 };
+	Date d{ 0,0,0 };
 	int i = 0;
 	for (i = 0; i < k.length() && k[i] != 47; i++)
 	{
@@ -137,4 +137,10 @@ int CountCourses(Student* stu) {
 	}	return count;
 }
 
-
+void FixConsoleWindow()
+{
+	HWND consoleWindow = GetConsoleWindow();
+	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
+	SetWindowLong(consoleWindow, GWL_STYLE, style);
+}
