@@ -505,5 +505,5 @@ bool SameSession(Courses*& pHead, string cID) {
 }
 
 void StudentInfo(Student* head) {
-	cout << "Name: "
+	cout << "Name: ";
 }
