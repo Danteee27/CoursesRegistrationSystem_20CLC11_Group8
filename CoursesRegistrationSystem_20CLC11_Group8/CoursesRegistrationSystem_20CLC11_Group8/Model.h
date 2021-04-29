@@ -1,4 +1,5 @@
-
+#ifndef _Model
+#define _Model
 #include "Data.h"
 
 void Login(Student* head);
@@ -15,3 +16,4 @@ bool CheckSession(Courses** check, Courses* source, int n);
 
 void AttendCoursesMenu(Courses* pHead, Student* stu);
 
+#endif
