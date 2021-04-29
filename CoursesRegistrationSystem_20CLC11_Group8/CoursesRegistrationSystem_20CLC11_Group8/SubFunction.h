@@ -31,4 +31,6 @@ wstring getpass();
 
 int CountCourses(Student* stu);
 
+int CountStudent(Student* stu)
+
 #endif // !_Func
