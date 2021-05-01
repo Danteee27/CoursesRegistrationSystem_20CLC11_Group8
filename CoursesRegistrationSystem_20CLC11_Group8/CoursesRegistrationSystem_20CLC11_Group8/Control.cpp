@@ -92,7 +92,7 @@ LABEL:
 	std::wstring ID;
 	cout << "Give me the ID: ";
 	Vietlanguage();
-	wcin >> ID;
+	std::wcin >> ID;
 	ASCIIlanguage();
 	while (first->next != nullptr) {
 		if (ID == first->ID) break;
@@ -506,4 +506,27 @@ bool SameSession(Courses*& pHead, string cID) {
 
 void StudentInfo(Student* head) {
 	cout << "Name: ";
+}
+
+
+void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
+	string m;
+	string x;
+	int t = 0;
+	std::cout << "Enter Student ID: ";
+	std::cin >> x;
+	wstring ID = StringToWString(x);
+	Student* Cur = SHead;
+	while (Cur && Cur->ID != ID) {
+		Cur = Cur->next;
+		if (Cur) {
+			t = CountCourse(Cur->score);
+			std::cout << std::endl <<  "Courses: " << t << std::endl;
+			for (int i = 0; i < t; i++) {
+				m = Cur->score->courseCode;
+				ouputCoursesbyID(CHead, m);
+				std::cout << std::endl;
+			}
+		}
+	}
 }
