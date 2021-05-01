@@ -68,6 +68,14 @@ int WStringtoNum(wstring k)
 	return sum;
 }
 
+std::string WstringToString(std::wstring source) {
+	std::string temp;
+	temp.resize(source.size());
+	for (int i = 0; i < source.length(); i++) {
+		temp[i] = source[i];
+	}
+	return temp;
+}
 
 wchar_t* StringtoLongChar(string k)
 {

@@ -23,6 +23,8 @@ int StringtoNum(string k);
 
 int WStringtoNum(wstring k);
 
+std::string WstringToString(std::wstring);
+
 wchar_t* StringtoLongChar(string k);
 
 string WstringToString(wstring k);

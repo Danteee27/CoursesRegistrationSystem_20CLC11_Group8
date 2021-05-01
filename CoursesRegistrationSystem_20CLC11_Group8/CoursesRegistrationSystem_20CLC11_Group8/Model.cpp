@@ -66,6 +66,96 @@ void PrintToChoose(Courses* pHead)
 
 }
 
+void InputList(std::string k, Student*& pHead)
+{
+	Student* pCur = nullptr;
+	std::fstream AllStudentList("All.txt", std::ios_base::in);
+	int t;
+	std::string x;
+	AllStudentList.seekg(-2, std::ios_base::end);
+	int end = AllStudentList.tellg();
+	AllStudentList.seekg(0, std::ios_base::beg);
+	if (AllStudentList.fail())
+	{
+		std::cout << "File is not existed";
+		return;
+	}
+	while (AllStudentList.tellg() < end)
+	{
+		if (pHead == nullptr)
+		{
+			pHead = new Student;
+			pCur = pHead;
+		}
+		else
+		{
+			pCur->next = new Student;
+			pCur->next->prev = pCur;
+			pCur = pCur->next;
+		}
+		AllStudentList >> x;
+		pCur->ID = StringToWString(x);
+		AllStudentList >> t;
+		Score* Temp = pCur->score;
+		for (int i = 0; i < t; i++)
+		{
+			if (Temp == nullptr)
+			{
+				pCur->score = new Score;
+				Temp = pCur->score;
+			}
+			else
+			{
+				Temp->next = new Score;
+				Temp->next->prev = Temp;
+				Temp = Temp->next;
+			}
+			AllStudentList >> Temp->courseCode;
+		}
+		AllStudentList.ignore(1000, '\n');
+	}
+	AllStudentList.close();
+}
+
+int CountCourse(Score* pHead)
+{
+	int count = 0;
+	while (pHead != nullptr)
+	{
+		count++;
+		pHead = pHead->next;
+	}
+	return count;
+}
+
+void SaveList(std::string k, Student*& pHead)
+{
+	Student* pCur = pHead;
+	int t = 0;
+	std::fstream AllStudentList("All.txt", std::ios_base::out);
+	while (pCur != nullptr)
+	{
+		std::cout << 5000 << " ";
+		AllStudentList << WstringToString(pCur->ID) << " ";
+		t = CountCourse(pCur->score);
+		AllStudentList << t << " ";
+		Score* Temp = pCur->score;
+		for (int i = 0; i < t; i++)
+		{
+			if (i == t - 1)
+			{
+				AllStudentList << Temp->courseCode << std::endl;
+			}
+			else
+			{
+				AllStudentList << Temp->courseCode << " ";
+				Temp = Temp->next;
+			}
+		}
+		pCur = pCur->next;
+	}
+}
+
 bool CheckDup(Courses** check, Courses* source, int n) 
 {
 	if (n == 0) return true;

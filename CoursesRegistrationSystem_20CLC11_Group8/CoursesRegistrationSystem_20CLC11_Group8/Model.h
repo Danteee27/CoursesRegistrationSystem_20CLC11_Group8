@@ -8,6 +8,12 @@ void Login(Student* head);
 
 void PrintToChoose(Courses* pCur);
 
+void InputList(std::string k, Student*& pHead);
+
+int CountCourse(Score* pHead);
+
+void SaveList(std::string k, Student*& pHead);
+
 bool CheckDup(Courses** check, Courses* source, int n);
 
 int StudentLimit(wstring k);
