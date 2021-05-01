@@ -1,6 +1,8 @@
 #include "Model.h"
 #include <fstream>
 #include "SubFunction.h"
+#include <locale.h>
+#include <codecvt>
 
 void StudentMenu(Student* head) { // Havent done
 	wcout << "Student ID: " << head->ID << endl;
@@ -156,6 +158,121 @@ void SaveList(std::string k, Student*& pHead)
 	}
 }
 
+void OpenCourseFile(std::string k, Student*& pHead)
+{
+	std::wfstream CourseStudentList(k + ".txt", std::ios_base::in);
+	Student* pCur = nullptr;
+	CourseStudentList.seekg(-2, std::ios_base::end);
+	int end = CourseStudentList.tellg();
+	CourseStudentList.seekg(0, std::ios_base::beg);
+	while (CourseStudentList.tellg() < end)
+	{
+		if (pHead == nullptr)
+		{
+			pHead = new Student;
+			pCur = pHead;
+		}
+		else
+		{
+			pCur->next = new Student;
+			pCur->next->prev = pCur;
+			pCur = pCur->next;
+		}
+		getline(CourseStudentList, pCur->ID);
+	}
+	CourseStudentList.close();
+}
+
+void SaveCourseFile(std::string k, Student*& pHead)
+{
+	std::wfstream CourseStudentList(k + ".txt", std::ios_base::out);
+	Student* pCur = pHead;
+	while (pCur != nullptr)
+	{
+		CourseStudentList << pCur->ID << L'\n';
+		pCur = pCur->next;
+	}
+
+	while (pHead != nullptr)
+	{
+		pCur = pHead;
+		pHead = pHead->next;
+		delete pCur;
+	}
+}
+
+void DeleteInList(std::string k, std::wstring a)
+{
+	Student* pHead = nullptr;
+	OpenCourseFile(k, pHead);
+	Student* pCur = pHead;
+
+	while (pCur != nullptr && pCur->ID.compare(a) != 0)
+	{
+		pCur = pCur->next;
+	}
+	Student* pTemp = nullptr;
+	if (pCur != nullptr)
+	{
+		pTemp = pCur;
+		if (pCur->prev != nullptr)
+		{
+			pCur->prev->next = pCur->next;
+		}
+		if (pCur->next != nullptr)
+		{
+			pCur->next->prev = pCur->prev;
+		}
+		if (pCur == pHead)
+		{
+			pHead = pHead->next;
+		}
+		delete pTemp;
+	}
+
+	SaveCourseFile(k, pHead);
+}
+
+bool CheckInList(std::string k, std::wstring a)
+{
+	Student* pHead = nullptr;
+	Student* pCur = nullptr;
+	OpenCourseFile(k, pHead);
+	if (pHead == nullptr)
+	{
+		return false;
+	}
+	pCur = pHead;
+
+	/*if (pCur == nullptr)
+	{
+		return false;
+	}*/
+
+	while (pCur != nullptr && pCur->ID.compare(a) != 0)
+	{
+		std::wcout << pCur->ID << std::endl;
+		pCur = pCur->next;
+	}
+	if (pCur != nullptr)
+	{
+		while (pHead != nullptr)
+		{
+			pCur = pHead;
+			pHead = pHead->next;
+			delete pCur;
+		}
+		return true;
+	}
+	while (pHead != nullptr)
+	{
+		pCur = pHead;
+		pHead = pHead->next;
+		delete pCur;
+	}
+	return false;
+}
+
 bool CheckDup(Courses** check, Courses* source, int n) 
 {
 	if (n == 0) return true;
@@ -179,11 +296,11 @@ bool CheckSession(Courses** check, Courses* source, int n)
 	return true;
 }
 
-int StudentLimit(wstring k)
+int StudentLimit(std::string k)
 {
-	wfstream CourseStudentList(k, ios_base::in);
+	std::wfstream CourseStudentList(k, std::ios_base::in);
 	int line;
-	wstring lines;
+	std::wstring lines;
 
 	for (line = 0; getline(CourseStudentList, lines); line++);
 	return line;
@@ -207,6 +324,55 @@ void SuccessAttend(Courses* a[5], int t)
 	}
 }
 
+void DeallocateStudentCourse(Student*& pHead)
+{
+	Student* pCur = nullptr;
+	Score* Temp = nullptr;
+	while (pHead != nullptr)
+	{
+		pCur = pHead;
+		Temp = pCur->score;
+		while (pCur->score != nullptr)
+		{
+			pCur->score = pCur->score->next;
+			delete Temp;
+			Temp = pCur->score;
+		}
+		pHead = pHead->next;
+		delete pCur;
+	}
+}
+
+void TakeList(std::wstring a, Student*& Temp)
+{
+	Student* pHead = nullptr;
+	InputList("All.txt", pHead);
+	Student* pCur = pHead;
+	while (pCur != nullptr && pCur->ID.compare(a) != 0)
+	{
+		pCur = pCur->next;
+	}
+	if (pCur != nullptr)
+	{
+		Temp = pCur;
+		if (pCur->prev != nullptr)
+		{
+			pCur->prev->next = pCur->next;
+		}
+		if (pCur->next != nullptr)
+		{
+			pCur->next->prev = pCur->prev;
+		}
+		if (pCur == pHead)
+		{
+			pHead = pHead->next;
+		}
+	}
+	std::cout << "done";
+	SaveList("All.txt", pHead);
+	DeallocateStudentCourse(pHead);
+}
+
 void AttendCoursesMenu(Courses* pHead, Student* stu)
 {
 	Courses* pCur = pHead;
@@ -220,49 +386,71 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 	}
 
 	GotoXY(10, y + 2);
-	cout << "Instruction";
+	std::cout << "Instruction";
 	GotoXY(10, y + 3);
-	cout << "W move up";
+	std::cout << "W move up";
 	GotoXY(10, y + 4);
-	cout << "S move down";
+	std::cout << "S move down";
 	GotoXY(10, y + 5);
-	cout << "Enter to choose";
+	std::cout << "Enter to choose";
 	GotoXY(10, y + 6);
-	cout << "Backspace to unchoose";
+	std::cout << "Backspace to unchoose";
 	GotoXY(10, y + 7);
-	cout << "E to exit and save" << endl;
+	std::cout << "E to exit and save" << std::endl;
 
 	y = 0;
 	pCur = pHead;
 	GotoXY(0, y);
-	cout << "->";
+	std::cout << "->";
 	char a;
-	a = _getwch();
-	int t = 0;
 
-	Courses** add = new Courses * [5];
+	int t = 0;
+	Courses** add = new Courses * [5]{ nullptr };
+
+	Student* Temp = nullptr;
+	TakeList(stu->ID, Temp);
+	GotoXY(0, 15);
+	a = _getwch();
+	if (Temp != nullptr)
+	{
+		Score* pAdd = Temp->score;
+		while (pAdd != nullptr)
+		{
+			while (pCur != nullptr && pCur->courseCode.compare(pAdd->courseCode) != 0)
+			{
+				pCur = pCur->next;
+			}
+			add[t] = pCur;
+			t++;
+			pCur = pHead;
+			pAdd = pAdd->next;
+		}
+		SuccessAttend(add, t);
+	}
+	if (Temp != nullptr) delete Temp;
+
 	while (a != 'e')
 	{
-		while (a != 13 && a != 8)
+		while (a != 13 && a != 8 && a != 'e')
 		{
 			if (tolower(a) == 'w' && pCur->prev != nullptr)
 			{
 				GotoXY(0, y);
-				PrintToChoose(pCur); cout << "  ";
+				PrintToChoose(pCur); std::cout << "  ";
 				pCur = pCur->prev;
 				y -= 1;
 				GotoXY(0, y);
-				cout << "->";
+				std::cout << "->";
 				PrintToChoose(pCur);
 			}
 			if (tolower(a) == 's' && pCur->next != nullptr)
 			{
 				GotoXY(0, y);
-				PrintToChoose(pCur); cout << "  ";
+				PrintToChoose(pCur); std::cout << "  ";
 				pCur = pCur->next;
 				y += 1;
 				GotoXY(0, y);
-				cout << "->";
+				std::cout << "->";
 				PrintToChoose(pCur);
 			}
 			a = _getwch();
@@ -272,8 +460,9 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 			//do trong mang xem thang muon xoa o dau
 			for (int i = 0; i < t; i++)
 			{
-				if (add[i]->courseCode.compare(pCur->courseCode) == 0)
+				if (add[i] != nullptr && add[i]->courseCode.compare(pCur->courseCode) == 0)
 				{
+					DeleteInList(add[i]->courseCode, stu->ID);
 					add[i] = add[t - 1];
 					t -= 1;
 					SuccessAttend(add, t);
@@ -281,19 +470,23 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 				}
 			}
 		}
-		if (a == 13 && CheckDup(add, pCur, t) && CheckSession(add, pCur, t) /*&& StudentLimit(pCur->courseName + L".csv")<50*/)
+		if (a == 13 && pCur != nullptr && CheckDup(add, pCur, t) && CheckSession(add, pCur, t) && t < 5)
 		{
-			if (add == nullptr)
+			int p = StudentLimit(pCur->courseCode + ".txt");
+			if (p < pCur->MaxStudent)
 			{
-				add[t] = pCur;
-				t++;
-				SuccessAttend(add, t);
-			}
-			else
-			{
-				add[t] = pCur;
-				t++;
-				SuccessAttend(add, t);
+				if (add == nullptr)
+				{
+					add[t] = pCur;
+					t++;
+					SuccessAttend(add, t);
+				}
+				else
+				{
+					add[t] = pCur;
+					t++;
+					SuccessAttend(add, t);
+				}
 			}
 		}
 		a = _getwch();
@@ -305,8 +498,6 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		{
 			stu->score = new Score;
 			stu->score->courseCode = add[i]->courseCode;
-			stu->score->next = nullptr;
-			stu->score->prev = nullptr;
 		}
 		else
 		{
@@ -317,43 +508,36 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		}
 	}
 
-	//luu file
-	pCur = pHead;
-	while (pCur != nullptr)
+	//pCur = pHead;
+	for (int i = 0; i < t; i++)
 	{
-		wfstream CourseStudentList(pCur->courseName + L".csv", ios_base::app);
-		CourseStudentList << stu->ID;
-		CourseStudentList.close();
-		pCur = pCur->next;
+		if (!CheckInList(add[i]->courseCode, stu->ID))
+		{
+			std::cout << "fuck you";
+			std::wfstream CourseStudentList(add[i]->courseCode + ".txt", std::ios_base::app);
+			CourseStudentList << stu->ID << L'\n';
+			CourseStudentList.close();
+		}
 	}
 
-	pCur = pHead;
-	wfstream AllStudentScore;
-	AllStudentScore.open("Allstudent.csv");
-	Student* pStart = nullptr;
-	Student* pRun = pStart;
-	AllStudentScore.seekg(0, ios_base::end);
-	int end = AllStudentScore.tellg();
-	AllStudentScore.seekg(0, ios_base::beg);
-
-	while (AllStudentScore.tellg() != end);
+	std::wfstream AllStudentCourse("All.txt", std::ios_base::app);
+	AllStudentCourse.imbue(std::locale(AllStudentCourse.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
+	AllStudentCourse << stu->ID << L' ';
+	AllStudentCourse << t << L' ';
+	for (int i = 0; i < t; i++)
 	{
-		if (pStart == nullptr)
+		if (i == t - 1)
 		{
-			pStart = new Student;
-			pRun = pStart;
+			wchar_t* temp = StringtoLongChar(add[i]->courseCode);
+			AllStudentCourse << temp << L'\n';
+			delete[]temp;
 		}
 		else
 		{
-			pRun->next = new Student;
-			pRun->next->prev = pRun;
-			pRun = pRun->next;
+			wchar_t* temp = StringtoLongChar(add[i]->courseCode);
+			AllStudentCourse << temp << L' ';
+			delete[]temp;
 		}
-		getline(AllStudentScore, pRun->ID);
 	}
-	AllStudentScore.close();
-
-	pRun = pStart;
-	while (stu->ID.compare(pRun->ID) != 0) pRun = pRun->next;
-	//quy dinh stt cua tung mon de luu vao ds All thi them 1 bien thu tu nua dc k cho de luu
+	AllStudentCourse.close();
 }

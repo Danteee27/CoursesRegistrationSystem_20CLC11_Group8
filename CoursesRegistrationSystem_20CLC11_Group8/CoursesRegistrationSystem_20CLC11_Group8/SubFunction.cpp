@@ -68,15 +68,6 @@ int WStringtoNum(wstring k)
 	return sum;
 }
 
-std::string WstringToString(std::wstring source) {
-	std::string temp;
-	temp.resize(source.size());
-	for (int i = 0; i < source.length(); i++) {
-		temp[i] = source[i];
-	}
-	return temp;
-}
-
 wchar_t* StringtoLongChar(string k)
 {
 	int temp = k.length();
@@ -91,6 +82,16 @@ wchar_t* StringtoLongChar(string k)
 
 string WstringToString(wstring k) {
 	string temp;
+	temp.resize(k.size());
+	for (int i = 0; i < k.length(); i++) {
+		temp[i] = k[i];
+	}
+	return temp;
+}
+
+wstring StringToWString(string k)
+{
+	wstring temp;
 	temp.resize(k.size());
 	for (int i = 0; i < k.length(); i++) {
 		temp[i] = k[i];

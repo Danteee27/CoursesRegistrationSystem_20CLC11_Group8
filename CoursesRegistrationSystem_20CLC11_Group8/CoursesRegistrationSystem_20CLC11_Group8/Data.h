@@ -57,6 +57,7 @@ struct Courses {
 	char*** Session;
 	wstring courseName;
 	string courseCode;
+	int MaxStudent;
 	int credit;
 	Student* Stu;
 	Courses* next=nullptr, * prev=nullptr;
