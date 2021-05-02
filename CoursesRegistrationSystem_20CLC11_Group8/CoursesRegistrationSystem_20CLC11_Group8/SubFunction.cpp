@@ -5,7 +5,7 @@
 
 
 
-Date OutputBirthday(wstring k)
+Date OutputBirthday(std::wstring k)
 {
 	Date d{ 0,0,0 };
 	int i = 0;
@@ -48,7 +48,7 @@ void ASCIIlanguage()
 	_setmode(_fileno(stdout), _O_TEXT);
 }
 
-int StringtoNum(string k)
+int StringtoNum(std::string k)
 {
 	int sum = 0;
 	for (int i = 0; i < k.length(); i++)
@@ -58,7 +58,7 @@ int StringtoNum(string k)
 	return sum;
 }
 
-int WStringtoNum(wstring k)
+int WStringtoNum(std::wstring k)
 {
 	int sum = 0;
 	for (int i = 0; i < k.length(); i++)
@@ -68,7 +68,7 @@ int WStringtoNum(wstring k)
 	return sum;
 }
 
-wchar_t* StringtoLongChar(string k)
+wchar_t* StringtoLongChar(std::string k)
 {
 	int temp = k.length();
 	wchar_t* p = new wchar_t[temp + 1];
@@ -80,8 +80,8 @@ wchar_t* StringtoLongChar(string k)
 	return p;
 }
 
-string WstringToString(wstring k) {
-	string temp;
+std::string WStringToString(std::wstring k) {
+	std::string temp;
 	temp.resize(k.size());
 	for (int i = 0; i < k.length(); i++) {
 		temp[i] = k[i];
@@ -89,9 +89,9 @@ string WstringToString(wstring k) {
 	return temp;
 }
 
-wstring StringToWString(string k)
+std::wstring StringToWString(std::string k)
 {
-	wstring temp;
+	std::wstring temp;
 	temp.resize(k.size());
 	for (int i = 0; i < k.length(); i++) {
 		temp[i] = k[i];
@@ -99,12 +99,12 @@ wstring StringToWString(string k)
 	return temp;
 }
 
-wstring getpass()
+std::wstring getpass()
 {
 	const char BACKSPACE = 8;
 	const char RETURN = 13;
 
-	wstring password;
+	std::wstring password;
 	unsigned char ch = 0;
 
 
@@ -123,17 +123,17 @@ wstring getpass()
 			if (password.length() != 0)
 			{
 				
-				cout << "\b \b";
+				std::cout << "\b \b";
 				password.resize(password.length() - 1);
 			}
 		}
 		else
 		{
 			password += ch;
-				cout << '*';
+				std::cout << '*';
 		}
 	}
-	cout << endl;
+	std::cout << std::endl;
 	return password;
 }
 

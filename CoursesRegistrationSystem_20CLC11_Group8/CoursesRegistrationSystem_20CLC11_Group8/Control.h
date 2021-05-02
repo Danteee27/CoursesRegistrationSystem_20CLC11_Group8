@@ -30,5 +30,7 @@ Courses* ouputCoursesbyID(Courses*& pHead, string cID);
 
 void ouputAllCourses(Courses*& pHead);
 
+void RemoveCourse(Courses*& pHead, std::string cID);
+
 void UpdateCourses(Courses*& pHead);
 #endif // !_ControlFunc

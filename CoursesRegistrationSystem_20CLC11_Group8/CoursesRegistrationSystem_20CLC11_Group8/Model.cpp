@@ -368,7 +368,6 @@ void TakeList(std::wstring a, Student*& Temp)
 			pHead = pHead->next;
 		}
 	}
-	std::cout << "done";
 	SaveList("All.txt", pHead);
 	DeallocateStudentCourse(pHead);
 }
@@ -513,7 +512,6 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 	{
 		if (!CheckInList(add[i]->courseCode, stu->ID))
 		{
-			std::cout << "fuck you";
 			std::wfstream CourseStudentList(add[i]->courseCode + ".txt", std::ios_base::app);
 			CourseStudentList << stu->ID << L'\n';
 			CourseStudentList.close();
