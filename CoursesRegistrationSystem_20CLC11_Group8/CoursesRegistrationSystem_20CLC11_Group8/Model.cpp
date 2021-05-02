@@ -5,19 +5,19 @@
 #include <codecvt>
 
 void StudentMenu(Student* head) { // Havent done
-	wcout << "Student ID: " << head->ID << endl;
+	std::wcout << "Student ID: " << head->ID << std::endl;
 	Vietlanguage();
-	wcout << "Student name: " << head->Firstname << " " << head->Lastname << endl;
-	wcout << "Gender: " << head->Gender << endl;
+	std::wcout << "Student name: " << head->Firstname << " " << head->Lastname << std::endl;
+	std::wcout << "Gender: " << head->Gender << std::endl;
 	ASCIIlanguage();
-	cout << "DOB: " << head->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << endl;
-	wcout << "ID: " << head->ID;
-	cout << endl;
-	cout << "1. Edit student's information." << endl;
-	cout << "2. View courses." << endl;
-	cout << "3. View class." << endl;
+	std::cout << "DOB: " << head->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << std::endl;
+	std::wcout << "ID: " << head->ID;
+	std::cout << std::endl;
+	std::cout << "1. Edit student's information." << std::endl;
+	std::cout << "2. View courses." << std::endl;
+	std::cout << "3. View class." << std::endl;
 	int choice;
-	cin >> choice;
+	std::cin >> choice;
 	switch (choice) {
 	case 1:
 		break;
@@ -25,7 +25,7 @@ void StudentMenu(Student* head) { // Havent done
 		int count = 1;
 		while (head->score->prev != nullptr) head->score = head->score->prev;
 		while (head->score != nullptr) {
-			cout << count << ". " << head->score->courseCode << endl;
+			std::cout << count << ". " << head->score->courseCode << std::endl;
 			count++;
 		}
 		
@@ -34,21 +34,21 @@ void StudentMenu(Student* head) { // Havent done
 
 void Login(Student* head) { // Havent done
 	LABEL:
-	wstring ID, password;
-	cout << "ID: ";
-	wcin >> ID;
-	cout << "Password: ";
+	std::wstring ID, password;
+	std::cout << "ID: ";
+	std::wcin >> ID;
+	std::cout << "Password: ";
 	password = getpass();
 	if (FindStudent(head, ID) == nullptr) {
 		goto LABEL;
 	}
-	const wstring correct_password = L"1";
+	const std::wstring correct_password = L"1";
 	if (password == correct_password) {
-		cout << "Welcome to the system";
+		std::cout << "Welcome to the system";
 	
 	}
 	else {
-		cout << "Incorrect password. ";
+		std::cout << "Incorrect password. ";
 	}
 }
 
@@ -57,14 +57,14 @@ void PrintToChoose(Courses* pHead)
 	int y = 0;
 	Courses* pCur = pHead;
 	Vietlanguage();
-	wcout << pCur->courseName;
-	wcout << " - " << pCur->teacher;
+	std::wcout << pCur->courseName;
+	std::wcout << " - " << pCur->teacher;
 	ASCIIlanguage();
-	cout << " - " << pCur->credit;
-	cout << " - " << pCur->courseCode;
-	cout << " - " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1];
-	cout << " - " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year;
-	cout << " - " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year;
+	std::cout << " - " << pCur->credit;
+	std::cout << " - " << pCur->courseCode;
+	std::cout << " - " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1];
+	std::cout << " - " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year;
+	std::cout << " - " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year;
 
 }
 
@@ -138,7 +138,7 @@ void SaveList(std::string k, Student*& pHead)
 	while (pCur != nullptr)
 	{
 		std::cout << 5000 << " ";
-		AllStudentList << WstringToString(pCur->ID) << " ";
+		AllStudentList << WStringToString(pCur->ID) << " ";
 		t = CountCourse(pCur->score);
 		AllStudentList << t << " ";
 		Score* Temp = pCur->score;
@@ -312,14 +312,14 @@ void SuccessAttend(Courses* a[5], int t)
 	for (int i = 0; i < 5; i++)
 	{
 		GotoXY(0, y);
-		cout << "                                         ";
+		std::cout << "                                         ";
 		y++;
 	}
 	y = 20;
 	for (int i = 0; i < t; i++)
 	{
 		GotoXY(0, y);
-		cout << a[i]->courseCode << "Accepted";
+		std::cout << a[i]->courseCode << "Accepted";
 		y++;
 	}
 }

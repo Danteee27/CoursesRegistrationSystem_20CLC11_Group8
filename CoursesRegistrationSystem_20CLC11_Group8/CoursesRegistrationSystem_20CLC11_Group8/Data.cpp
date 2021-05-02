@@ -4,14 +4,14 @@
 #include<codecvt>
 #include<string>
 #include"SubFunction.h"
-using namespace std;
+
 Student* ReadStudent(std::string k)
 {
 	std::wfstream List(k, std::wfstream::in);
 	List.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
 	if (List.fail())
 	{
-		cout << "File is not existed";
+		std::cout << "File is not existed";
 		return nullptr;
 	}
 	Student* pHead = nullptr;
@@ -44,7 +44,7 @@ Student* ReadStudent(std::string k)
 		getline(List, pCur->Gender, L',');
 		getline(List, x, L',');
 		pCur->Birthday = OutputBirthday(x);
-		pCur->password = to_wstring(pCur->Birthday.day) + to_wstring(pCur->Birthday.month) + to_wstring(pCur->Birthday.year);
+		pCur->password = std::to_wstring(pCur->Birthday.day) + std::to_wstring(pCur->Birthday.month) + std::to_wstring(pCur->Birthday.year);
 
 		getline(List, pCur->Lastname, L',');
 		getline(List, pCur->Firstname, L',');
@@ -64,7 +64,7 @@ Student* FindStudent(Student* head, std::wstring ID) {
 	while (head!= nullptr && head->ID!=ID) 
 		head = head->next;
 	if (head == nullptr) {
-		cout << "The ID is not existed !" << endl;
+		std::cout << "The ID is not existed !" << std::endl;
 	}
 	return head;
 }

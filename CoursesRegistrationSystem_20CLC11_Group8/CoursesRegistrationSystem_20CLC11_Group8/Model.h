@@ -24,7 +24,7 @@ bool CheckInList(std::string k, std::wstring a);
 
 bool CheckDup(Courses** check, Courses* source, int n);
 
-int StudentLimit(string k);
+int StudentLimit(std::string k);
 
 void SuccessAttend(Courses* a[5], int t);
 

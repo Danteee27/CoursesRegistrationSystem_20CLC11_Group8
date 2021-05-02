@@ -6,7 +6,7 @@
 #include<locale>
 #include<codecvt>
 
-void CreateSchoolYear(Schoolyear*& head,string name) {
+void CreateSchoolYear(Schoolyear*& head,std::string name) {
 	std::cout << "Give me the schoolyear: ";
 	std::cin >> name;
 	if (head == nullptr) {
@@ -26,7 +26,7 @@ void CreateSchoolYear(Schoolyear*& head,string name) {
 		cur->_course = nullptr;
 		cur->year = name;
 	}
-	fstream Open(name + ".txt");
+	std::fstream.open(name + ".txt");
 }
 
 void AddInCourses(Schoolyear*& head) {
@@ -38,12 +38,12 @@ void OutputAllStudent(Student* head) {
 	while (head != nullptr) {
 		Vietlanguage();
 		std::wcout << head->Num + L" " + head->ID + L" " + head->Lastname + L" " + head->Firstname + L" " + head->Gender + L" ";
-		std::cout << head->Birthday.day + "/" + head->Birthday.month << "/" + head->Birthday.year;
+		std::wcout << head->Birthday.day + "/" + head->Birthday.month << "/" + head->Birthday.year;
 	}
 	ASCIIlanguage();
 }
 
-void OutputStudentFile(Student* head, string name) {
+void OutputStudentFile(Student* head, std::string name) {
 	Vietlanguage();
 	std::wfstream Write(name + ".csv",std::ios::out);
 	Write << wchar_t(237) << wchar_t(187) << wchar_t(191);
@@ -56,7 +56,7 @@ void OutputStudentFile(Student* head, string name) {
 		Write << head->Gender << ",";
 		Write << head->Birthday.day << '/' << head->Birthday.month <<
 			'/' << head->Birthday.year << ",";
-		Write << head->SocialID << endl;
+		Write << head->SocialID << std::endl;
 		Write << L'\n';
 		head = head->next;
 	}
@@ -64,7 +64,7 @@ void OutputStudentFile(Student* head, string name) {
 }
 
 
-void CreateClass(Class* first, string name) {
+void CreateClass(Class* first, std::string name) {
 	Class* newClass = new Class;
 	newClass->classCode = name;
 	newClass->next = nullptr;
@@ -81,7 +81,7 @@ void CreateClass(Class* first, string name) {
 	}
 	cur->next = newClass;
 	newClass->prev = previous;
-	wfstream Output( name + ".csv");
+	std::wfstream Output( name + ".csv");
 }
 
 void AddInClass(Class* head, Student* first) {
@@ -97,7 +97,7 @@ LABEL:
 		if (ID == first->ID) break;
 	}
 	if (first->next == nullptr && ID != first->ID) {
-		std::cout << "Invalid ID. ID is not existed" << endl;
+		std::cout << "Invalid ID. ID is not existed" << std::endl;
 		goto LABEL;
 	}
 	if (head->Stu == nullptr) {
@@ -110,7 +110,7 @@ LABEL:
 	Student* previous = nullptr;
 	while (head->Stu->next != nullptr) {
 		if (head->Stu->ID == ID) {
-			std::cout << "Invalid ID. This ID has already been added in the class!" << endl;
+			std::cout << "Invalid ID. This ID has already been added in the class!" << std::endl;
 			goto LABEL;
 		}
 		previous = head->Stu;
@@ -142,9 +142,9 @@ Courses *InputCourses(Courses*& pHead)
 		std::cin.ignore(1000, '\n');
 		Vietlanguage();
 		std::wcout << "Input course name:";
-		getline(wcin, pCur->courseName, L'\n');
+		getline(std::wcin, pCur->courseName, L'\n');
 		std::wcout << "Input teacher name:";
-		getline(wcin, pCur->teacher, L'\n');
+		getline(std::wcin, pCur->teacher, L'\n');
 		ASCIIlanguage();
 		std::cout << "Input course ID:";
 		std::cin >> pCur->courseCode;
@@ -171,10 +171,10 @@ Courses *InputCourses(Courses*& pHead)
 	return pCur;
 }
 
-void CoursesSaveFile(string k, Courses* pHead)
+void CoursesSaveFile(std::string k, Courses* pHead)
 {
 	Vietlanguage();
-	wfstream CourseList(k, wfstream::out);
+	std::wfstream CourseList(k, std::wfstream::out);
 	CourseList.imbue(std::locale(CourseList.getloc(), new std::codecvt_utf8<wchar_t>));
 	CourseList << wchar_t(0xfeff);
 	Courses* pRun = pHead;
@@ -189,28 +189,28 @@ void CoursesSaveFile(string k, Courses* pHead)
 		CourseList << pRun->endDate.day << "/" << pRun->endDate.month << "/" << pRun->endDate.year << ",";
 		for (int i = 0; i < 2; i++)
 		{
-			CourseList << pRun->Session[i][1] << L"," << pRun->Session[i][0]; if (i == 0) CourseList << L","; else CourseList << endl;
+			CourseList << pRun->Session[i][1] << L"," << pRun->Session[i][0]; if (i == 0) CourseList << L","; else CourseList << std::endl;
 		}
 		pRun = pRun->next;
 	}
 	ASCIIlanguage();
 	CourseList.close();
 }
-Courses* InputCoursesCSV(Courses*& pHead, string k)
+Courses* InputCoursesCSV(Courses*& pHead, std::string k)
 {
 	Courses* pCur = pHead;
-	wfstream CoursesCSV(k, wfstream::in);
+	std::wfstream CoursesCSV(k, std::wfstream::in);
 	CoursesCSV.imbue(std::locale(CoursesCSV.getloc(), new std::codecvt_utf8<wchar_t>));
 	if (CoursesCSV.fail())
 	{
 		std::cout << "File is not existed";
 		return nullptr;
 	}
-	CoursesCSV.seekg(0, ios_base::end);
+	CoursesCSV.seekg(0, std::ios_base::end);
 	int end = CoursesCSV.tellg();
-	CoursesCSV.seekg(0, ios_base::beg);
+	CoursesCSV.seekg(0, std::ios_base::beg);
 	CoursesCSV.ignore(1i64, wchar_t(0xfeff));
-	wstring x;
+	std::wstring x;
 	while (CoursesCSV.tellg() != end)
 	{
 		if (pHead == nullptr)
@@ -225,7 +225,7 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 			pCur = pCur->next;
 		}
 		getline(CoursesCSV, x, L',');
-		pCur->courseCode = WstringToString(x);
+		pCur->courseCode = WStringToString(x);
 		getline(CoursesCSV, pCur->courseName, L',');
 		getline(CoursesCSV, pCur->teacher, L',');
 		getline(CoursesCSV, x, L',');
@@ -240,28 +240,28 @@ Courses* InputCoursesCSV(Courses*& pHead, string k)
 			pCur->Session[i][1] = new char[4];
 			pCur->Session[i][1][3] = '\0';
 			getline(CoursesCSV, x, L',');
-			WstringToString(x).copy(pCur->Session[i][1], 3, 0);
+			WStringToString(x).copy(pCur->Session[i][1], 3, 0);
 			if (i == 0) getline(CoursesCSV, x, L',');
 			else getline(CoursesCSV, x);
-			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
+			WStringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
 	}
 	return pHead;
 }
 
-Courses *ouputCoursesbyID(Courses*& pHead, string cID) {
+Courses *ouputCoursesbyID(Courses*& pHead, std::string cID) {
 	Courses* pCur = pHead;
 	while (pCur && pCur->courseCode != cID) {
 		pCur = pCur->next;
 		if (pCur) {
 			Vietlanguage();
-			std::wcout << "Course name: " << pCur->courseName << endl;
-			std::wcout << "Teacher name: " << pCur->teacher << endl;
+			std::wcout << "Course name: " << pCur->courseName << std::endl;
+			std::wcout << "Teacher name: " << pCur->teacher << std::endl;
 			ASCIIlanguage();
-			std::cout << "Course ID: " << pCur->courseCode << endl;
-			std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << endl;
-			std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
-			std::cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+			std::cout << "Course ID: " << pCur->courseCode << std::endl;
+			std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << std::endl;
+			std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << std::endl;
+			std::cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
 			return pCur;
 		}
 	}
@@ -274,21 +274,21 @@ void ouputAllCourses(Courses*& pHead) {
 	int count = 0;
 	while (pCur) {
 		count += 1;
-		std::cout << count << " )" << endl;
-		std::wcout << "Course name: " << pCur->courseName << endl;
-		std::wcout << "Teacher name: " << pCur->teacher << endl;
+		std::cout << count << " )" << std::endl;
+		std::wcout << "Course name: " << pCur->courseName << std::endl;
+		std::wcout << "Teacher name: " << pCur->teacher << std::endl;
 		ASCIIlanguage();
-		std::cout << "Course ID: " << pCur->courseCode << endl;
-		std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << endl;
-		std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << endl;
-		std::cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << endl << endl;
+		std::cout << "Course ID: " << pCur->courseCode << std::endl;
+		std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << std::endl;
+		std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << std::endl;
+		std::cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
 		pCur = pCur->next;
 	}
 }
 
-	void OutputStudent(Student * head, string name) {
+	void OutputStudent(Student * head, std::string name) {
 		Vietlanguage();
-		wofstream Write(name + ".csv", std::ios::out);
+		std::wofstream Write(name + ".csv", std::ios::out);
 		while (head != nullptr) {
 			Write << head->Num << ",";
 			Write << head->ID << ",";
@@ -296,7 +296,7 @@ void ouputAllCourses(Courses*& pHead) {
 			Write << head->Firstname << ",";
 			Write << head->Gender << ",";
 			Write << head->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << ",";
-			Write << head->SocialID << endl;
+			Write << head->SocialID << std::endl;
 			head = head->next;
 		}
 		ASCIIlanguage();
@@ -304,38 +304,38 @@ void ouputAllCourses(Courses*& pHead) {
 
 void UpdateCourses(Courses*& pHead) {
 	int choice;
-	std::cout << "Updateable: " << endl;
-	std::wcout << "1. Teacher name: " << pHead->teacher << endl;
-	std::wcout << "2. Starting date: " << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << endl;
-	std::wcout << "3. End date: " << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << endl;
-	std::wcout << "4.  Course name: " << pHead->courseName << endl;
-	std::cout << "5. Course code: " << pHead->courseCode << endl;
-	std::cout << "Update: (1-5)" << endl;
+	std::cout << "Updateable: " << std::endl;
+	std::wcout << "1. Teacher name: " << pHead->teacher << std::endl;
+	std::wcout << "2. Starting date: " << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << std::endl;
+	std::wcout << "3. End date: " << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << std::endl;
+	std::wcout << "4.  Course name: " << pHead->courseName << std::endl;
+	std::cout << "5. Course code: " << pHead->courseCode << std::endl;
+	std::cout << "Update: (1-5)" << std::endl;
 	std::cin >> choice;
-	wstring temp;
-	string temp2;
+	std::wstring temp;
+	std::string temp2;
 	switch (choice) {
 	case 1:
 		std::cout << "New teacher name: ";
-		wcin >> temp;
+		std::wcin >> temp;
 		pHead->teacher = temp;
 		std::wcout << "Course teacher name changed to: " << pHead->teacher;
 		break;
 	case 2: 
 		std::cout << "New starting date: (dd/mm/yyyy): ";
-		wcin >> temp;
+		std::wcin >> temp;
 		pHead->startDate = OutputBirthday(temp);
-		std::cout << "Start date changed to" << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << endl;
+		std::cout << "Start date changed to" << pHead->startDate.day << "/" << pHead->startDate.month << "/" << pHead->startDate.year << std::endl;
 		break;
 	case 3:
 		std::cout << "New ending date: (dd/mm/yyyy): ";
-		wcin >> temp;
+		std::wcin >> temp;
 		pHead->endDate = OutputBirthday(temp);
-		std::cout << "End date changed to" << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << endl;
+		std::cout << "End date changed to" << pHead->endDate.day << "/" << pHead->endDate.month << "/" << pHead->endDate.year << std::endl;
 		break;
 	case 4:
 		std::cout << "New course name: ";
-		wcin >> temp;
+		std::wcin >> temp;
 		pHead->courseName = temp;
 		std::wcout << "Course name changed to: " << pHead->courseName;
 		break;
@@ -348,7 +348,7 @@ void UpdateCourses(Courses*& pHead) {
 	}
 }
 
-void deleteCoursesbyID(Courses*& pHead, string cID) {
+void deleteCoursesbyID(Courses*& pHead, std::string cID) {
 	Courses* pCur = pHead;
 	if (pHead == nullptr) return;
 	while (pCur && pCur->courseCode != cID) {
@@ -387,7 +387,7 @@ void printSameSession(Courses*& pHead) {
 		pNext = pCur->next;
 		while (pNext) {
 			if (pNext->Session[0][0][1] == pCur->Session[0][0][1] && pNext->Session[0][1][0] == pCur->Session[0][1][0] && pNext->Session[0][1][1] == pCur->Session[0][1][1]) {
-				std::wcout << "Same Session: " << pCur->courseName << " & " << pNext->courseName << endl;
+				std::wcout << "Same Session: " << pCur->courseName << " & " << pNext->courseName << std::endl;
 			}
 			pNext = pNext->next;
 		}
@@ -417,19 +417,19 @@ void Deallocate(Courses* pHead)
 
 void EditCourses(Courses* pHead)
 {
-	string k;
+	std::string k;
 	std::cin >> k;
 	InputCoursesCSV(pHead, k);
 	ouputAllCourses(pHead);
-	string Id;
+	std::string Id;
 	std::cin >> Id;
 	Courses* pTemp = ouputCoursesbyID(pHead, Id);
 	int t = -1;
-	std::cout << "1.Course ID" << endl << "2.Course Name" << endl << "3.Teacher Name" << endl << "4.Session" << endl << "5.Credits" << endl << "6.Start date" << endl << "7.End date" << "0.End\n";
+	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date" << "0.End\n";
 	while (t != 0)
 	{
-		string a;
-		wstring b;
+		std::string a;
+		std::wstring b;
 		int c;
 		std::cout << "chose: ";
 		std::cin >> t;
@@ -441,12 +441,12 @@ void EditCourses(Courses* pHead)
 		case 2: std::cout << "Course Name:";
 			std::cin.ignore(1000, '\n');
 			Vietlanguage();
-			getline(wcin, pTemp->courseName, L'\n');
+			getline(std::wcin, pTemp->courseName, L'\n');
 			ASCIIlanguage(); break;
 		case 3: std::cout << "Teacher name:";
 			std::cin.ignore(1000, '\n');
 			Vietlanguage();
-			getline(wcin, pTemp->teacher, L'\n');
+			getline(std::wcin, pTemp->teacher, L'\n');
 			ASCIIlanguage(); break;
 		case 4: std::cout << "Session:";
 			for (int i = 0; i < 2; i++)
@@ -484,7 +484,7 @@ void EditCourses(Courses* pHead)
 	CoursesSaveFile(k, pHead);
 }
 
-bool SameSession(Courses*& pHead, string cID) {
+bool SameSession(Courses*& pHead, std::string cID) {
 	return false;
 	Courses* pCur = pHead;
 	if (pHead == nullptr) return false;
@@ -503,14 +503,14 @@ bool SameSession(Courses*& pHead, string cID) {
 	}
 }
 
-void RemoveCourse(Courses*& pHead, std::string cID)
+void RemoveCourse(Courses*&pHead, std::string cID)
 {
 	std::string k;
-	std::std::cin >> k;
-	Courses* end = InputCoursesCSV(pHead, k);
+	std::cin >> k;
+	Courses*end=InputCoursesCSV(pHead, k);
 	ouputAllCourses(pHead);
 	std::string ID;
-	std::std::cin >> ID;
+	std::cin >> ID;
 	deleteCoursesbyID(pHead, ID);
 
 	//tim tung thang hs dang ky cai mon nay r sua lai cho no
@@ -526,22 +526,22 @@ void StudentInfo(Student* head) {
 
 
 void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
-	string m;
-	string x;
+	std::string m;
+	std::string x;
 	int t = 0;
-	std::std::cout << "Enter Student ID: ";
-	std::std::cin >> x;
-	wstring ID = StringToWString(x);
+	std::cout << "Enter Student ID: ";
+	std::cin >> x;
+	std::wstring ID = StringToWString(x);
 	Student* Cur = SHead;
 	while (Cur && Cur->ID != ID) {
 		Cur = Cur->next;
 		if (Cur) {
 			t = CountCourses(Cur->score);
-			std::std::cout << std::endl <<  "Courses: " << t << std::endl;
+			std::cout << std::endl <<  "Courses: " << t << std::endl;
 			for (int i = 0; i < t; i++) {
 				m = Cur->score->courseCode;
 				ouputCoursesbyID(CHead, m);
-				std::std::cout << std::endl;
+				std::cout << std::endl;
 			}
 		}
 	}
