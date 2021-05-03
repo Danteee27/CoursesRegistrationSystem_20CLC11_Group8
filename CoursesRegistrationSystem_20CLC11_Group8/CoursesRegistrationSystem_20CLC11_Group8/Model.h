@@ -35,4 +35,8 @@ void DeallocateStudentCourse(Student*& pHead);
 void TakeList(std::wstring a, Student*& Temp);
 
 void AttendCoursesMenu(Courses* pHead, Student* stu);
+
+void InsertIntoSortedList(Student* stu, Student*& pHead);
+
+void SaveOneToList(std::string k, Courses** add, Student* stu);
 #endif

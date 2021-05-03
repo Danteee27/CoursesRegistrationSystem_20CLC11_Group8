@@ -518,7 +518,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		}
 	}
 
-	std::wfstream AllStudentCourse("All.txt", std::ios_base::app);
+	/*std::wfstream AllStudentCourse("All.txt", std::ios_base::app);
 	AllStudentCourse.imbue(std::locale(AllStudentCourse.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 	AllStudentCourse << stu->ID << L' ';
 	AllStudentCourse << t << L' ';
@@ -537,5 +537,66 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 			delete[]temp;
 		}
 	}
-	AllStudentCourse.close();
+	AllStudentCourse.close();*/
+	Score* Add = stu->score;
+	for (int i = 0; i < t; i++)
+	{
+		if (Add == nullptr)
+		{
+			stu->score = new Score;
+			Add = stu->score;
+		}
+		else
+		{
+			Add->next = new Score;
+			Add->next->prev = Add;
+			Add = Add->next;
+		}
+		Add->courseCode = add[t]->courseCode;
+	}
+}
+
+void InsertIntoSortedList(Student* stu, Student*& pHead)
+{
+	Student* pCur = pHead;
+	if (pHead == nullptr)
+	{
+		pHead = stu;
+	}
+	else
+	{
+		while (pCur->next != nullptr && stu->Num > pCur->next->Num)
+		{
+			pCur = pCur->next;
+		}
+		if (pCur == pHead)
+		{
+			stu->next = pCur;
+			pCur->prev = stu;
+		}
+		else
+		{
+			if (pCur->next != nullptr)
+			{
+				pCur->next->prev = stu;
+				stu->next = pCur->next;
+				stu->prev = pCur;
+				pCur->next = stu;
+			}
+			else
+			{
+				pCur->next = stu;
+				stu->prev = pCur;
+			}
+		}
+	}
+}
+
+void SaveOneToList(std::string k, Courses** add, Student* stu)
+{
+	Student* pHead = nullptr;
+	InputList("All.txt", pHead);
+	Student* pCur = pHead;
+	InsertIntoSortedList(stu, pHead);
+	SaveList("All.txt", pHead);
 }

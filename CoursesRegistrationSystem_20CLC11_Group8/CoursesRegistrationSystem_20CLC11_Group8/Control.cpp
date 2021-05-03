@@ -26,7 +26,7 @@ void CreateSchoolYear(Schoolyear*& head,std::string name) {
 		cur->_course = nullptr;
 		cur->year = name;
 	}
-	std::fstream.open(name + ".txt");
+	fstream Open(name + ".txt");
 }
 
 void AddInCourses(Schoolyear*& head) {
@@ -353,12 +353,22 @@ void deleteCoursesbyID(Courses*& pHead, std::string cID) {
 	if (pHead == nullptr) return;
 	while (pCur && pCur->courseCode != cID) {
 		pCur = pCur->next;
-		if (pCur) {
-			Courses* temp = pCur;
-			pCur->prev->next = pCur->next;
-			pCur->next->prev = pCur->prev;
-			pCur = pCur->next;
-			delete temp;
+		if (pCur != nullptr)
+		{
+			Courses* pTemp = pCur;
+			if (pCur->prev != nullptr)
+			{
+				pCur->prev->next = pCur->next;
+			}
+			if (pCur->next != nullptr)
+			{
+				pCur->next->prev = pCur->prev;
+			}
+			if (pCur == pHead)
+			{
+				pHead = pHead->next;
+			}
+			delete pTemp;
 		}
 	}
 }
