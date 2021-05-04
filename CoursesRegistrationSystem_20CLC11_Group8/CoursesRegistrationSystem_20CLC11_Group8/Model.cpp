@@ -71,7 +71,7 @@ void PrintToChoose(Courses* pHead)
 void InputList(std::string k, Student*& pHead)
 {
 	Student* pCur = nullptr;
-	std::fstream AllStudentList("All.txt", std::ios_base::in);
+	std::fstream AllStudentList(k, std::ios_base::in);
 	int t;
 	std::string x;
 	AllStudentList.seekg(-2, std::ios_base::end);
@@ -95,6 +95,7 @@ void InputList(std::string k, Student*& pHead)
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
 		}
+		AllStudentList >> pCur->Num;
 		AllStudentList >> x;
 		pCur->ID = StringToWString(x);
 		AllStudentList >> t;
@@ -134,28 +135,23 @@ void SaveList(std::string k, Student*& pHead)
 {
 	Student* pCur = pHead;
 	int t = 0;
-	std::fstream AllStudentList("All.txt", std::ios_base::out);
+	std::fstream AllStudentList(k, std::ios_base::out);
 	while (pCur != nullptr)
 	{
-		std::cout << 5000 << " ";
+		AllStudentList << pCur->Num << " ";
 		AllStudentList << WStringToString(pCur->ID) << " ";
 		t = CountCourse(pCur->score);
 		AllStudentList << t << " ";
 		Score* Temp = pCur->score;
 		for (int i = 0; i < t; i++)
 		{
-			if (i == t - 1)
-			{
-				AllStudentList << Temp->courseCode << std::endl;
-			}
-			else
-			{
-				AllStudentList << Temp->courseCode << " ";
-				Temp = Temp->next;
-			}
+			AllStudentList << Temp->courseCode << " ";
+			Temp = Temp->next;
 		}
+		AllStudentList << '\n';
 		pCur = pCur->next;
 	}
+	AllStudentList.close();
 }
 
 void OpenCourseFile(std::string k, Student*& pHead)
@@ -178,7 +174,8 @@ void OpenCourseFile(std::string k, Student*& pHead)
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
 		}
-		getline(CourseStudentList, pCur->ID);
+		CourseStudentList >> pCur->Num;
+		CourseStudentList >> pCur->ID;
 	}
 	CourseStudentList.close();
 }
@@ -189,6 +186,7 @@ void SaveCourseFile(std::string k, Student*& pHead)
 	Student* pCur = pHead;
 	while (pCur != nullptr)
 	{
+		CourseStudentList << pCur->Num << " ";
 		CourseStudentList << pCur->ID << L'\n';
 		pCur = pCur->next;
 	}
@@ -372,6 +370,96 @@ void TakeList(std::wstring a, Student*& Temp)
 	DeallocateStudentCourse(pHead);
 }
 
+void AddOneIntoList(std::string k, Student* stu)
+{
+	Student* pHead = nullptr;
+	InputList(k, pHead);
+	InsertIntoSortedList(stu, pHead);
+	SaveList(k, pHead);
+}
+
+void AddOneIntoCourseList(std::string a, Student* stu)
+{
+	Student* pHead = nullptr;
+	OpenCourseFile(a, pHead);
+	InsertIntoSortedList(stu, pHead);
+	SaveCourseFile(a, pHead);
+}
+
+bool AvsB(Date a, Date b) //0 la B dang truoc thoi han cua A
+{
+	b = RealTime();
+	if (a.year > b.year)
+	{
+		return 0;
+	}
+	if (a.year == b.year && a.month > b.month)
+	{
+		return 0;
+	}
+	if (a.year == b.year && a.month == b.month && a.day > b.day)
+	{
+		return 0;
+	}
+	return 1;
+}
+
+bool BvsC(Date c, Date b) //0 la tre thoi han dang ky
+{
+	b = RealTime();
+	if (c.year < b.year)
+	{
+		return 0;
+	}
+	if (c.year == b.year && c.month < b.month)
+	{
+		return 0;
+	}
+	if (c.year == b.year && c.month == b.month && c.day < b.day)
+	{
+		return 0;
+	}
+	return 1;
+}
+
+void ReadSem(std::string k, Semester*& Start)
+{
+	Semester* pRun = nullptr;
+	std::wfstream Time(k, std::ios_base::in);
+	Time.seekg(0, std::ios_base::end);
+	int end = Time.tellg();
+	Time.seekg(0, std::ios_base::beg);
+	std::wstring x;
+	while (Time.tellg() != end)
+	{
+		if (Start == nullptr)
+		{
+			Start = new Semester;
+			pRun = Start;
+		}
+		else
+		{
+			pRun->next = new Semester;
+			pRun = pRun->next;
+		}
+		getline(Time, x, L' ');
+		pRun->startDate = OutputBirthday(x);
+		getline(Time, x, L'\n');
+		pRun->endDate = OutputBirthday(x);
+	}
+}
+
+bool TimeIsOpen(std::string k, Semester* Start)
+{
+	Semester* pStart = nullptr;
+	ReadSem(k, Start);
+	while (Start != nullptr)
+	{
+
+	}
+	return 1;
+}
+
 void AttendCoursesMenu(Courses* pHead, Student* stu)
 {
 	Courses* pCur = pHead;
@@ -491,112 +579,52 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		a = _getwch();
 	}
 
+	Score* Run = stu->score;
 	for (int i = 0; i < t; i++)
 	{
-		if (stu->score == nullptr)
+		if (Run == nullptr)
 		{
 			stu->score = new Score;
-			stu->score->courseCode = add[i]->courseCode;
+			Run = stu->score;
 		}
 		else
 		{
-			stu->score->next = new Score;
-			stu->score->next->prev = stu->score;
-			stu->score = stu->score->next;
-			stu->score->courseCode = add[i]->courseCode;
+			Run->next = new Score;
+			Run->next->prev = Run;
+			Run = Run->next;
 		}
+		Run->courseCode = add[i]->courseCode;
 	}
 
-	//pCur = pHead;
+	AddOneIntoList("All.txt", stu);
 	for (int i = 0; i < t; i++)
 	{
-		if (!CheckInList(add[i]->courseCode, stu->ID))
+		if (CheckInList(add[i]->courseCode, stu->ID) == 0)
 		{
-			std::wfstream CourseStudentList(add[i]->courseCode + ".txt", std::ios_base::app);
-			CourseStudentList << stu->ID << L'\n';
-			CourseStudentList.close();
+			AddOneIntoCourseList(add[i]->courseCode, stu);
 		}
-	}
-
-	/*std::wfstream AllStudentCourse("All.txt", std::ios_base::app);
-	AllStudentCourse.imbue(std::locale(AllStudentCourse.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
-	AllStudentCourse << stu->ID << L' ';
-	AllStudentCourse << t << L' ';
-	for (int i = 0; i < t; i++)
-	{
-		if (i == t - 1)
-		{
-			wchar_t* temp = StringtoLongChar(add[i]->courseCode);
-			AllStudentCourse << temp << L'\n';
-			delete[]temp;
-		}
-		else
-		{
-			wchar_t* temp = StringtoLongChar(add[i]->courseCode);
-			AllStudentCourse << temp << L' ';
-			delete[]temp;
-		}
-	}
-	AllStudentCourse.close();*/
-	Score* Add = stu->score;
-	for (int i = 0; i < t; i++)
-	{
-		if (Add == nullptr)
-		{
-			stu->score = new Score;
-			Add = stu->score;
-		}
-		else
-		{
-			Add->next = new Score;
-			Add->next->prev = Add;
-			Add = Add->next;
-		}
-		Add->courseCode = add[t]->courseCode;
 	}
 }
 
 void InsertIntoSortedList(Student* stu, Student*& pHead)
 {
-	Student* pCur = pHead;
-	if (pHead == nullptr)
+	Student* This = new Student{ *stu };
+	This->score = new Score{ *stu->score };
+	//chuyen stu thanh This
+	Student* DummyNode = new Student;
+	DummyNode->next = pHead;
+	Student* Temp = DummyNode;
+	while (Temp->next != nullptr && This->Num > Temp->next->Num)
 	{
-		pHead = stu;
+		Temp = Temp->next;
 	}
-	else
+	This->next = Temp->next;
+	Temp->next = This;
+	This->prev = Temp;
+	if (This->next != nullptr)
 	{
-		while (pCur->next != nullptr && stu->Num > pCur->next->Num)
-		{
-			pCur = pCur->next;
-		}
-		if (pCur == pHead)
-		{
-			stu->next = pCur;
-			pCur->prev = stu;
-		}
-		else
-		{
-			if (pCur->next != nullptr)
-			{
-				pCur->next->prev = stu;
-				stu->next = pCur->next;
-				stu->prev = pCur;
-				pCur->next = stu;
-			}
-			else
-			{
-				pCur->next = stu;
-				stu->prev = pCur;
-			}
-		}
+		This->next->prev = This;
 	}
-}
-
-void SaveOneToList(std::string k, Courses** add, Student* stu)
-{
-	Student* pHead = nullptr;
-	InputList("All.txt", pHead);
-	Student* pCur = pHead;
-	InsertIntoSortedList(stu, pHead);
-	SaveList("All.txt", pHead);
+	pHead = DummyNode->next;
+	delete DummyNode;
 }

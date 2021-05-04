@@ -23,11 +23,11 @@ struct Score {
 	float mid = 0;
 	float final = 0;
 	float gpa = 0;
-	Score* next, * prev;
+	Score* next=nullptr, * prev=nullptr;
 };
 
 struct Student {
-	std::wstring Num;
+	int Num;
 	std::wstring ID;
 	std::wstring Lastname;
 	std::wstring Firstname;
@@ -36,7 +36,7 @@ struct Student {
 	std::wstring SocialID;
 	std::wstring password;
 	Score* score;
-	Student* next, * prev;
+	Student* next=nullptr, * prev=nullptr;
 };
 
 struct User {
@@ -47,7 +47,7 @@ struct User {
 struct Class{
 	std::string classCode;
 	Student* Stu;
-	Class* next, * prev;
+	Class* next=nullptr, * prev=nullptr;
 };
 
 struct Courses {
@@ -64,15 +64,15 @@ struct Courses {
 
 struct Semester {
 	int No;
-	std::string startDate, endDate;
+	Date startDate, endDate;
 	Courses* Course;
-	Semester* next, * prev;
+	Semester* next=nullptr, * prev=nullptr;
 };
 
 struct Schoolyear {
 	std::string year;
 	Courses* _course;
-	Schoolyear* next, * prev;
+	Schoolyear* next=nullptr, * prev=nullptr;
 };
 
 

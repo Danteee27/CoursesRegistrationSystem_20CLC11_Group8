@@ -35,7 +35,7 @@ Student* ReadStudent(std::string k)
 			pCur = pCur->next;
 		}
 		getline(List, x, L',');
-		pCur->Num = x;
+		pCur->Num = WStringtoNum(x);
 		getline(List, x, L',');
 		pCur->ID = x;
 

@@ -34,9 +34,20 @@ void DeallocateStudentCourse(Student*& pHead);
 
 void TakeList(std::wstring a, Student*& Temp);
 
+void AddOneIntoList(std::string k, Student* stu);
+
+void AddOneIntoCourseList(std::string a, Student* stu);
+
+bool AvsB(Date a, Date b);
+
+bool BvsC(Date c, Date b);
+
+void ReadSem(std::string k, Semester*& Start);
+
+bool TimeIsOpen(std::string k, Semester* Start);
+
 void AttendCoursesMenu(Courses* pHead, Student* stu);
 
 void InsertIntoSortedList(Student* stu, Student*& pHead);
 
-void SaveOneToList(std::string k, Courses** add, Student* stu);
 #endif

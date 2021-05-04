@@ -11,7 +11,7 @@
 Date OutputBirthday(std::wstring k);
 
 
-void RealTime();
+Date RealTime();
 
 void GotoXY(int x, int y);
 

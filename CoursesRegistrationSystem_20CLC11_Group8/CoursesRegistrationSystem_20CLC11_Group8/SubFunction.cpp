@@ -26,6 +26,18 @@ Date OutputBirthday(std::wstring k)
 	return d;
 }
 
+Date RealTime()
+{
+	Date a;
+	time_t today;
+	time(&today);
+	tm Today = *localtime(&today);
+	a.day = Today.tm_mday;
+	a.month = Today.tm_mon + 1;
+	a.year = Today.tm_year + 1900;
+	return a;
+}
+
 
 
 void GotoXY(int x, int y)
