@@ -6,12 +6,12 @@
 
 #include <string>
 
-using namespace std;
-
-Date OutputBirthday(wstring k);
 
 
-void RealTime();
+Date OutputBirthday(std::wstring k);
+
+
+Date RealTime();
 
 void GotoXY(int x, int y);
 
@@ -19,15 +19,17 @@ void Vietlanguage();
 
 void ASCIIlanguage();
 
-int StringtoNum(string k);
+int StringtoNum(std::string k);
 
-int WStringtoNum(wstring k);
+int WStringtoNum(std::wstring k);
 
-wchar_t* StringtoLongChar(string k);
+wchar_t* StringtoLongChar(std::string k);
 
-string WstringToString(wstring k);
+std::string WStringToString(std::wstring k);
 
-wstring getpass();
+std::wstring StringToWString(std::string k);
+
+std::wstring getpass();
 
 int CountCourses(Student* stu);
 
