@@ -106,6 +106,7 @@ LABEL:
 		head->Stu = first;
 		head->Stu->prev = nullptr;
 		head->Stu->next = nullptr;
+		OutputStudent(head->Stu, head->classCode + ".csv");
 		return;
 	}
 	Student* previous = nullptr;
@@ -120,7 +121,7 @@ LABEL:
 	head->Stu->next = first;
 	head->Stu->next->prev = previous;
 	head->Stu->next = nullptr;
-	OutputStudent(head->Stu, head->classCode + ".csv");
+
 }
 
 Courses *InputCourses(Courses*& pHead)
@@ -287,9 +288,12 @@ void ouputAllCourses(Courses*& pHead) {
 	}
 }
 
-	void OutputStudent(Student * head, string name) {
+void OutputStudent(Student* head, string name) {
+	while (head->prev != nullptr) head = head->prev;
 		Vietlanguage();
 		wofstream Write(name + ".csv", ios::out);
+		Write.imbue(std::locale(Write.getloc(), new std::codecvt_utf8<wchar_t>));
+		Write << wchar_t(0xfeff);
 		while (head != nullptr) {
 			Write << head->Num << ",";
 			Write << head->ID << ",";
@@ -300,8 +304,8 @@ void ouputAllCourses(Courses*& pHead) {
 			Write << head->SocialID << endl;
 			head = head->next;
 		}
-		ASCIIlanguage();
-	}
+		ASCIIlanguage();	
+}
 
 void UpdateCourses(Courses*& pHead) {
 	int choice;

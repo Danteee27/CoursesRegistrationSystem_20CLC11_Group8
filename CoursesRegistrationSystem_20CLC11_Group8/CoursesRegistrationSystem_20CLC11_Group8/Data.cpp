@@ -44,13 +44,9 @@ Student* ReadStudent(string k)
 		getline(List, pCur->Gender, L',');
 		getline(List, x, L',');
 		pCur->Birthday = OutputBirthday(x);
-		pCur->password = to_wstring(pCur->Birthday.day) + to_wstring(pCur->Birthday.month) + to_wstring(pCur->Birthday.year);
 
-		getline(List, pCur->Lastname, L',');
-		getline(List, pCur->Firstname, L',');
-		getline(List, pCur->Gender, L',');
-		getline(List, x, L',');
 		pCur->Birthday = OutputBirthday(x);
+		pCur->password = to_wstring(pCur->Birthday.day) + to_wstring(pCur->Birthday.month) + to_wstring(pCur->Birthday.year);	
 
 		getline(List, x);
 		pCur->SocialID = x;
