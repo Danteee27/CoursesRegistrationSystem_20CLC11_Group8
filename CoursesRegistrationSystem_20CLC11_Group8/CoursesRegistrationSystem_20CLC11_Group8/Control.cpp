@@ -26,7 +26,7 @@ void CreateSchoolYear(Schoolyear*& head,std::string name) {
 		cur->_course = nullptr;
 		cur->year = name;
 	}
-	fstream Open(name + ".txt");
+	
 }
 
 void AddInCourses(Schoolyear*& head) {
@@ -546,7 +546,7 @@ void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
 	while (Cur && Cur->ID != ID) {
 		Cur = Cur->next;
 		if (Cur) {
-			t = CountCourses(Cur->score);
+			t = CountCourses(Cur);
 			std::cout << std::endl <<  "Courses: " << t << std::endl;
 			for (int i = 0; i < t; i++) {
 				m = Cur->score->courseCode;

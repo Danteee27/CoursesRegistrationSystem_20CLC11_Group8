@@ -1,5 +1,5 @@
-#ifndef Model
-#define Model
+#ifndef MODEL
+#define MODEL
 #include "Data.h"
 
 void StudentMenu(Student* head);
@@ -10,7 +10,7 @@ void PrintToChoose(Courses* pCur);
 
 void InputList(std::string k, Student*& pHead);
 
-int CountCourse(Score* pHead);
+
 
 void SaveList(std::string k, Student*& pHead);
 
