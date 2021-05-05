@@ -42,7 +42,7 @@ struct Student {
 struct User {
 	std::wstring ID;
 	std::wstring password;
-};
+};	
 
 struct Class{
 	std::string classCode;

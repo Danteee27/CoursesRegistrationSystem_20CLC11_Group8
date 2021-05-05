@@ -120,16 +120,7 @@ void InputList(std::string k, Student*& pHead)
 	AllStudentList.close();
 }
 
-int CountCourse(Score* pHead)
-{
-	int count = 0;
-	while (pHead != nullptr)
-	{
-		count++;
-		pHead = pHead->next;
-	}
-	return count;
-}
+
 
 void SaveList(std::string k, Student*& pHead)
 {
@@ -140,7 +131,7 @@ void SaveList(std::string k, Student*& pHead)
 	{
 		AllStudentList << pCur->Num << " ";
 		AllStudentList << WStringToString(pCur->ID) << " ";
-		t = CountCourse(pCur->score);
+		t = CountCourses(pCur);
 		AllStudentList << t << " ";
 		Score* Temp = pCur->score;
 		for (int i = 0; i < t; i++)
