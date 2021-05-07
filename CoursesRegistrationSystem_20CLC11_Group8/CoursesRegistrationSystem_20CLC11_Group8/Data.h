@@ -13,50 +13,50 @@
 #include <io.h>
 #include <filesystem>
 
-using namespace std;
 
 struct Date {
 	int day, month, year;
 };
 
 struct Score {
-	string courseCode;
+	std::string courseCode;
 	float mid = 0;
 	float final = 0;
 	float gpa = 0;
-	Score* next, * prev;
+	Score* next=nullptr, * prev=nullptr;
 };
 
 struct Student {
-	wstring Num;
-	wstring ID;
-	wstring Lastname;
-	wstring Firstname;
-	wstring Gender;
+	int Num;
+	std::wstring ID;
+	std::wstring Lastname;
+	std::wstring Firstname;
+	std::wstring Gender;
 	Date Birthday;
-	wstring SocialID;
-	wstring password;
+	std::wstring SocialID;
+	std::wstring password;
 	Score* score;
-	Student* next, * prev;
+	Student* next=nullptr, * prev=nullptr;
 };
 
 struct User {
-	wstring ID;
-	wstring password;
-};
+	std::wstring ID;
+	std::wstring password;
+};	
 
 struct Class{
-	string classCode;
+	std::string classCode;
 	Student* Stu;
-	Class* next, * prev;
+	Class* next=nullptr, * prev=nullptr;
 };
 
 struct Courses {
-	wstring teacher;
+	std::wstring teacher;
 	Date startDate, endDate;
 	char*** Session;
-	wstring courseName;
-	string courseCode;
+	std::wstring courseName;
+	std::string courseCode;
+	int MaxStudent;
 	int credit;
 	Student* Stu;
 	Courses* next=nullptr, * prev=nullptr;
@@ -64,19 +64,19 @@ struct Courses {
 
 struct Semester {
 	int No;
-	string startDate, endDate;
+	Date startDate, endDate;
 	Courses* Course;
-	Semester* next, * prev;
+	Semester* next=nullptr, * prev=nullptr;
 };
 
 struct Schoolyear {
-	string year;
+	std::string year;
 	Courses* _course;
-	Schoolyear* next, * prev;
+	Schoolyear* next=nullptr, * prev=nullptr;
 };
 
 
-Student* ReadStudent(string k);
+Student* ReadStudent(std::string k);
 
 
 Student* FindStudent(Student* head, std::wstring ID);

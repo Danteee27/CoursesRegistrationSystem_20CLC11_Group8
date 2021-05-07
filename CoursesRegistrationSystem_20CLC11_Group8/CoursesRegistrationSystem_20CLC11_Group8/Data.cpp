@@ -4,22 +4,22 @@
 #include<codecvt>
 #include<string>
 #include"SubFunction.h"
-using namespace std;
-Student* ReadStudent(string k)
+
+Student* ReadStudent(std::string k)
 {
-	wfstream List(k, wfstream::in);
+	std::wfstream List(k, std::wfstream::in);
 	List.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
 	if (List.fail())
 	{
-		cout << "File is not existed";
+		std::cout << "File is not existed";
 		return nullptr;
 	}
 	Student* pHead = nullptr;
 	Student* pCur = nullptr;
 	std::wstring x;
-	List.seekg(-1, ios_base::end);
+	List.seekg(-1, std::ios_base::end);
 	int end = List.tellg();
-	List.seekg(0, ios_base::beg);
+	List.seekg(0, std::ios_base::beg);
 	while (List.tellg()<end)
 	{
 		if (pHead == nullptr)
@@ -35,7 +35,7 @@ Student* ReadStudent(string k)
 			pCur = pCur->next;
 		}
 		getline(List, x, L',');
-		pCur->Num = x;
+		pCur->Num = WStringtoNum(x);
 		getline(List, x, L',');
 		pCur->ID = x;
 
@@ -44,7 +44,7 @@ Student* ReadStudent(string k)
 		getline(List, pCur->Gender, L',');
 		getline(List, x, L',');
 		pCur->Birthday = OutputBirthday(x);
-		pCur->password = to_wstring(pCur->Birthday.day) + to_wstring(pCur->Birthday.month) + to_wstring(pCur->Birthday.year);
+		pCur->password = std::to_wstring(pCur->Birthday.day) + std::to_wstring(pCur->Birthday.month) + std::to_wstring(pCur->Birthday.year);
 
 		getline(List, pCur->Lastname, L',');
 		getline(List, pCur->Firstname, L',');
@@ -64,7 +64,7 @@ Student* FindStudent(Student* head, std::wstring ID) {
 	while (head!= nullptr && head->ID!=ID) 
 		head = head->next;
 	if (head == nullptr) {
-		cout << "The ID is not existed !" << endl;
+		std::cout << "The ID is not existed !" << std::endl;
 	}
 	return head;
 }
