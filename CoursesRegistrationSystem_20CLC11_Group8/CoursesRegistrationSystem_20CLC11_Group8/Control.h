@@ -31,4 +31,5 @@ Courses* ouputCoursesbyID(Courses*& pHead, string cID);
 void ouputAllCourses(Courses*& pHead);
 
 void UpdateCourses(Courses*& pHead);
+int CountCourse(Score* pHead);
 #endif // !_ControlFunc
