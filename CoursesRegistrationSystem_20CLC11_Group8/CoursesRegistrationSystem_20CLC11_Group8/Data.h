@@ -35,7 +35,7 @@ struct Student {
 	Date Birthday;
 	std::wstring SocialID;
 	std::wstring password;
-	Score* score;
+	Score* score=nullptr;
 	Student* next=nullptr, * prev=nullptr;
 };
 
