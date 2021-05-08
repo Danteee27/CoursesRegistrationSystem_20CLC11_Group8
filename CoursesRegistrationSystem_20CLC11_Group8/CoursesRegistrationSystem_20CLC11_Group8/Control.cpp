@@ -570,3 +570,13 @@ void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
 		}
 	}
 }
+
+void ViewAllClasses(Class*& pHead) {
+	if (pHead == nullptr) return;
+	Class* pCur = pHead;
+	std::cout << "List of Classes: " << std::endl;
+	while (pCur) {
+		std::cout << pCur->classCode << endl;
+		pCur = pCur->next;
+	}
+}
