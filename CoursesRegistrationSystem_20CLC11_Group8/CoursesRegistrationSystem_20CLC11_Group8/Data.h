@@ -70,8 +70,8 @@ struct Semester {
 };
 
 struct Schoolyear {
-	std::string year;
-	Courses* _course;
+	std::wstring year;
+	Semester* sem;
 	Schoolyear* next=nullptr, * prev=nullptr;
 };
 

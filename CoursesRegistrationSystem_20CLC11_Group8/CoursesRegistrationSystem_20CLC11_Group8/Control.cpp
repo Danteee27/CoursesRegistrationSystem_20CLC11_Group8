@@ -6,13 +6,14 @@
 #include<locale>
 #include<codecvt>
 
-void CreateSchoolYear(Schoolyear*& head,std::string name) {
+void CreateSchoolYear(Schoolyear*& head) {
+	std::wstring name;
 	std::cout << "Give me the schoolyear: ";
-	std::cin >> name;
+	std::wcin >> name;
+
 	if (head == nullptr) {
 		head = new Schoolyear;
 		head->year = name;
-		head->_course = nullptr;
 		head->next = nullptr;
 		head->prev = nullptr;
 	}
@@ -23,15 +24,18 @@ void CreateSchoolYear(Schoolyear*& head,std::string name) {
 		cur->next = new Schoolyear;
 		cur->next->prev = cur;
 		cur->next->next = nullptr;
-		cur->_course = nullptr;
 		cur->year = name;
 	}
-	
+	CreateDirectory(name.c_str(), NULL);
+	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
+	std::ofstream Out(name + L".txt",std::ios::app);
+	Out.write((char*)&name, sizeof(name));
+	Out.close();
+
 }
 
-void AddInCourses(Schoolyear*& head) {
-	InputCourses(head->_course);
-}
 
 void OutputAllStudent(Student* head) {
 	while (head->prev != nullptr) head = head->prev;
