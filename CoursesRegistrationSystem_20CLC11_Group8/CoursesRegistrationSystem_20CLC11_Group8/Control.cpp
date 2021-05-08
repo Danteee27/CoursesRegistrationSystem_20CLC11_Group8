@@ -5,7 +5,7 @@
 #include<string>
 #include<locale>
 #include<codecvt>
-
+using namespace std;
 void CreateSchoolYear(Schoolyear*& head) {
 	std::wstring name;
 	std::cout << "Give me the schoolyear: ";
@@ -14,26 +14,28 @@ void CreateSchoolYear(Schoolyear*& head) {
 	if (head == nullptr) {
 		head = new Schoolyear;
 		head->year = name;
+		head->year_Student = ReadStudent("StudentTest.csv");
 		head->next = nullptr;
 		head->prev = nullptr;
 	}
 	else {
 		Schoolyear* cur = head;
-		while (cur->next != nullptr) 
+		while (cur->next != nullptr)
 			cur = cur->next;
 		cur->next = new Schoolyear;
 		cur->next->prev = cur;
 		cur->next->next = nullptr;
+
 		cur->year = name;
 	}
 	CreateDirectory(name.c_str(), NULL);
 	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
 	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
 	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
-	std::ofstream Out(name + L".txt",std::ios::app);
-	Out.write((char*)&name, sizeof(name));
-	Out.close();
 
+	ofstream Out("Schoolyear.txt", std::ios::app);
+	Out << WStringToString(name) << endl;
+	Out.close();
 }
 
 
