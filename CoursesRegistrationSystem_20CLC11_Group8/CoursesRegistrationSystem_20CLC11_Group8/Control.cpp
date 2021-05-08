@@ -385,12 +385,20 @@ void deleteCurrCourses(Courses*& pHead, Courses*& pCur) {
 		pHead->prev = nullptr;
 		pCur = pHead;
 		delete temp;
+		return;
 	}
 	Courses* temp = pCur;
-	pCur->prev->next = pCur->next;
-	pCur->next->prev = pCur->prev;
-	pCur = pCur->next;
-	delete temp;
+	if (pCur->prev == nullptr) {
+		pCur->next->prev = nullptr;
+		pCur = pCur->next;
+		delete temp;
+	}
+	else {
+		pCur->prev->next = pCur->next;
+		pCur->next->prev = pCur->prev;
+		pCur = pCur->next;
+		delete temp;
+	}
 }
 
 void printSameSession(Courses*& pHead) {
