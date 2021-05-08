@@ -32,4 +32,5 @@ void ouputAllCourses(Courses*& pHead);
 void RemoveCourse(Courses*& pHead, std::string cID);
 
 void UpdateCourses(Courses*& pHead);
+int CountCourse(Score* pHead);
 #endif // !_ControlFunc
