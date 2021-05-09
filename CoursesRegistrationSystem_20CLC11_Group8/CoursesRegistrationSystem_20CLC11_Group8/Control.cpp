@@ -281,6 +281,7 @@ void ouputAllCourses(Courses*& pHead) {
 	while (pCur) {
 		count += 1;
 		std::cout << count << " )" << std::endl;
+		Vietlanguage();
 		std::wcout << "Course name: " << pCur->courseName << std::endl;
 		std::wcout << "Teacher name: " << pCur->teacher << std::endl;
 		ASCIIlanguage();
