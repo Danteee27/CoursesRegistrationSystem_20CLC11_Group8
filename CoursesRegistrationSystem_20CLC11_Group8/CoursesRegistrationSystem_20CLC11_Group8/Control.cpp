@@ -581,3 +581,29 @@ void ViewAllClasses(Class*& pHead) {
 		pCur = pCur->next;
 	}
 }
+
+void viewAllStuIn1Class(Class*& pHead, Student*& head) {
+	std::string Code;
+	if (pHead == nullptr) return;
+	cout << "Enter Class: ";
+	cin >> Code;
+	Class* pCurC = pHead;
+	while (pCurC && pCurC->classCode != Code) {
+		pCurC = pCurC->next;
+		if (pCurC) {
+			if (pCurC->Stu == nullptr) return;
+			Student* pCurS = pCurC->Stu;
+			while (pCurS) {
+				Vietlanguage();
+				wcout << pCurS->Num << "  ";
+				wcout << pCurS->ID << "  ";
+				wcout << pCurS->Lastname << "  ";
+				wcout << pCurS->Firstname << "  ";
+				wcout << pCurS->Gender << "  ";
+				ASCIIlanguage();
+				wcout << pCurS->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << "  ";
+				wcout << pCurS->SocialID << std::endl;
+			}
+		}
+	}
+}
