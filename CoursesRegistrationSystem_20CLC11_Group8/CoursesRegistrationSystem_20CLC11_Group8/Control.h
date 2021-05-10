@@ -21,7 +21,7 @@ void CoursesSaveFile(std::string k, Courses* pHead);
 
 Courses* InputCoursesCSV(Courses*& pHead, std::string k);
 
-Courses* InputCourses(Courses*& pHead);
+void InputCourses(Courses*& pHead);
 
 void CoursesSaveFile(std::string k, Courses* pHead);
 
@@ -32,5 +32,9 @@ void ouputAllCourses(Courses*& pHead);
 void RemoveCourse(Courses*& pHead, std::string cID);
 
 void UpdateCourses(Courses*& pHead);
+
 int CountCourse(Score* pHead);
+
+void AddCourse(Schoolyear*& head);
+
 #endif // !_ControlFunc

@@ -128,7 +128,7 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
-Courses *InputCourses(Courses*& pHead)
+void InputCourses(Courses*& pHead)
 {
 	Courses* pCur = pHead;
 	int t = -1;
@@ -174,7 +174,7 @@ Courses *InputCourses(Courses*& pHead)
 		std::cout << "1 to continue, 0 to end:";
 		std::cin >> t;
 	}
-	return pCur;
+
 }
 
 void CoursesSaveFile(std::string k, Courses* pHead)
@@ -190,7 +190,7 @@ void CoursesSaveFile(std::string k, Courses* pHead)
 		CourseList << temp << ",";
 		delete[] temp;
 		CourseList << pRun->courseName << ",";
-		CourseList << pRun->teacher << ",";
+		CourseList << pRun->teacher << ",";	
 		CourseList << pRun->startDate.day << "/" << pRun->startDate.month << "/" << pRun->startDate.year << ",";
 		CourseList << pRun->endDate.day << "/" << pRun->endDate.month << "/" << pRun->endDate.year << ",";
 		for (int i = 0; i < 2; i++)
@@ -560,5 +560,57 @@ void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
 				std::cout << std::endl;
 			}
 		}
+	}
+}
+
+void AddCourse(Schoolyear*& head) {
+	system("cls");
+	wcout << "Schoolyear: " << head->year << endl;
+	cout << "1. Add course" << endl;
+	cout << "2. Back" << endl;
+	int c;
+	cout << "Choose: ";
+	cin >> c;
+	switch (c) {
+	case 1:
+		system("cls");
+		wcout << "Adding course on schoolyear: " << head->year << endl;
+		cout << "1. Semester 1" << endl;
+		cout << "2. Semester 2" << endl;
+		cout << "3. Semester 3" << endl;
+		cout << "4. Back" << endl;
+		int o;
+		cout << "Choose: ";
+		cin >> o;
+		switch (o) {
+		case 1:
+			while (head->sem->prev != nullptr) head->sem = head->sem->prev;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WStringToString(head->year) + "//Semester 1//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 2:
+			while (head->sem->prev != nullptr) head->sem = head->sem->prev;
+			head->sem = head->sem->next;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WStringToString(head->year) + "//Semester 2//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 3:
+			while (head->sem->Course->prev != nullptr) head->sem->Course = head->sem->Course->prev;
+			head->sem = head->sem->next;
+			head->sem = head->sem->next;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WStringToString(head->year) + "//Semester 3//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 4:
+			StaffMenu(head);
+			break;
+		}
+		break;
+	case 2:
+		StaffMenu(head);
+		break;
 	}
 }
