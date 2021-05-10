@@ -147,11 +147,15 @@ void SaveList(std::string k, Student*& pHead)
 
 void OpenCourseFile(std::string k, Student*& pHead)
 {
-	std::wfstream CourseStudentList(k + ".txt", std::ios_base::in);
+	std::wfstream CourseStudentList(k + ".csv", std::ios_base::in);// cho cai .csv mai lam
+	CourseStudentList.imbue(std::locale(CourseStudentList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
+	//CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = nullptr;
+	std::wstring x;
 	CourseStudentList.seekg(-2, std::ios_base::end);
 	int end = CourseStudentList.tellg();
 	CourseStudentList.seekg(0, std::ios_base::beg);
+	CourseStudentList.ignore(100, wchar_t(0xfeff));
 	while (CourseStudentList.tellg() < end)
 	{
 		if (pHead == nullptr)
@@ -165,23 +169,32 @@ void OpenCourseFile(std::string k, Student*& pHead)
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
 		}
-		CourseStudentList >> pCur->Num;
-		CourseStudentList >> pCur->ID;
+		getline(CourseStudentList, x, L',');
+		pCur->Num = WStringtoNum(x);
+		getline(CourseStudentList, pCur->ID, L',');
+		getline(CourseStudentList, pCur->Lastname, L',');
+		getline(CourseStudentList, pCur->Firstname);
+		std::cout << "fuck you";
 	}
 	CourseStudentList.close();
 }
 
+
 void SaveCourseFile(std::string k, Student*& pHead)
 {
-	std::wfstream CourseStudentList(k + ".txt", std::ios_base::out);
+	std::wfstream CourseStudentList(k + ".csv", std::ios_base::out); //cho cai .csv ra ngoai
+	CourseStudentList.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
+	CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = pHead;
 	while (pCur != nullptr)
 	{
-		CourseStudentList << pCur->Num << " ";
-		CourseStudentList << pCur->ID << L'\n';
+		CourseStudentList << pCur->Num << L',';
+		CourseStudentList << pCur->ID << L',';
+		CourseStudentList << pCur->Lastname << L',';
+		CourseStudentList << pCur->Firstname << L'\n';
 		pCur = pCur->next;
 	}
-
+	CourseStudentList.close();
 	while (pHead != nullptr)
 	{
 		pCur = pHead;
@@ -377,80 +390,6 @@ void AddOneIntoCourseList(std::string a, Student* stu)
 	SaveCourseFile(a, pHead);
 }
 
-bool AvsB(Date a, Date b) //0 la B dang truoc thoi han cua A
-{
-	b = RealTime();
-	if (a.year > b.year)
-	{
-		return 0;
-	}
-	if (a.year == b.year && a.month > b.month)
-	{
-		return 0;
-	}
-	if (a.year == b.year && a.month == b.month && a.day > b.day)
-	{
-		return 0;
-	}
-	return 1;
-}
-
-bool BvsC(Date c, Date b) //0 la tre thoi han dang ky
-{
-	b = RealTime();
-	if (c.year < b.year)
-	{
-		return 0;
-	}
-	if (c.year == b.year && c.month < b.month)
-	{
-		return 0;
-	}
-	if (c.year == b.year && c.month == b.month && c.day < b.day)
-	{
-		return 0;
-	}
-	return 1;
-}
-
-void ReadSem(std::string k, Semester*& Start)
-{
-	Semester* pRun = nullptr;
-	std::wfstream Time(k, std::ios_base::in);
-	Time.seekg(0, std::ios_base::end);
-	int end = Time.tellg();
-	Time.seekg(0, std::ios_base::beg);
-	std::wstring x;
-	while (Time.tellg() != end)
-	{
-		if (Start == nullptr)
-		{
-			Start = new Semester;
-			pRun = Start;
-		}
-		else
-		{
-			pRun->next = new Semester;
-			pRun = pRun->next;
-		}
-		getline(Time, x, L' ');
-		pRun->startDate = OutputBirthday(x);
-		getline(Time, x, L'\n');
-		pRun->endDate = OutputBirthday(x);
-	}
-}
-
-bool TimeIsOpen(std::string k, Semester* Start)
-{
-	Semester* pStart = nullptr;
-	ReadSem(k, Start);
-	while (Start != nullptr)
-	{
-
-	}
-	return 1;
-}
-
 void AttendCoursesMenu(Courses* pHead, Student* stu)
 {
 	Courses* pCur = pHead;
@@ -550,7 +489,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		}
 		if (a == 13 && pCur != nullptr && CheckDup(add, pCur, t) && CheckSession(add, pCur, t) && t < 5)
 		{
-			int p = StudentLimit(pCur->courseCode + ".txt");
+			int p = StudentLimit(pCur->courseCode + ".csv");
 			if (p < pCur->MaxStudent)
 			{
 				if (add == nullptr)
@@ -570,7 +509,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		a = _getwch();
 	}
 
-	Score* Run = stu->score;
+	Score* Run = nullptr;
 	for (int i = 0; i < t; i++)
 	{
 		if (Run == nullptr)

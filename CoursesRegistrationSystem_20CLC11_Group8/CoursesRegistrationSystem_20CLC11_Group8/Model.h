@@ -38,13 +38,6 @@ void AddOneIntoList(std::string k, Student* stu);
 
 void AddOneIntoCourseList(std::string a, Student* stu);
 
-bool AvsB(Date a, Date b);
-
-bool BvsC(Date c, Date b);
-
-void ReadSem(std::string k, Semester*& Start);
-
-bool TimeIsOpen(std::string k, Semester* Start);
 
 void AttendCoursesMenu(Courses* pHead, Student* stu);
 
