@@ -2,7 +2,7 @@
 #define MODEL
 #include "Data.h"
 
-void StudentMenu(Student* head);
+void StudentMenu(Schoolyear*& head);
 
 void Login(Student* head);
 
@@ -42,5 +42,7 @@ void AddOneIntoCourseList(std::string a, Student* stu);
 void AttendCoursesMenu(Courses* pHead, Student* stu);
 
 void InsertIntoSortedList(Student* stu, Student*& pHead);
+
+void StaffMenu(Schoolyear*& S_year);
 
 #endif
