@@ -19,7 +19,7 @@ void AddInClass(Class* head, Student* first);
 
 void CoursesSaveFile(std::string k, Courses* pHead);
 
-Courses* InputCoursesCSV(Courses*& pHead, std::string k);
+Courses* InputCoursesCSV(std::string k);
 
 void InputCourses(Courses*& pHead);
 
