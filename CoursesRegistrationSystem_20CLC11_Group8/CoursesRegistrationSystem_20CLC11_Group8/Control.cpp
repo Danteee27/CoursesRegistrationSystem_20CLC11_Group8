@@ -607,3 +607,101 @@ void viewAllStuIn1Class(Class*& pHead, Student*& head) {
 		}
 	}
 }
+
+void StaffMenu(Schoolyear * &S_year) {
+		system("cls");
+		cout << "Staff Menu: " << endl;
+		cout << "1. View schoolyears" << endl;
+		cout << "E. Exit" << endl;
+		char choice;
+		cout << "Choose: ";
+		cin >> choice;
+		if (choice == 1) cout << "Hehe";
+		wifstream yRead("Schoolyear.txt");
+		wstring year_read;
+		int count = 1;
+		switch (choice) {
+		case '1': 
+			system("cls");
+			cout << "All schoolyear: " << endl;
+			while (!yRead.eof()) {
+				yRead >> year_read;
+				wcout << count << ". " << year_read << endl;
+			}
+			cout << "C. Create new schoolyear" << endl;
+			cout << "D. Delete a schoolyear" << endl;
+			cout << "B. Back" << endl;
+			cout << "Choose: ";
+			cin >> choice;
+			switch (choice) {
+			case 'C':
+				CreateSchoolYear(S_year);
+				break;
+			case 'B':
+
+			}
+			break;
+		case 'E':
+			exit(0);
+		}
+
+	}
+
+void CreateSchoolYear(Schoolyear*& head) {
+	std::wstring name;
+	std::cout << "Give me the schoolyear: ";
+	std::wcin >> name;
+
+	if (head == nullptr) {
+		head = new Schoolyear;
+		head->year = name;
+		head->year_Student = ReadStudent("StudentTest.csv");
+		head->sem = new Semester;
+		head->sem->next = new Semester;
+		head->sem->next = head->sem->next;
+		head->sem->next->prev = head->sem;
+		head->sem->next->next = new Semester;
+		head->sem->next->next = head->sem->next->next;
+		head->sem->next->next->prev = head->sem->next;
+		head->next = nullptr;
+		head->prev = nullptr;
+	}
+	else {
+		Schoolyear* cur = head;
+		while (cur->next != nullptr)
+			cur = cur->next;
+		cur->next = new Schoolyear;
+		cur->next->prev = cur;
+		cur->sem = new Semester;
+		cur->sem->next = new Semester;
+		cur->sem->next = cur->sem->next;
+		cur->sem->next->prev = cur->sem;
+		cur->sem->next->next = new Semester;
+		cur->sem->next->next = cur->sem->next->next;
+		cur->sem->next->next->prev = cur->sem->next;
+
+		cur->year = name;
+		cur->year_Student = ReadStudent("StudentTest.csv");
+
+	}
+	CreateDirectory(name.c_str(), NULL);
+	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
+
+	ofstream Out("Schoolyear.txt", std::ios::app);
+	Out << WstringToString(name) << endl;
+	Out.close();
+	cout << "1. Continue" << endl;
+	cout << "2. Back" << endl;
+	int choice;
+	cout << "Choose : ";
+	cin >> choice;
+	switch (choice) {
+	case 1:
+		AddCourse(head);
+		break;
+
+	}
+
+}

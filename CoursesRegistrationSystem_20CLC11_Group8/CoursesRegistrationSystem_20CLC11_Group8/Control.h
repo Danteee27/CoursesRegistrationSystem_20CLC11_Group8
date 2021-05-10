@@ -37,4 +37,6 @@ int CountCourse(Score* pHead);
 
 void AddCourse(Schoolyear*& head);
 
+void CreateSchoolYear(Schoolyear*& head);
+
 #endif // !_ControlFunc
