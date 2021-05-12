@@ -167,6 +167,10 @@ Courses *InputCourses(Courses*& pHead)
 			pCur->Session[i][0][2] = '\0';
 			pCur->Session[i][1][3] = '\0';
 		}
+		std::cout << "Input Max student:";
+		std::cin >> pCur->MaxStudent;
+		std::cout << "Input credit:";
+		std::cin >> pCur->credit;
 		std::cout << "Input start date:";
 		std::cin >> pCur->startDate.day >> pCur->startDate.month >> pCur->startDate.year;
 		std::cout << "Input end date:";
@@ -191,6 +195,8 @@ void CoursesSaveFile(std::string k, Courses* pHead)
 		delete[] temp;
 		CourseList << pRun->courseName << ",";
 		CourseList << pRun->teacher << ",";
+		CourseList << pRun->MaxStudent << ",";
+		CourseList << pRun->credit << ",";
 		CourseList << pRun->startDate.day << "/" << pRun->startDate.month << "/" << pRun->startDate.year << ",";
 		CourseList << pRun->endDate.day << "/" << pRun->endDate.month << "/" << pRun->endDate.year << ",";
 		for (int i = 0; i < 2; i++)
