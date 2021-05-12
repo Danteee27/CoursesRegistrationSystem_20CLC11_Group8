@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <filesystem>
-#include "SubFunction.h"
+//#include "SubFunction.h"
 
 struct Date {
 	int day, month, year;
