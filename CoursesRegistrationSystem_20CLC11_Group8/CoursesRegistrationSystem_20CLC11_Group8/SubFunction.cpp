@@ -2,8 +2,9 @@
 #include<Windows.h>
 #include <fcntl.h>  
 #include <io.h>
+#include <sstream>
 
-
+using namespace std;
 
 Date OutputBirthday(std::wstring k)
 {
@@ -58,6 +59,18 @@ void ASCIIlanguage()
 {
 	_setmode(_fileno(stdin), _O_TEXT);
 	_setmode(_fileno(stdout), _O_TEXT);
+}
+
+std::string NumToString(int n) {
+	std::string Result;       
+
+	stringstream convert;  
+
+	convert << n;
+
+	Result = convert.str();
+
+	return Result;
 }
 
 int StringtoNum(std::string k)
@@ -165,3 +178,5 @@ void FixConsoleWindow()
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
+
+

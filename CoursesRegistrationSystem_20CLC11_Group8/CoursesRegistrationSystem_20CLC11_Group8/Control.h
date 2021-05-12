@@ -25,15 +25,16 @@ void InputCourses(Courses*& pHead);
 
 void CoursesSaveFile(std::string k, Courses* pHead);
 
-Courses* ouputCoursesbyID(Courses*& pHead, std::string cID);
+void EditCourses(Courses*& pHead);
 
-void ouputAllCourses(Courses*& pHead);
+Courses* outputCoursesbyID(Courses*& pHead, std::string cID);
+
+void outputAllCourses(Courses*& pHead);
 
 void RemoveCourse(Courses*& pHead, std::string cID);
 
 void UpdateCourses(Courses*& pHead);
 
-int CountCourse(Score* pHead);
 
 void AddCourse(Schoolyear*& head);
 

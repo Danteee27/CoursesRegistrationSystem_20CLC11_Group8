@@ -1,6 +1,7 @@
 #ifndef MODEL
 #define MODEL
 #include "Data.h"
+#include "Control.h"
 
 void StudentMenu(Schoolyear*& head);
 
