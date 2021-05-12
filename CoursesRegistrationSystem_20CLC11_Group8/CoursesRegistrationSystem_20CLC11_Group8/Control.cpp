@@ -128,7 +128,7 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
-Courses *InputCourses(Courses*& pHead)
+void InputCourses(Courses*& pHead)
 {
 	Courses* pCur = pHead;
 	int t = -1;
@@ -174,7 +174,7 @@ Courses *InputCourses(Courses*& pHead)
 		std::cout << "1 to continue, 0 to end:";
 		std::cin >> t;
 	}
-	return pCur;
+
 }
 
 void CoursesSaveFile(std::string k, Courses* pHead)
@@ -281,7 +281,7 @@ Courses *ouputCoursesbyID(Courses*& pHead, std::string cID) {
 }
 
 
-void ouputAllCourses(Courses*& pHead) {
+void outputAllCourses(Courses*& pHead) {
 	Courses* pCur = pHead;
 	int count = 0;
 	while (pCur) {
@@ -446,12 +446,11 @@ void Deallocate(Courses* pHead)
 	}
 }
 
-void EditCourses(Courses* pHead)
+void EditCourses(std::string k,Courses*& pHead)
 {
-	std::string k;
-	std::cin >> k;
-	InputCoursesCSV(pHead, k);
-	ouputAllCourses(pHead);
+
+	pHead = InputCoursesCSV("//Semester " + k + "//course.csv");
+	outputAllCourses(pHead);
 	std::string Id;
 	std::cin >> Id;
 	Courses* pTemp = ouputCoursesbyID(pHead, Id);
@@ -538,8 +537,8 @@ void RemoveCourse(Courses*&pHead, std::string cID)
 {
 	std::string k;
 	std::cin >> k;
-	Courses*end=InputCoursesCSV(pHead, k);
-	ouputAllCourses(pHead);
+	Courses*end=InputCoursesCSV(k);
+	outputAllCourses(pHead);
 	std::string ID;
 	std::cin >> ID;
 	deleteCoursesbyID(pHead, ID);
@@ -627,7 +626,7 @@ void StaffMenu(Schoolyear * &S_year) {
 		wstring year_read;
 		int count = 1;
 		switch (choice) {
-		case '1': 
+		case '1':
 			system("cls");
 			cout << "All schoolyear: " << endl;
 			while (!yRead.eof()) {
@@ -646,6 +645,7 @@ void StaffMenu(Schoolyear * &S_year) {
 			case 'B':
 
 			}
+		
 			break;
 		case 'E':
 			exit(0);
@@ -696,7 +696,7 @@ void CreateSchoolYear(Schoolyear*& head) {
 	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
 
 	ofstream Out("Schoolyear.txt", std::ios::app);
-	Out << WstringToString(name) << endl;
+	Out << WStringToString(name) << endl;
 	Out.close();
 	cout << "1. Continue" << endl;
 	cout << "2. Back" << endl;
