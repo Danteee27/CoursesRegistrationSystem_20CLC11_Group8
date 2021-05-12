@@ -202,9 +202,9 @@ void CoursesSaveFile(std::string k, Courses* pHead)
 	ASCIIlanguage();
 	CourseList.close();
 }
-Courses* InputCoursesCSV(Courses*& pHead, std::string k)
+Courses* InputCoursesCSV(std::string k)
 {
-	Courses* pCur = pHead;
+	Courses* pCur = nullptr;
 	std::wfstream CoursesCSV(k, std::wfstream::in);
 	CoursesCSV.imbue(std::locale(CoursesCSV.getloc(), new std::codecvt_utf8<wchar_t>));
 	if (CoursesCSV.fail())
@@ -212,21 +212,21 @@ Courses* InputCoursesCSV(Courses*& pHead, std::string k)
 		std::cout << "File is not existed";
 		return nullptr;
 	}
-	CoursesCSV.seekg(0, std::ios_base::end);
+	CoursesCSV.seekg(0, std::ios_base::end); //kiem thang ky tu cuoi cung cua file csv, vi no du 1 hang trong nen dich sang trai 1 buoc cho no dung ke thang SI cuoi cung
 	int end = CoursesCSV.tellg();
 	CoursesCSV.seekg(0, std::ios_base::beg);
-	CoursesCSV.ignore(1i64, wchar_t(0xfeff));
+	CoursesCSV.ignore(1i64, wchar_t(0xfeff)); //bo qua thang ky tu dau tien do dinh dang BOM UTF8
 	std::wstring x;
-	while (CoursesCSV.tellg() != end)
+	while (CoursesCSV.tellg() != end)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
 	{
-		if (pHead == nullptr)
-		{
-			pHead = new Courses;
-			pCur = pHead;
+		if (pCur == nullptr) {
+			pCur = new Courses;
+			pCur->prev = nullptr;
+			pCur->next = nullptr;
 		}
-		else
-		{
+		else {
 			pCur->next = new Courses;
+			pCur->next->next = nullptr;
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
 		}
@@ -235,11 +235,16 @@ Courses* InputCoursesCSV(Courses*& pHead, std::string k)
 		getline(CoursesCSV, pCur->courseName, L',');
 		getline(CoursesCSV, pCur->teacher, L',');
 		getline(CoursesCSV, x, L',');
+		pCur->MaxStudent = WStringtoNum(x);
+		getline(CoursesCSV, x, L',');
+		pCur->credit = WStringtoNum(x);
+		getline(CoursesCSV, x, L',');
 		pCur->startDate = OutputBirthday(x);
 		getline(CoursesCSV, x, L',');
 		pCur->endDate = OutputBirthday(x);
 		pCur->Session = new char** [2];
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++)
+		{
 			pCur->Session[i] = new char* [2];
 			pCur->Session[i][0] = new char[3];
 			pCur->Session[i][0][2] = '\0';
@@ -252,7 +257,8 @@ Courses* InputCoursesCSV(Courses*& pHead, std::string k)
 			WStringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
 	}
-	return pHead;
+	while (pCur->prev != nullptr) pCur = pCur->prev;
+	return pCur;
 }
 
 Courses *ouputCoursesbyID(Courses*& pHead, std::string cID) {
@@ -606,4 +612,102 @@ void viewAllStuIn1Class(Class*& pHead, Student*& head) {
 			}
 		}
 	}
+}
+
+void StaffMenu(Schoolyear * &S_year) {
+		system("cls");
+		cout << "Staff Menu: " << endl;
+		cout << "1. View schoolyears" << endl;
+		cout << "E. Exit" << endl;
+		char choice;
+		cout << "Choose: ";
+		cin >> choice;
+		if (choice == 1) cout << "Hehe";
+		wifstream yRead("Schoolyear.txt");
+		wstring year_read;
+		int count = 1;
+		switch (choice) {
+		case '1': 
+			system("cls");
+			cout << "All schoolyear: " << endl;
+			while (!yRead.eof()) {
+				yRead >> year_read;
+				wcout << count << ". " << year_read << endl;
+			}
+			cout << "C. Create new schoolyear" << endl;
+			cout << "D. Delete a schoolyear" << endl;
+			cout << "B. Back" << endl;
+			cout << "Choose: ";
+			cin >> choice;
+			switch (choice) {
+			case 'C':
+				CreateSchoolYear(S_year);
+				break;
+			case 'B':
+
+			}
+			break;
+		case 'E':
+			exit(0);
+		}
+
+	}
+
+void CreateSchoolYear(Schoolyear*& head) {
+	std::wstring name;
+	std::cout << "Give me the schoolyear: ";
+	std::wcin >> name;
+
+	if (head == nullptr) {
+		head = new Schoolyear;
+		head->year = name;
+		head->year_Student = ReadStudent("StudentTest.csv");
+		head->sem = new Semester;
+		head->sem->next = new Semester;
+		head->sem->next = head->sem->next;
+		head->sem->next->prev = head->sem;
+		head->sem->next->next = new Semester;
+		head->sem->next->next = head->sem->next->next;
+		head->sem->next->next->prev = head->sem->next;
+		head->next = nullptr;
+		head->prev = nullptr;
+	}
+	else {
+		Schoolyear* cur = head;
+		while (cur->next != nullptr)
+			cur = cur->next;
+		cur->next = new Schoolyear;
+		cur->next->prev = cur;
+		cur->sem = new Semester;
+		cur->sem->next = new Semester;
+		cur->sem->next = cur->sem->next;
+		cur->sem->next->prev = cur->sem;
+		cur->sem->next->next = new Semester;
+		cur->sem->next->next = cur->sem->next->next;
+		cur->sem->next->next->prev = cur->sem->next;
+
+		cur->year = name;
+		cur->year_Student = ReadStudent("StudentTest.csv");
+
+	}
+	CreateDirectory(name.c_str(), NULL);
+	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
+
+	ofstream Out("Schoolyear.txt", std::ios::app);
+	Out << WstringToString(name) << endl;
+	Out.close();
+	cout << "1. Continue" << endl;
+	cout << "2. Back" << endl;
+	int choice;
+	cout << "Choose : ";
+	cin >> choice;
+	switch (choice) {
+	case 1:
+		AddCourse(head);
+		break;
+
+	}
+
 }

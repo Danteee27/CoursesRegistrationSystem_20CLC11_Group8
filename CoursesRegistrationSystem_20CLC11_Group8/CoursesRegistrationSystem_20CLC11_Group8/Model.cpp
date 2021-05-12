@@ -558,3 +558,42 @@ void InsertIntoSortedList(Student* stu, Student*& pHead)
 	pHead = DummyNode->next;
 	delete DummyNode;
 }
+
+void StaffMenu(Schoolyear*& S_year) {
+	system("cls");
+	std::cout << "Staff Menu: " << endl;
+	std::cout << "1. View schoolyears" << endl;
+	std::cout << "E. Exit" << endl;
+	char choice;
+	std::cout << "Choose: ";
+	std::cin >> choice;
+	if (choice == 1) std::cout << "Hehe";
+	std::wifstream yRead("Schoolyear.txt");
+	std::wstring year_read;
+	int count = 1;
+	switch (choice) {
+	case '1':
+		system("cls");
+		std::cout << "All schoolyear: " << endl;
+		while (!yRead.eof()) {
+			yRead >> year_read;
+			std::wcout << count << ". " << year_read << endl;
+		}
+		std::cout << "C. Create new schoolyear" << endl;
+		std::cout << "D. Delete a schoolyear" << endl;
+		std::cout << "B. Back" << endl;
+		std::cout << "Choose: ";
+		std:: >> choice;
+		switch (choice) {
+		case 'C':
+			CreateSchoolYear(S_year);
+			break;
+		case 'B':
+
+		}
+		break;
+	case 'E':
+		exit(0);
+	}
+
+}
