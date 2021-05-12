@@ -561,9 +561,9 @@ void InsertIntoSortedList(Student* stu, Student*& pHead)
 
 void StaffMenu(Schoolyear*& S_year) {
 	system("cls");
-	std::cout << "Staff Menu: " << endl;
-	std::cout << "1. View schoolyears" << endl;
-	std::cout << "E. Exit" << endl;
+	std::cout << "Staff Menu: " << std::endl;
+	std::cout << "1. View schoolyears" << std::endl;
+	std::cout << "E. Exit" << std::endl;
 	char choice;
 	std::cout << "Choose: ";
 	std::cin >> choice;
@@ -574,16 +574,16 @@ void StaffMenu(Schoolyear*& S_year) {
 	switch (choice) {
 	case '1':
 		system("cls");
-		std::cout << "All schoolyear: " << endl;
+		std::cout << "All schoolyear: " << std::endl;
 		while (!yRead.eof()) {
 			yRead >> year_read;
-			std::wcout << count << ". " << year_read << endl;
+			std::wcout << count << ". " << year_read << std::endl;
 		}
-		std::cout << "C. Create new schoolyear" << endl;
-		std::cout << "D. Delete a schoolyear" << endl;
-		std::cout << "B. Back" << endl;
+		std::cout << "C. Create new schoolyear" << std::endl;
+		std::cout << "D. Delete a schoolyear" << std::endl;
+		std::cout << "B. Back" << std::endl;
 		std::cout << "Choose: ";
-		std:: >> choice;
+		std::cin >> choice;
 		switch (choice) {
 		case 'C':
 			CreateSchoolYear(S_year);

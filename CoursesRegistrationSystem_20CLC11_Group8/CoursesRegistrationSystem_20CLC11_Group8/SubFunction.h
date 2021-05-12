@@ -19,7 +19,11 @@ void Vietlanguage();
 
 void ASCIIlanguage();
 
+std::string NumToString(int n);
+
 int StringtoNum(std::string k);
+
+
 
 int WStringtoNum(std::wstring k);
 
