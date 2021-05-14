@@ -80,6 +80,8 @@ struct Schoolyear {
 
 Student* ReadStudent(std::string k);
 
+void SaveStudent(Student* pHead, std::string k);
+
 
 Student* FindStudent(Student* head, std::wstring ID);
 

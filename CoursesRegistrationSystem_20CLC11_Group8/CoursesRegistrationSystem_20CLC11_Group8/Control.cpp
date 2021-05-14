@@ -1,5 +1,6 @@
 #include"Control.h"
 #include"SubFunction.h"
+#include "Model.h"
 #include<fstream>
 #include"Data.h"
 #include<string>
@@ -422,12 +423,11 @@ void Deallocate(Courses* pHead)
 
 void EditCourses(Courses*& pHead)
 {
-	outputAllCourses(pHead);
 	std::string Id;
 	std::cin >> Id;
 	Courses* pTemp = outputCoursesbyID(pHead, Id);
 	int t = -1;
-	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date" << "0.End\n";
+	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date" << std::endl << "8.MaxStudent" << std::endl << "0.End\n";
 	while (t != 0)
 	{
 		std::string a;
@@ -479,44 +479,44 @@ void EditCourses(Courses*& pHead)
 			std::cin >> c;
 			pTemp->startDate.year = c;
 			break;
+		case 8: std::wcout << "Max Student:";
+			std::cin >> c;
+			pTemp->MaxStudent = c;
+			break;
 		}
 	}
-}
-
-bool SameSession(Courses*& pHead, std::string cID) {
-	return false;
-	Courses* pCur = pHead;
-	if (pHead == nullptr) return false;
-	Courses* pNext = pHead;
-	while (pCur && pCur->courseCode != cID) {
-		pNext = pCur->next;
-		if (pCur) {
-			while (pNext) {
-				if (pNext != pCur && pNext->Session[0][0][1] == pCur->Session[0][0][1] && pNext->Session[0][1][0] == pCur->Session[0][1][0] && pNext->Session[0][1][1] == pCur->Session[0][1][1]) {
-					return true;
-					break;
-				}
-				pNext = pNext->next;
-			}
-		}
-	}
-}
-
-void RemoveCourse(Courses*&pHead, std::string cID)
-{
 	std::string k;
+	std::wcout << "save file: ";
 	std::cin >> k;
-	Courses*end=InputCoursesCSV(k);
-	outputAllCourses(pHead);
-	std::string ID;
-	std::cin >> ID;
-	deleteCoursesbyID(pHead, ID);
+	CoursesSaveFile(k, pHead);
+}
 
-	//tim tung thang hs dang ky cai mon nay r sua lai cho no
 
-	std::string path;
-	path = ID + ".txt";
-	remove(path.c_str());
+void CheckNumber(Student* pHead)
+{
+	if (pHead == nullptr) return;
+	for (int i = 1; pHead != nullptr; i++)
+	{
+		pHead->Num = i;
+		pHead = pHead->next;
+	}
+}
+
+void finishFile(Courses* pHead)
+{
+	Courses* pCur = pHead;
+	if (pHead == nullptr)
+	{
+		return;
+	}
+	while (pCur != nullptr)
+	{
+		Student* pHead = nullptr;
+		OpenCourseFile(pCur->courseCode + ".csv", pHead); //trc cai pCur->courseCode cai duong dan cua file
+		CheckNumber(pHead);
+		SaveCourseFile(pCur->courseCode + ".csv", pHead); //trc cai pCur->courseCode cai duong dan de luu
+		pCur = pCur->next;
+	}
 }
 
 void StudentInfo(Student* head) {

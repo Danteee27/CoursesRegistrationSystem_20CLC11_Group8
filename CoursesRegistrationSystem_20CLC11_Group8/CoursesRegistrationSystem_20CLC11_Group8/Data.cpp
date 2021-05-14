@@ -60,6 +60,28 @@ Student* ReadStudent(std::string k)
 	return pHead;
 }
 
+void SaveStudent(Student* pHead, std::string k)
+{
+	Vietlanguage();
+	std::wfstream StudentList(k, std::wfstream::out);
+	StudentList.imbue(std::locale(StudentList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
+	StudentList << wchar_t(0xfeff);
+	Student* pRun = pHead;
+	while (pRun != nullptr)
+	{
+		StudentList << pRun->Num << L',';
+		StudentList << pRun->ID << L',';
+		StudentList << pRun->Lastname << L',';
+		StudentList << pRun->Firstname << L',';
+		StudentList << pRun->Gender << L',';
+		StudentList << pRun->Birthday.day << L'/' << pRun->Birthday.month << L'/' << pRun->Birthday.year << L',';
+		StudentList << pRun->SocialID << L'\n';
+		pRun = pRun->next;
+	}
+	StudentList.close();
+	ASCIIlanguage();
+}
+
 Student* FindStudent(Student* head, std::wstring ID) {
 	while (head!= nullptr && head->ID!=ID) 
 		head = head->next;
