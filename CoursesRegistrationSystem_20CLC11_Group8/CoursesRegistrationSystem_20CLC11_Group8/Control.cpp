@@ -724,3 +724,12 @@ void deallocateCkass(Class*& phead) {
 		delete temp;
 	}
 }
+
+void deallocateStudent(Student*& phead) {
+	if (phead == nullptr) return;
+	while (phead) {
+		Student* temp = phead;
+		phead = phead->next;
+		delete temp;
+	}
+}
