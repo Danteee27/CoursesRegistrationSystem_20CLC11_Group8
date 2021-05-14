@@ -559,14 +559,8 @@ void ViewAllClasses(Class*& pHead) {
 void viewAllStuIn1Class(Class*& pHead) {
 	std::string Code;
 	if (pHead == nullptr) return;
-	cout << "Enter Class: ";
-	cin >> Code;
-	Class* pCurC = pHead;
-	while (pCurC && pCurC->classCode != Code) {
-		pCurC = pCurC->next;
-		if (pCurC) {
-			if (pCurC->Stu == nullptr) return;
-			Student* pCurS = pCurC->Stu;
+
+			Student* pCurS = pHead->Stu;
 			while (pCurS) {
 				Vietlanguage();
 				wcout << pCurS->Num << "  ";
@@ -577,22 +571,14 @@ void viewAllStuIn1Class(Class*& pHead) {
 				ASCIIlanguage();
 				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
 				wcout << pCurS->SocialID << std::endl;
+				pCurS = pCurS->next;
 			}
 		}
-	}
-}
 
 void viewAllStudentIn1Courses(Courses*& phead) {
 	if (phead == nullptr) return;
 	std::string code;
-	std::cout << "Enter Course ID: ";
-	std::cin >> code;
-	Courses* pCurC = phead;
-	while (pCurC && pCurC->courseCode != code) {
-		pCurC = pCurC->next;
-		if (pCurC) {
-			if (pCurC->Stu == nullptr) return;
-			Student* pCurS = pCurC->Stu;
+			Student* pCurS = phead->Stu;
 			while (pCurS) {
 				Vietlanguage();
 				wcout << pCurS->Num << "  ";
@@ -603,10 +589,9 @@ void viewAllStudentIn1Courses(Courses*& phead) {
 				ASCIIlanguage();
 				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
 				wcout << pCurS->SocialID << std::endl;
+				pCurS = pCurS->next;
 			}
 		}
-	}
-}
 
 void StaffMenu(Schoolyear * &S_year) {
 		system("cls");
@@ -732,4 +717,91 @@ void deallocateStudent(Student*& phead) {
 		phead = phead->next;
 		delete temp;
 	}
+}
+
+void deallocateSem(Semester*& phead) {
+	if (phead == nullptr) return;
+	while (phead) {
+		Semester* temp = phead;
+		phead = phead->next;
+		delete temp;
+	}
+}
+
+void deallocateScore(Score*& phead) {
+	if (phead == nullptr) return;
+	while (phead) {
+		Score* temp = phead;
+		phead = phead->next;
+		delete temp;
+	}
+}
+
+void updateScore(Courses*& noC, Semester*& noS, Schoolyear*& noY) {
+	if (noC == nullptr || noS == nullptr || noY == nullptr) return;
+	std::cout << "Student ID: ";
+	std::wstring sID;
+	std::wcin >> sID;
+	Student* s = noC->Stu;
+	while (s && s->ID != sID) {
+		s = s->next;
+		if (s) {
+			Score* so = s->score;
+			std::cout << "1. mid score: " << so->mid << std::endl;
+			std::cout << "2. final score: " << so->final << std::endl;
+			std::cout << "3. total: " << so->gpa << std::endl;
+			std::cout << endl << "update? : ";
+			int choice;
+			float temp;
+			std::cin >> choice;
+			switch (choice) {
+			case 1:
+				std::cout << "New mid score: ";
+				std::cin >> temp;
+				so->mid = temp;
+				std::wcout << "New mid score changed to: " << so->mid << std::endl;
+				break;
+			case 2:
+				std::cout << "New final score: ";
+				std::wcin >> temp;
+				so->final = temp;
+				std::cout << "New final score changed to: " << so->final << std::endl;
+				break;
+			case 3:
+				std::cout << "New total score: ";
+				std::wcin >> temp;
+				so->gpa = temp;
+				std::cout << "New total score changed to: " << so->gpa << std::endl;
+				break;
+			}
+		}
+	}
+}
+
+float getCredit(Courses* cou, std::string Code) {
+	float cre = 0;
+	if (cou == nullptr) return 0;
+	Courses* c = cou;
+	while (c && c->courseCode != Code) {
+		c = c->next;
+		if (c) {
+			cre = c->credit;
+		}
+	}
+	return cre;
+}
+
+float GPAsem(Student* stu,Semester* sem, Schoolyear* year) {
+	if (stu == nullptr || sem == nullptr || year == nullptr) return 0;
+	Courses* cou;
+	Score* sco = stu->score;
+	if (sco == nullptr) return 0;
+	float t = 0;
+	float m = 0;
+	while (sco) {
+		t += sco->gpa * getCredit(cou, sco->courseCode);
+		m += getCredit(cou, sco->courseCode);
+		sco = sco->next;
+	}
+	return t / m;
 }
