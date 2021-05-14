@@ -576,13 +576,38 @@ void viewAllStuIn1Class(Class*& pHead) {
 				wcout << pCurS->Firstname << "  ";
 				wcout << pCurS->Gender << "  ";
 				ASCIIlanguage();
-				wcout << pCurS->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << "  ";
+				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
 				wcout << pCurS->SocialID << std::endl;
 			}
 		}
 	}
 }
 
+void viewAllStudentIn1Courses(Courses*& phead) {
+	if (phead == nullptr) return;
+	std::string code;
+	std::cout << "Enter Course ID: ";
+	std::cin >> code;
+	Courses* pCurC = phead;
+	while (pCurC && pCurC->courseCode != code) {
+		pCurC = pCurC->next;
+		if (pCurC) {
+			if (pCurC->Stu == nullptr) return;
+			Student* pCurS = pCurC->Stu;
+			while (pCurS) {
+				Vietlanguage();
+				wcout << pCurS->Num << "  ";
+				wcout << pCurS->ID << "  ";
+				wcout << pCurS->Lastname << "  ";
+				wcout << pCurS->Firstname << "  ";
+				wcout << pCurS->Gender << "  ";
+				ASCIIlanguage();
+				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
+				wcout << pCurS->SocialID << std::endl;
+			}
+		}
+	}
+}
 
 void StaffMenu(Schoolyear * &S_year) {
 		system("cls");
