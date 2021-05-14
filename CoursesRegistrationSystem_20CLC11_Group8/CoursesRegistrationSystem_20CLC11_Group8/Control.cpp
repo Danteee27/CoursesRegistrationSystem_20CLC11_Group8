@@ -248,11 +248,10 @@ Courses *outputCoursesbyID(Courses*& pHead, std::string cID) {
 			std::cout << "Course ID: " << pCur->courseCode << std::endl;
 			std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << std::endl;
 			std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << std::endl;
-			std::cout << "End date: " << pCur->endDate.day << " " <<pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
-			return pCur;
+			std::cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
 		}
 	}
-	return nullptr;
+	return pCur;
 }
 
 
