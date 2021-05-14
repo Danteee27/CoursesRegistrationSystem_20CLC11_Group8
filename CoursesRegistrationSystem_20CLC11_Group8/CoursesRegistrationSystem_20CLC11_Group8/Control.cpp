@@ -706,3 +706,4 @@ void CreateSchoolYear(Schoolyear*& head) {
 	}
 
 }
+
