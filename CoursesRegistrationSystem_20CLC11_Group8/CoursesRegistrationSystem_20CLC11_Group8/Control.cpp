@@ -557,7 +557,7 @@ void ViewAllClasses(Class*& pHead) {
 	}
 }
 
-void viewAllStuIn1Class(Class*& pHead, Student*& head) {
+void viewAllStuIn1Class(Class*& pHead) {
 	std::string Code;
 	if (pHead == nullptr) return;
 	cout << "Enter Class: ";
@@ -582,6 +582,7 @@ void viewAllStuIn1Class(Class*& pHead, Student*& head) {
 		}
 	}
 }
+
 
 void StaffMenu(Schoolyear * &S_year) {
 		system("cls");
