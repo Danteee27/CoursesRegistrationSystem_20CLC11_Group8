@@ -707,3 +707,12 @@ void CreateSchoolYear(Schoolyear*& head) {
 
 }
 
+void deallocateSY(Schoolyear*& phead) {
+	if (phead == nullptr) return;
+	while (phead) {
+		Schoolyear* temp = phead;
+		phead = phead->next;
+		delete temp;
+	}
+}
+
