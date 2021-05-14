@@ -716,3 +716,11 @@ void deallocateSY(Schoolyear*& phead) {
 	}
 }
 
+void deallocateCkass(Class*& phead) {
+	if (phead == nullptr) return;
+	while (phead) {
+		Class* temp = phead;
+		phead = phead->next;
+		delete temp;
+	}
+}
