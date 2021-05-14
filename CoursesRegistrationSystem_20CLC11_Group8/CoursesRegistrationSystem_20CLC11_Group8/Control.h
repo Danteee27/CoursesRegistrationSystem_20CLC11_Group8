@@ -31,9 +31,11 @@ Courses* outputCoursesbyID(Courses*& pHead, std::string cID);
 
 void outputAllCourses(Courses*& pHead);
 
-void RemoveCourse(Courses*& pHead, std::string cID);
-
 void UpdateCourses(Courses*& pHead);
+
+void CheckNumber(Student* pHead);
+
+void finishFile(Courses* pHead);
 
 
 void AddCourse(Schoolyear*& head);
