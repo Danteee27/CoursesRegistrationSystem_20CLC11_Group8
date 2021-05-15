@@ -1,5 +1,5 @@
 #include "View.h"
-<<<<<<< HEAD
+
 #include"Control.h"
 #include"SubFunction.h"
 #include "Model.h"
@@ -259,10 +259,6 @@ void PrintHello(Student* pHead)
 	ASCIIlanguage();
 
 }
-=======
-#include "SubFunction.h"
-#include "Control.h"
-#include "Model.h"
 
 void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 {
@@ -322,4 +318,3 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 	DeallocateCourse(pStart);
 	DeallocateStudentCourse(pHead);
 }
->>>>>>> 304b88d0f2a7230c3c9cb249eb35781503a7add8
