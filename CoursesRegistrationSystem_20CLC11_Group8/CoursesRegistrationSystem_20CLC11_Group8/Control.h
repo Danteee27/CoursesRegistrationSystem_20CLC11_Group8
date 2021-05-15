@@ -42,4 +42,8 @@ void AddCourse(Schoolyear*& head);
 
 void CreateSchoolYear(Schoolyear*& head);
 
+float GPAsem(Student* stu, Semester* sem, Schoolyear* year);
+float getCredit(Courses* cou, std::string Code);
+void updateScore(Courses*& noC);
+
 #endif // !_ControlFunc
