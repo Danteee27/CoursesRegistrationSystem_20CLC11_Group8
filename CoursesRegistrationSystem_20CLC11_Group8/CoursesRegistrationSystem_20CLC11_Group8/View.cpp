@@ -40,7 +40,7 @@ LABEL22:
 	}
 }
 
-void viewAllStuIn1Course(Courses* pHead) {
+void viewAllStuIn1Course(Courses* pHead, wstring NoYear, int NoSem) {
 	std::string Code;
 	if (pHead == nullptr) {
 		return; cout << "No course";
@@ -55,6 +55,8 @@ LABEL23:
 		pHead = last;
 		cout << "The course code is not existed" << endl; goto LABEL23;
 	}
+	
+	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//course", pHead->Stu);
 	Student* pCurS = pHead->Stu;
 	while (pCurS) {
 		Vietlanguage();
@@ -118,20 +120,36 @@ void ViewSchoolyear(Schoolyear*& head) {
 	cout << "Choose: ";
 	cin >> c;
 	system("cls");
-	cout << "Semester " << c << endl;
+
 	switch (c) {
-	case 1:
+	case 1:	
+		cout << "Semester " << c << endl;
 		outputAllCourses(head->sem->Course);
 		break;
 	case 2:
+		cout << "Semester " << c << endl;
 		outputAllCourses(head->sem->next->Course);
 		break;
 	case 3:
+		cout << "Semester " << c << endl;
 		outputAllCourses(head->sem->next->next->Course);
 		break;
 	case 4:
-
+		PrintHello(head->year_Student);
 		break;
+		cout << "1. Back" << endl;
+		cout << "2. Exit" << endl;
+		int a;
+		cout << "Choose: ";
+		cin >> a;
+		switch (a) {
+		case 1:
+			ViewSchoolyear(head);
+			break;
+		case 2:
+			exit(0);
+			break;
+		}
 	case 5:
 	CLASSLABEL:
 		LoadClass(head);
@@ -156,6 +174,7 @@ void ViewSchoolyear(Schoolyear*& head) {
 			viewAllStuIn1Class(head->all_Class);
 			break;
 		case 3:
+
 			break;
 		case 4:
 			ViewSchoolyear(head);
@@ -163,10 +182,10 @@ void ViewSchoolyear(Schoolyear*& head) {
 		}
 		cout << "1. Continue" << endl;
 		cout << "2. Back" << endl;
-		int a;
+		int b;
 		cout << "Choose: ";
-		cin >> a;
-		switch (a) {
+		cin >> b;
+		switch (b) {
 		case 1:
 			goto CLASSLABEL;
 			break;
@@ -184,8 +203,9 @@ LABEL:
 	cout << "2. Update a course" << endl;
 	cout << "3. Delete a course" << endl;
 	cout << "4. View score of the course" << endl;
-	cout << "5. Create a registration of the semester" << endl;
-	cout << "6. Back" << endl;
+	cout << "5. View all student of a course" << endl;
+	cout << "6. Create a registration of the semester" << endl;
+	cout << "7. Back" << endl;
 	cout << "Choose: ";
 	int a;
 	cin >> a;
@@ -218,9 +238,12 @@ LABEL:
 		}
 		break;
 	case 5:
-		RegisDate(head->sem, head->year);
+		viewAllStuIn1Course(head->sem->Course, head->year, head->sem->No);
 		break;
 	case 6:
+		RegisDate(head->sem, head->year);
+		break;
+	case 7:
 		ViewSchoolyear(head);
 		break;
 	}
@@ -285,6 +308,10 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 		GotoXY(x, y);
 		y++;
 		std::wcout << "ID:" << pCur->ID;
+		y++;
+		GotoXY(x, y);
+		cout << "ID\t CName \t\t Teacher\tSessions";
+		y++;
 		Score* temp = pCur->score;
 		while (temp != nullptr)
 		{
@@ -315,6 +342,7 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 			temp = temp->next;
 		}
 	}
+	GotoXY(0, ++y);
 	DeallocateCourse(pStart);
 	DeallocateStudentCourse(pHead);
 }

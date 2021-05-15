@@ -5,10 +5,9 @@
 
 
 int main() {
-	Student* first = nullptr; first = ReadStudent("StudentTest.csv");
-	Schoolyear* hehe = nullptr;
-	Courses* _course = nullptr;
-	LoadSchoolYear(hehe);
 
-	Login(hehe);
+	Schoolyear* hehe = nullptr;
+	cout << "hehe";
+	Courses* test = nullptr;
+	test = InputCoursesCSV("2020-2021//Semester 3//course.csv");
 }

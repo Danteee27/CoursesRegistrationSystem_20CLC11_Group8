@@ -40,7 +40,9 @@ void LoadSchoolYear(Schoolyear*& head) {
 		if (head == nullptr) {
 			head = new Schoolyear;
 			head->year = name;
+			cout << "1";
 			head->year_Student = ReadStudent("StudentTest.csv");
+			cout << "2";
 			head->sem = new Semester;
 			head->sem->next = new Semester;
 			head->sem->next = head->sem->next;
@@ -52,10 +54,15 @@ void LoadSchoolYear(Schoolyear*& head) {
 			head->sem->next->No = 2;
 			head->sem->next->next->No = 3;
 			head->sem->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 1//course.csv");
+			cout << "3";
 			head->sem->next->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 2//course.csv");
+			cout << "4";
 			head->sem->next->next->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 3//course.csv");
+			cout << "5";
 			LoadRegisDate(head->sem, head->year);
+			cout << "6";
 			LoadClass(head);
+			cout << "7";
 			head->next = nullptr;
 			head->prev = nullptr;
 

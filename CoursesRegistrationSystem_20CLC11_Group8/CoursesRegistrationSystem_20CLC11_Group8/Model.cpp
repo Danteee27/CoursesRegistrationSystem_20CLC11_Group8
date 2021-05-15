@@ -23,7 +23,7 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 	ASCIIlanguage();
 	cout << "Class: " << StuClass(s_year, head->ID)->classCode << endl;
 	cout << "--------MENU-----------" << endl;
-	cout << "1. Edit student's information." << endl;
+	cout << "1. View attended courses" << endl;
 	cout << "2. Enroll courses." << endl;
 	cout << "3. View class." << endl;
 	cout << "4. Exit." << endl;
@@ -32,6 +32,8 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 	cin >> choice;
 	switch (choice) {
 	case 1:
+		system("cls");
+		ViewAttendedCourse(WstringToString(s_year->year) + "//Semester " + NumToString(SemNo) + "//All Courses.txt", WstringToString(s_year->year) + "//Semester " + NumToString(SemNo) + "//course.csv", head);
 		break;
 	case 2:
 		system("cls");
@@ -48,6 +50,18 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 	case 4:
 		exit(0);
 		break;
+	}
+	cout << "1. Back" << endl;
+	cout << "2. Exit" << endl;
+	cout << "Choose: ";
+	int c;
+	cin >> c;
+	switch (c) {
+	case 1:
+		StudentMenu(s_year, head);
+		break;
+	case 2:
+		exit(0);
 	}
 }
 

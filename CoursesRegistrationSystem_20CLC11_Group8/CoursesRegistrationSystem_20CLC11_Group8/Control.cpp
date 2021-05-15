@@ -237,6 +237,7 @@ LABEL:
 	OutputStudent(head->Stu, head->classCode + ".csv");
 }
 
+
 void InputCourses(Courses*& pHead)
 {
 	Courses* pCur = pHead;
@@ -250,6 +251,7 @@ void InputCourses(Courses*& pHead)
 		}
 		else
 		{
+			while (pCur->next != nullptr) pCur = pCur->next;
 			pCur->next = new Courses;
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
@@ -263,6 +265,10 @@ void InputCourses(Courses*& pHead)
 		ASCIIlanguage();
 		std::cout << "Input course ID:";
 		std::cin >> pCur->courseCode;
+		std::cout << "Input number of credit:";
+		std::cin >> pCur->credit;
+		std::cout << "Input max student:";
+		std::cin >> pCur->MaxStudent;
 		pCur->Session = new char** [2];
 		for (int i = 0; i < 2; i++)
 		{
@@ -276,10 +282,6 @@ void InputCourses(Courses*& pHead)
 			pCur->Session[i][0][2] = '\0';
 			pCur->Session[i][1][3] = '\0';
 		}
-		std::cout << "Input Max student:";
-		std::cin >> pCur->MaxStudent;
-		std::cout << "Input credit:";
-		std::cin >> pCur->credit;
 		std::cout << "Input start date:";
 		std::cin >> pCur->startDate.day >> pCur->startDate.month >> pCur->startDate.year;
 		std::cout << "Input end date:";
@@ -319,6 +321,7 @@ void CoursesSaveFile(std::string k, Courses* pHead)
 }
 Courses* InputCoursesCSV(std::string k)
 {
+
 	Courses* pCur = nullptr;
 	std::wfstream CoursesCSV(k, std::wfstream::in);
 	CoursesCSV.imbue(std::locale(CoursesCSV.getloc(), new std::codecvt_utf8<wchar_t>));
@@ -332,7 +335,9 @@ Courses* InputCoursesCSV(std::string k)
 	CoursesCSV.seekg(0, std::ios_base::beg);
 	CoursesCSV.ignore(1i64, wchar_t(0xfeff)); //bo qua thang ky tu dau tien do dinh dang BOM UTF8
 	std::wstring x;
-	while (CoursesCSV.tellg() != end)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
+	Vietlanguage();
+
+	while (CoursesCSV.tellg() < end -2)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
 	{
 		if (pCur == nullptr) {
 			pCur = new Courses;
@@ -371,7 +376,9 @@ Courses* InputCoursesCSV(std::string k)
 			else getline(CoursesCSV, x);
 			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
+		
 	}
+	ASCIIlanguage();
 	while (pCur->prev != nullptr) pCur = pCur->prev;
 	return pCur;
 }
@@ -758,6 +765,7 @@ void updateScore(Courses*& noC, int NoSem, wstring NoYear) {
 
 		}
 	}
+	SaveCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + noC->courseCode, noC->Stu);
 }
 
 float getCredit(Courses* cou, std::string Code) {
