@@ -23,6 +23,7 @@ struct Score {
 	std::string courseCode;
 	float mid = 0;
 	float final = 0;
+	float other = 0;
 	float gpa = 0;
 	Score* next=nullptr, * prev=nullptr;
 };
