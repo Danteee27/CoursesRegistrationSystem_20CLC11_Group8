@@ -4,11 +4,11 @@
 #include "Model.h"
 
 
-
 int main() {
-	Student* first = nullptr;
-	first = ReadStudent("StudentTest.csv");
-	Login(first);
+	Student* first = nullptr; first = ReadStudent("StudentTest.csv");
+	Schoolyear* hehe = nullptr;
+	Courses* _course = nullptr;
+	LoadSchoolYear(hehe);
 
-	OutputStudent(first, "ListStudent");
+	Login(hehe);
 }
