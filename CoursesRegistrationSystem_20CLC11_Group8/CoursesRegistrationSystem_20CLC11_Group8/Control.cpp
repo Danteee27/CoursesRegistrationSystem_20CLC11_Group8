@@ -737,8 +737,8 @@ void deallocateScore(Score*& phead) {
 	}
 }
 
-void updateScore(Courses*& noC, Semester*& noS, Schoolyear*& noY) {
-	if (noC == nullptr || noS == nullptr || noY == nullptr) return;
+void updateScore(Courses*& noC) {
+	if (noC == nullptr) return;
 	std::cout << "Student ID: ";
 	std::wstring sID;
 	std::wcin >> sID;
