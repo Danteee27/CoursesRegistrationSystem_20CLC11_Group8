@@ -749,7 +749,8 @@ void updateScore(Courses*& noC) {
 			Score* so = s->score;
 			std::cout << "1. mid score: " << so->mid << std::endl;
 			std::cout << "2. final score: " << so->final << std::endl;
-			std::cout << "3. total: " << so->gpa << std::endl;
+			std::cout << "3. other score: " << so->other << std::endl;
+			std::cout << "4. total: " << so->gpa << std::endl;
 			std::cout << endl << "update? : ";
 			int choice;
 			float temp;
@@ -768,6 +769,12 @@ void updateScore(Courses*& noC) {
 				std::cout << "New final score changed to: " << so->final << std::endl;
 				break;
 			case 3:
+				std::cout << "New other score: ";
+				std::wcin >> temp;
+				so->other = temp;
+				std::cout << "New final score changed to: " << so->other << std::endl;
+				break;
+			case 4:
 				std::cout << "New total score: ";
 				std::wcin >> temp;
 				so->gpa = temp;
