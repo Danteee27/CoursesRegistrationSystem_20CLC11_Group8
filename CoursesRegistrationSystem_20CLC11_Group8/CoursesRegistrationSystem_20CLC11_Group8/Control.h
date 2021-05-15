@@ -37,6 +37,8 @@ void CheckNumber(Student* pHead);
 
 void finishFile(Courses* pHead);
 
+void DeallocateCourse(Courses*& pHead);
+
 
 void AddCourse(Schoolyear*& head);
 
