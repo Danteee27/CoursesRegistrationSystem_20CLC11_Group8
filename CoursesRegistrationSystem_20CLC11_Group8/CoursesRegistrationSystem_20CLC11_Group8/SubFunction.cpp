@@ -6,6 +6,48 @@
 
 using namespace std;
 
+bool operator>= (const Date& a, const Date& b) {
+	if (a.year > b.year)
+		return true;
+	if (a.year < b.year)
+		return false;
+	if (a.month > b.month)
+		return true;
+	if (a.month < b.month)
+		return false;
+	if (a.day > b.day)
+		return true;
+	if (a.day < b.day)
+		return false;
+	return true;
+}
+
+
+
+bool operator<= (const Date& a, const Date& b) {
+	if (a.year < b.year)
+		return true;
+	if (a.year > b.year)
+		return false;
+	if (a.month < b.month)
+		return true;
+	if (a.month > b.month)
+		return false;
+	if (a.day < b.day)
+		return true;
+	if (a.day > b.day)
+		return false;
+	return true;
+}
+
+bool operator== (const Date& a, const Date& b) {
+	return a.day == b.day && a.month == b.month && a.year == b.year;
+}
+
+bool operator!= (const Date& a, const Date& b) {
+	return a.day != b.day || a.month != b.month || a.year != b.year;
+}
+
 Date OutputBirthday(std::wstring k)
 {
 	Date d{ 0,0,0 };
@@ -93,6 +135,20 @@ int WStringtoNum(std::wstring k)
 	return sum;
 }
 
+float WStringtoFloat(std::wstring strbuf)
+{
+	std::wstringstream converter;
+	float value = 0;
+
+	converter.precision(4);
+	converter.fill('0');
+	converter.setf(std::ios::fixed, std::ios::floatfield);
+
+	converter << strbuf;
+	converter >> value;
+	return value;
+}
+
 wchar_t* StringtoLongChar(std::string k)
 {
 	int temp = k.length();
@@ -105,8 +161,8 @@ wchar_t* StringtoLongChar(std::string k)
 	return p;
 }
 
-std::string WStringToString(std::wstring k) {
-	std::string temp;
+string WstringToString(wstring k) {
+	string temp;
 	temp.resize(k.size());
 	for (int i = 0; i < k.length(); i++) {
 		temp[i] = k[i];
@@ -124,18 +180,17 @@ std::wstring StringToWString(std::string k)
 	return temp;
 }
 
-std::wstring getpass()
+wstring getpass()
 {
 	const char BACKSPACE = 8;
 	const char RETURN = 13;
 
-	std::wstring password;
+	wstring password;
 	unsigned char ch = 0;
 
 
-	DWORD con_mode;
+	DWORD con_mode = 0;
 	DWORD dwRead;
-
 	HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
 
 	GetConsoleMode(hIn, &con_mode);
@@ -147,18 +202,19 @@ std::wstring getpass()
 		{
 			if (password.length() != 0)
 			{
-				
-				std::cout << "\b \b";
+
+				cout << "\b \b";
 				password.resize(password.length() - 1);
 			}
 		}
 		else
 		{
 			password += ch;
-				std::cout << '*';
+			cout << '*';
 		}
 	}
-	std::cout << std::endl;
+	cout << endl;
+	SetConsoleMode(hIn, con_mode);
 	return password;
 }
 
@@ -179,4 +235,32 @@ void FixConsoleWindow()
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
 
+int CheckSemesterNo() {
+	Date realDay = RealTime();
+	if (realDay <= Sem1_start) return 0;
+	if (realDay >= Sem1_start && realDay <= Sem1_end) return 1;
+	if (realDay >= Sem2_start && realDay <= Sem2_end) return 2;
+	if (realDay >= Sem3_start && realDay <= Sem3_end) return 3;
+}
+
+bool checkRegis(Semester* sem, int NoSem) {
+	while (sem->prev != nullptr) sem = sem->prev;
+	for (int i = 0; i < NoSem - 1; i++) {
+		sem = sem->next;
+	}
+
+	Date realDay = RealTime();
+	if (realDay >= sem->startDate && realDay <= sem->endDate) return 1;
+	return 0;
+}
+
+void CheckNumber(Student* pHead)
+{
+	if (pHead == nullptr) return;
+	for (int i = 1; pHead != nullptr; i++)
+	{
+		pHead->Num = i;
+		pHead = pHead->next;
+	}
+}
 
