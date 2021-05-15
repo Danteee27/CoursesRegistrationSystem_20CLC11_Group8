@@ -3,52 +3,87 @@
 #include "SubFunction.h"
 #include <locale.h>
 #include <codecvt>
+#include "View.h"
+using namespace std;
 
-void StudentMenu(Student* head) { // Havent done
-	std::wcout << "Student ID: " << head->ID << std::endl;
+void StudentMenu(Schoolyear*& s_year, Student* head) {
+	system("cls");
+
+	int SemNo = CheckSemesterNo();
+	cout << "Semester: " << SemNo << endl;
+	cout << "Course Registration : ";
+	if (checkRegis(s_year->sem, SemNo)) {
+
+		cout << "AVAILABLE" << endl;
+	}
+	else { cout << s_year->sem->No; cout << "UNAVAILABLE" << endl; }
+	wcout << "Student ID: " << head->ID << endl;
 	Vietlanguage();
-	std::wcout << "Student name: " << head->Firstname << " " << head->Lastname << std::endl;
-	std::wcout << "Gender: " << head->Gender << std::endl;
+	wcout << "Student name: " << head->Firstname << " " << head->Lastname << endl;
 	ASCIIlanguage();
-	std::cout << "DOB: " << head->Birthday.day << "/" << head->Birthday.month << "/" << head->Birthday.year << std::endl;
-	std::wcout << "ID: " << head->ID;
-	std::cout << std::endl;
-	std::cout << "1. Edit student's information." << std::endl;
-	std::cout << "2. View courses." << std::endl;
-	std::cout << "3. View class." << std::endl;
+	cout << "Class: " << StuClass(s_year, head->ID)->classCode << endl;
+	cout << "--------MENU-----------" << endl;
+	cout << "1. Edit student's information." << endl;
+	cout << "2. Enroll courses." << endl;
+	cout << "3. View class." << endl;
+	cout << "4. Exit." << endl;
 	int choice;
-	std::cin >> choice;
+	cout << "Choose: ";
+	cin >> choice;
 	switch (choice) {
 	case 1:
 		break;
 	case 2:
-		int count = 1;
-		while (head->score->prev != nullptr) head->score = head->score->prev;
-		while (head->score != nullptr) {
-			std::cout << count << ". " << head->score->courseCode << std::endl;
-			count++;
+		system("cls");
+		if (checkRegis(s_year->sem, SemNo)) {
+			AttendCoursesMenu(s_year, head, SemNo);
 		}
-		
+		else cout << "REGISTRATION IS NOT AVAILABLE" << endl;
+		Sleep(2000);
+		StudentMenu(s_year, head);
+		break;
+	case 3:
+		PrintHello(StuClass(s_year, head->ID)->Stu);
+		break;
+	case 4:
+		exit(0);
+		break;
 	}
 }
 
-void Login(Student* head) { // Havent done
-	LABEL:
-	std::wstring ID, password;
-	std::cout << "ID: ";
-	std::wcin >> ID;
-	std::cout << "Password: ";
+void Login(Schoolyear*& s_year) {
+
+	wstring ID, password;
+LABEL:
+	cout << "ID: ";
+	wcin >> ID;
+	cout << "Password: ";
 	password = getpass();
-	if (FindStudent(head, ID) == nullptr) {
+
+
+
+	const wstring staff_password = L"staff";
+
+	cout << "hello 2";
+	if (ID == L"staff" && password == staff_password) {
+		cout << "aaa";
+		StaffMenu(s_year);
+	}
+	const wstring correct_password = FindStudent(s_year->year_Student, ID)->password;
+	if (FindStudent(s_year->year_Student, ID) == nullptr && ID != L"staff") {
+		cout << "aaa1";
+		cout << "The ID is not existed" << endl;
 		goto LABEL;
 	}
-	const std::wstring correct_password = L"1";
-	if (password == correct_password) {
-		std::cout << "Welcome to the system";
-	
+
+	else if (password != correct_password) {
+		cout << "aaa2";
+		cout << "The password is incorrect!" << endl;
+		goto LABEL;
 	}
-	else {
-		std::cout << "Incorrect password. ";
+	else if (password == correct_password) {
+		cout << "aaa3";
+		StudentMenu(s_year, FindStudent(s_year->year_Student, ID));
 	}
 }
 
@@ -130,7 +165,7 @@ void SaveList(std::string k, Student*& pHead)
 	while (pCur != nullptr)
 	{
 		AllStudentList << pCur->Num << " ";
-		AllStudentList << WStringToString(pCur->ID) << " ";
+		AllStudentList << WstringToString(pCur->ID) << " ";
 		t = CountCourses(pCur);
 		AllStudentList << t << " ";
 		Score* Temp = pCur->score;
@@ -147,7 +182,8 @@ void SaveList(std::string k, Student*& pHead)
 
 void OpenCourseFile(std::string k, Student*& pHead)
 {
-	std::wfstream CourseStudentList(k + ".csv", std::ios_base::in);// cho cai .csv mai lam
+	pHead = nullptr;
+	std::wfstream CourseStudentList(k + ".csv", std::ios_base::in);
 	CourseStudentList.imbue(std::locale(CourseStudentList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 	//CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = nullptr;
@@ -161,20 +197,31 @@ void OpenCourseFile(std::string k, Student*& pHead)
 		if (pHead == nullptr)
 		{
 			pHead = new Student;
+			pHead->score = new Score;
 			pCur = pHead;
 		}
 		else
 		{
 			pCur->next = new Student;
+			pCur->next->score = new Score;
 			pCur->next->prev = pCur;
 			pCur = pCur->next;
 		}
 		getline(CourseStudentList, x, L',');
 		pCur->Num = WStringtoNum(x);
 		getline(CourseStudentList, pCur->ID, L',');
+		Vietlanguage();
 		getline(CourseStudentList, pCur->Lastname, L',');
-		getline(CourseStudentList, pCur->Firstname);
-		std::cout << "fuck you";
+		getline(CourseStudentList, pCur->Firstname, L',');
+		ASCIIlanguage();
+		getline(CourseStudentList, x, L',');
+
+		pCur->score->mid = WStringtoFloat(x);
+
+		getline(CourseStudentList, x, L',');
+		pCur->score->final = WStringtoFloat(x);
+		getline(CourseStudentList, x);
+		pCur->score->gpa = WStringtoFloat(x);
 	}
 	CourseStudentList.close();
 }
@@ -182,7 +229,7 @@ void OpenCourseFile(std::string k, Student*& pHead)
 
 void SaveCourseFile(std::string k, Student*& pHead)
 {
-	std::wfstream CourseStudentList(k + ".csv", std::ios_base::out); //cho cai .csv ra ngoai
+	std::wfstream CourseStudentList(k + ".csv", std::ios_base::out);
 	CourseStudentList.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
 	CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = pHead;
@@ -190,8 +237,13 @@ void SaveCourseFile(std::string k, Student*& pHead)
 	{
 		CourseStudentList << pCur->Num << L',';
 		CourseStudentList << pCur->ID << L',';
+		Vietlanguage();
 		CourseStudentList << pCur->Lastname << L',';
-		CourseStudentList << pCur->Firstname << L'\n';
+		CourseStudentList << pCur->Firstname << L',';
+		CourseStudentList << pCur->score->mid << L',';
+		CourseStudentList << pCur->score->final << L',';
+		CourseStudentList << pCur->score->gpa << L'\n';
+		ASCIIlanguage();
 		pCur = pCur->next;
 	}
 	CourseStudentList.close();
@@ -246,14 +298,9 @@ bool CheckInList(std::string k, std::wstring a)
 	}
 	pCur = pHead;
 
-	/*if (pCur == nullptr)
-	{
-		return false;
-	}*/
-
 	while (pCur != nullptr && pCur->ID.compare(a) != 0)
 	{
-		std::wcout << pCur->ID << std::endl;
+		//std::wcout << pCur->ID << std::endl;
 		pCur = pCur->next;
 	}
 	if (pCur != nullptr)
@@ -275,7 +322,7 @@ bool CheckInList(std::string k, std::wstring a)
 	return false;
 }
 
-bool CheckDup(Courses** check, Courses* source, int n) 
+bool CheckDup2(Courses** check, Courses* source, int n) 
 {
 	if (n == 0) return true;
 	for (int i = 0; i < n; i++) {
@@ -370,6 +417,7 @@ void TakeList(std::wstring a, Student*& Temp)
 			pHead = pHead->next;
 		}
 	}
+	std::cout << "done";
 	SaveList("All.txt", pHead);
 	DeallocateStudentCourse(pHead);
 }
@@ -390,9 +438,14 @@ void AddOneIntoCourseList(std::string a, Student* stu)
 	SaveCourseFile(a, pHead);
 }
 
-void AttendCoursesMenu(Courses* pHead, Student* stu)
+void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 {
-	Courses* pCur = pHead;
+	Semester* sem = pHead->sem;
+	while (sem->prev != nullptr) sem = sem->prev;
+	for (int i = 0; i < NoSem - 1; i++) {
+		sem = sem->next;
+	}
+	Courses* pCur = sem->Course;
 	int y = 0;
 	while (pCur != nullptr)
 	{
@@ -416,7 +469,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 	std::cout << "E to exit and save" << std::endl;
 
 	y = 0;
-	pCur = pHead;
+	pCur = sem->Course;
 	GotoXY(0, y);
 	std::cout << "->";
 	char a;
@@ -439,7 +492,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 			}
 			add[t] = pCur;
 			t++;
-			pCur = pHead;
+			pCur = pHead->sem->Course;
 			pAdd = pAdd->next;
 		}
 		SuccessAttend(add, t);
@@ -472,7 +525,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 			}
 			a = _getwch();
 		}
-		if (a == 8 && pCur != nullptr && CheckDup(add, pCur, t) != 1)
+		if (a == 8 && pCur != nullptr && CheckDup2(add, pCur, t) != 1)
 		{
 			//do trong mang xem thang muon xoa o dau
 			for (int i = 0; i < t; i++)
@@ -487,7 +540,7 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 				}
 			}
 		}
-		if (a == 13 && pCur != nullptr && CheckDup(add, pCur, t) && CheckSession(add, pCur, t) && t < 5)
+		if (a == 13 && pCur != nullptr && CheckDup2(add, pCur, t) && CheckSession(add, pCur, t) && t < 5)
 		{
 			int p = StudentLimit(pCur->courseCode + ".csv");
 			if (p < pCur->MaxStudent)
@@ -504,6 +557,9 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 					t++;
 					SuccessAttend(add, t);
 				}
+			}
+			else {
+				std::cout << "Can not";
 			}
 		}
 		a = _getwch();
@@ -526,12 +582,12 @@ void AttendCoursesMenu(Courses* pHead, Student* stu)
 		Run->courseCode = add[i]->courseCode;
 	}
 
-	AddOneIntoList("All.txt", stu);
+	AddOneIntoList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//All Courses.txt", stu);
 	for (int i = 0; i < t; i++)
 	{
-		if (CheckInList(add[i]->courseCode, stu->ID) == 0)
+		if (CheckInList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode, stu->ID) == 0)
 		{
-			AddOneIntoCourseList(add[i]->courseCode, stu);
+			AddOneIntoCourseList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode, stu);
 		}
 	}
 }
@@ -561,39 +617,39 @@ void InsertIntoSortedList(Student* stu, Student*& pHead)
 
 void StaffMenu(Schoolyear*& S_year) {
 	system("cls");
-	std::cout << "Staff Menu: " << std::endl;
-	std::cout << "1. View schoolyears" << std::endl;
-	std::cout << "E. Exit" << std::endl;
+	cout << "Staff Menu: " << endl;
+	cout << "1. View schoolyears" << endl;
+	cout << "X. Exit" << endl;
 	char choice;
-	std::cout << "Choose: ";
-	std::cin >> choice;
-	if (choice == 1) std::cout << "Hehe";
-	std::wifstream yRead("Schoolyear.txt");
-	std::wstring year_read;
-	int count = 1;
+	cout << "Choose: ";
+	cin >> choice;
+	if (choice == 1) cout << "Hehe";
+
 	switch (choice) {
 	case '1':
 		system("cls");
-		std::cout << "All schoolyear: " << std::endl;
-		while (!yRead.eof()) {
-			yRead >> year_read;
-			std::wcout << count << ". " << year_read << std::endl;
-		}
-		std::cout << "C. Create new schoolyear" << std::endl;
-		std::cout << "D. Delete a schoolyear" << std::endl;
-		std::cout << "B. Back" << std::endl;
-		std::cout << "Choose: ";
-		std::cin >> choice;
+
+		cout << "E. Choose" << endl;
+		cout << "C. Create new schoolyear" << endl;
+		cout << "B. Back" << endl;
+
+		cout << "Choose: ";
+		cin >> choice;
 		switch (choice) {
-		case 'C':
+		case 'C' || 'c':
 			CreateSchoolYear(S_year);
 			break;
 		case 'B':
-
+			StaffMenu(S_year);
+			break;
+		case 'E':
+			ViewSchoolyear(S_year);
+			break;
 		}
 		break;
-	case 'E':
+	case 'X':
 		exit(0);
 	}
 
 }
+
