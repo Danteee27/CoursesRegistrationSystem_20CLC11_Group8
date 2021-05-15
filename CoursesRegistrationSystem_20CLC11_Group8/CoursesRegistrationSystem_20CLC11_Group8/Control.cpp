@@ -6,7 +6,61 @@
 #include<string>
 #include<locale>
 #include<codecvt>
+#include "View.h"
+#include "Data.h"
 using namespace std;
+
+void AddCourse(Schoolyear*& head) { // For schoolyear
+	system("cls");
+	wcout << "Schoolyear: " << head->year << endl;
+	cout << "1. Add course" << endl;
+	cout << "2. Back" << endl;
+	int c;
+	cout << "Choose: ";
+	cin >> c;
+	switch (c) {
+	case 1:
+		system("cls");
+		wcout << "Adding course on schoolyear: " << head->year << endl;
+		cout << "1. Semester 1" << endl;
+		cout << "2. Semester 2" << endl;
+		cout << "3. Semester 3" << endl;
+		cout << "4. Back" << endl;
+		int o;
+		cout << "Choose: ";
+		cin >> o;
+		switch (o) {
+		case 1:
+			while (head->sem->prev != nullptr) head->sem = head->sem->prev;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WstringToString(head->year) + "//Semester 1//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 2:
+			while (head->sem->prev != nullptr) head->sem = head->sem->prev;
+			head->sem = head->sem->next;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WstringToString(head->year) + "//Semester 2//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 3:
+			while (head->sem->Course->prev != nullptr) head->sem->Course = head->sem->Course->prev;
+			head->sem = head->sem->next;
+			head->sem = head->sem->next;
+			InputCourses(head->sem->Course);
+			CoursesSaveFile(WstringToString(head->year) + "//Semester 3//course.csv", head->sem->Course);
+			StaffMenu(head);
+			break;
+		case 4:
+			StaffMenu(head);
+			break;
+		}
+		break;
+	case 2:
+		StaffMenu(head);
+		break;
+	}
+}
 
 
 void OutputAllStudent(Student* head) {
@@ -39,25 +93,110 @@ void OutputStudentFile(Student* head, std::string name) {
 	ASCIIlanguage();
 }
 
+Class* StuClass(Schoolyear* year, wstring ID) {
+	Class* result = nullptr;
+	while (year->all_Class != nullptr) {
+		while (year->all_Class->Stu != nullptr) {
+			if (year->all_Class->Stu->ID == ID) break;
+			year->all_Class->Stu = year->all_Class->Stu->next;
+		}
+		if (year->all_Class->Stu->ID == ID) break;
+		year->all_Class = year->all_Class->next;
+	}
+	if (year->all_Class)
+		result = year->all_Class;
+	return result;
+}
 
-void CreateClass(Class* first, std::string name) {
-	Class* newClass = new Class;
-	newClass->classCode = name;
-	newClass->next = nullptr;
-	if (first == nullptr) {
-		first = newClass;
-		first->prev = nullptr;
-		return;
+void CreateSchoolYear(Schoolyear*& head) {
+	std::wstring name;
+	std::cout << "Give me the schoolyear: ";
+	std::wcin >> name;
+
+	if (head == nullptr) {
+		head = new Schoolyear;
+		head->year = name;
+		head->year_Student = ReadStudent("StudentTest.csv");
+		head->sem = new Semester;
+		head->sem->next = new Semester;
+		head->sem->next = head->sem->next;
+		head->sem->next->prev = head->sem;
+		head->sem->next->next = new Semester;
+		head->sem->next->next = head->sem->next->next;
+		head->sem->next->next->prev = head->sem->next;
+		head->sem->No = 1;
+		head->sem->next->No = 2;
+		head->sem->next->next->No = 3;
+		head->next = nullptr;
+		head->prev = nullptr;
 	}
-	Class* cur = first;
-	Class* previous = nullptr;
-	while (cur->next != nullptr) {
-		previous = cur;
-		cur = cur->next;
+	else {
+		Schoolyear* cur = head;
+		while (cur->next != nullptr)
+			cur = cur->next;
+		cur->next = new Schoolyear;
+		cur->next->prev = cur;
+		cur->sem = new Semester;
+		cur->sem->next = new Semester;
+		cur->sem->next = cur->sem->next;
+		cur->sem->next->prev = cur->sem;
+		cur->sem->next->next = new Semester;
+		cur->sem->No = 1;
+		cur->sem->next->No = 2;
+		cur->sem->next->next->No = 3;
+		cur->sem->next->next = cur->sem->next->next;
+		cur->sem->next->next->prev = cur->sem->next;
+
+		cur->year = name;
+		cur->year_Student = ReadStudent("StudentTest.csv");
+
 	}
-	cur->next = newClass;
-	newClass->prev = previous;
-	std::wfstream Output( name + ".csv");
+	CreateDirectory(name.c_str(), NULL);
+	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
+	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
+
+	ofstream Out("Schoolyear.txt", std::ios::app);
+	Out << WstringToString(name) << endl;
+	Out.close();
+	cout << "1. Continue" << endl;
+	cout << "2. Back" << endl;
+	int choice;
+	cout << "Choose : ";
+	cin >> choice;
+	switch (choice) {
+	case 1:
+		AddCourse(head);
+		break;
+	case 2:
+		StaffMenu(head);
+		break;
+	}
+
+}
+
+
+void CreateClass(Schoolyear*& head) {
+	LoadClass(head);
+	string cc;
+	cout << "Class code: ";
+	cin >> cc;
+	Class* temp = head->all_Class;
+	if (temp == nullptr) {
+		temp = new Class;
+		temp->classCode = cc;
+		temp->Stu = ReadStudent(WstringToString(head->year) + "//" + temp->classCode + ".csv");
+	}
+	else while (temp->next != nullptr) {
+		temp = temp->next;
+	}
+	if (head->all_Class != nullptr) {
+		temp->next = new Class;
+		temp->next->classCode = cc;
+		temp->next->Stu = ReadStudent(WstringToString(head->year) + "//" + temp->next->classCode + ".csv");
+	}
+	ofstream Output(WstringToString(head->year) + "//Class.txt", ios::app);
+	Output << cc << endl;
 }
 
 void AddInClass(Class* head, Student* first) {
@@ -207,7 +346,7 @@ Courses* InputCoursesCSV(std::string k)
 			pCur = pCur->next;
 		}
 		getline(CoursesCSV, x, L',');
-		pCur->courseCode = WStringToString(x);
+		pCur->courseCode = WstringToString(x);
 		getline(CoursesCSV, pCur->courseName, L',');
 		getline(CoursesCSV, pCur->teacher, L',');
 		getline(CoursesCSV, x, L',');
@@ -227,31 +366,13 @@ Courses* InputCoursesCSV(std::string k)
 			pCur->Session[i][1] = new char[4];
 			pCur->Session[i][1][3] = '\0';
 			getline(CoursesCSV, x, L',');
-			WStringToString(x).copy(pCur->Session[i][1], 3, 0);
+			WstringToString(x).copy(pCur->Session[i][1], 3, 0);
 			if (i == 0) getline(CoursesCSV, x, L',');
 			else getline(CoursesCSV, x);
-			WStringToString(x).copy(pCur->Session[i][0], 2, 0);
+			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
 	}
 	while (pCur->prev != nullptr) pCur = pCur->prev;
-	return pCur;
-}
-
-Courses *outputCoursesbyID(Courses*& pHead, std::string cID) {
-	Courses* pCur = pHead;
-	while (pCur && pCur->courseCode != cID) {
-		pCur = pCur->next;
-		if (pCur) {
-			Vietlanguage();
-			std::wcout << "Course name: " << pCur->courseName << std::endl;
-			std::wcout << "Teacher name: " << pCur->teacher << std::endl;
-			ASCIIlanguage();
-			std::cout << "Course ID: " << pCur->courseCode << std::endl;
-			std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << std::endl;
-			std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << std::endl;
-			std::cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
-		}
-	}
 	return pCur;
 }
 
@@ -261,15 +382,15 @@ void outputAllCourses(Courses*& pHead) {
 	int count = 0;
 	while (pCur) {
 		count += 1;
-		std::cout << count << " )" << std::endl;
+		std::cout << count << ")" << std::endl;
 		Vietlanguage();
 		std::wcout << "Course name: " << pCur->courseName << std::endl;
 		std::wcout << "Teacher name: " << pCur->teacher << std::endl;
 		ASCIIlanguage();
 		std::cout << "Course ID: " << pCur->courseCode << std::endl;
-		std::cout << "Session: " << pCur->Session[0][0] << pCur->Session[0][1] << pCur->Session[1][0] << pCur->Session[1][1] << std::endl;
-		std::cout << "Start date: " << pCur->startDate.day << " " << pCur->startDate.month << " " << pCur->startDate.year << std::endl;
-		std::cout << "End date: " << pCur->endDate.day << " " << pCur->endDate.month << " " << pCur->endDate.year << std::endl << std::endl;
+		std::cout << "Session: " << pCur->Session[0][1] << " " << pCur->Session[0][0] << "/" << pCur->Session[1][1] << " " << pCur->Session[1][0] << std::endl;
+		std::cout << "Start date: " << pCur->startDate.day << "/" << pCur->startDate.month << "/" << pCur->startDate.year << std::endl;
+		std::cout << "End date: " << pCur->endDate.day << "/" << pCur->endDate.month << "/" << pCur->endDate.year << std::endl << std::endl;
 		pCur = pCur->next;
 	}
 }
@@ -423,11 +544,12 @@ void Deallocate(Courses* pHead)
 
 void EditCourses(Courses*& pHead)
 {
+	std::cout << "Give me the course ID to update: ";
 	std::string Id;
 	std::cin >> Id;
-	Courses* pTemp = outputCoursesbyID(pHead, Id);
+	Courses* pTemp = ouputCoursesbyID(pHead, Id);
 	int t = -1;
-	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date" << std::endl << "8.MaxStudent" << std::endl << "0.End\n";
+	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date\n" << "0.End\n";
 	while (t != 0)
 	{
 		std::string a;
@@ -479,31 +601,15 @@ void EditCourses(Courses*& pHead)
 			std::cin >> c;
 			pTemp->startDate.year = c;
 			break;
-		case 8: std::wcout << "Max Student:";
-			std::cin >> c;
-			pTemp->MaxStudent = c;
-			break;
 		}
 	}
-	std::string k;
-	std::wcout << "save file: ";
-	std::cin >> k;
-	CoursesSaveFile(k, pHead);
 }
 
 
-void CheckNumber(Student* pHead)
-{
-	if (pHead == nullptr) return;
-	for (int i = 1; pHead != nullptr; i++)
-	{
-		pHead->Num = i;
-		pHead = pHead->next;
-	}
-}
 
 void finishFile(Courses* pHead)
 {
+	std::string path;
 	Courses* pCur = pHead;
 	if (pHead == nullptr)
 	{
@@ -511,12 +617,14 @@ void finishFile(Courses* pHead)
 	}
 	while (pCur != nullptr)
 	{
+		path = pCur->courseCode;
 		Student* pHead = nullptr;
-		OpenCourseFile(pCur->courseCode + ".csv", pHead); //trc cai pCur->courseCode cai duong dan cua file
+		OpenCourseFile(path, pHead);
 		CheckNumber(pHead);
-		SaveCourseFile(pCur->courseCode + ".csv", pHead); //trc cai pCur->courseCode cai duong dan de luu
+		SaveCourseFile(path, pHead);
 		pCur = pCur->next;
 	}
+
 }
 
 void StudentInfo(Student* head) {
@@ -539,7 +647,7 @@ void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
 			std::cout << std::endl <<  "Courses: " << t << std::endl;
 			for (int i = 0; i < t; i++) {
 				m = Cur->score->courseCode;
-				outputCoursesbyID(CHead, m);
+				ouputCoursesbyID(CHead, m);
 				std::cout << std::endl;
 			}
 		}
@@ -556,141 +664,6 @@ void ViewAllClasses(Class*& pHead) {
 	}
 }
 
-void viewAllStuIn1Class(Class*& pHead) {
-	std::string Code;
-	if (pHead == nullptr) return;
-
-			Student* pCurS = pHead->Stu;
-			while (pCurS) {
-				Vietlanguage();
-				wcout << pCurS->Num << "  ";
-				wcout << pCurS->ID << "  ";
-				wcout << pCurS->Lastname << "  ";
-				wcout << pCurS->Firstname << "  ";
-				wcout << pCurS->Gender << "  ";
-				ASCIIlanguage();
-				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
-				wcout << pCurS->SocialID << std::endl;
-				pCurS = pCurS->next;
-			}
-		}
-
-void viewAllStudentIn1Courses(Courses*& phead) {
-	if (phead == nullptr) return;
-	std::string code;
-			Student* pCurS = phead->Stu;
-			while (pCurS) {
-				Vietlanguage();
-				wcout << pCurS->Num << "  ";
-				wcout << pCurS->ID << "  ";
-				wcout << pCurS->Lastname << "  ";
-				wcout << pCurS->Firstname << "  ";
-				wcout << pCurS->Gender << "  ";
-				ASCIIlanguage();
-				wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
-				wcout << pCurS->SocialID << std::endl;
-				pCurS = pCurS->next;
-			}
-		}
-
-void StaffMenu(Schoolyear * &S_year) {
-		system("cls");
-		cout << "Staff Menu: " << endl;
-		cout << "1. View schoolyears" << endl;
-		cout << "E. Exit" << endl;
-		char choice;
-		cout << "Choose: ";
-		cin >> choice;
-		if (choice == 1) cout << "Hehe";
-		wifstream yRead("Schoolyear.txt");
-		wstring year_read;
-		int count = 1;
-		switch (choice) {
-		case '1':
-			system("cls");
-			cout << "All schoolyear: " << endl;
-			while (!yRead.eof()) {
-				yRead >> year_read;
-				wcout << count << ". " << year_read << endl;
-			}
-			cout << "C. Create new schoolyear" << endl;
-			cout << "D. Delete a schoolyear" << endl;
-			cout << "B. Back" << endl;
-			cout << "Choose: ";
-			cin >> choice;
-			switch (choice) {
-			case 'C':
-				CreateSchoolYear(S_year);
-				break;
-			case 'B':
-
-			}
-		
-			break;
-		case 'E':
-			exit(0);
-		}
-
-	}
-
-void CreateSchoolYear(Schoolyear*& head) {
-	std::wstring name;
-	std::cout << "Give me the schoolyear: ";
-	std::wcin >> name;
-
-	if (head == nullptr) {
-		head = new Schoolyear;
-		head->year = name;
-		head->year_Student = ReadStudent("StudentTest.csv");
-		head->sem = new Semester;
-		head->sem->next = new Semester;
-		head->sem->next = head->sem->next;
-		head->sem->next->prev = head->sem;
-		head->sem->next->next = new Semester;
-		head->sem->next->next = head->sem->next->next;
-		head->sem->next->next->prev = head->sem->next;
-		head->next = nullptr;
-		head->prev = nullptr;
-	}
-	else {
-		Schoolyear* cur = head;
-		while (cur->next != nullptr)
-			cur = cur->next;
-		cur->next = new Schoolyear;
-		cur->next->prev = cur;
-		cur->sem = new Semester;
-		cur->sem->next = new Semester;
-		cur->sem->next = cur->sem->next;
-		cur->sem->next->prev = cur->sem;
-		cur->sem->next->next = new Semester;
-		cur->sem->next->next = cur->sem->next->next;
-		cur->sem->next->next->prev = cur->sem->next;
-
-		cur->year = name;
-		cur->year_Student = ReadStudent("StudentTest.csv");
-
-	}
-	CreateDirectory(name.c_str(), NULL);
-	CreateDirectory((name + L"//Semester 1").c_str(), NULL);
-	CreateDirectory((name + L"//Semester 2").c_str(), NULL);
-	CreateDirectory((name + L"//Semester 3").c_str(), NULL);
-
-	ofstream Out("Schoolyear.txt", std::ios::app);
-	Out << WStringToString(name) << endl;
-	Out.close();
-	cout << "1. Continue" << endl;
-	cout << "2. Back" << endl;
-	int choice;
-	cout << "Choose : ";
-	cin >> choice;
-	switch (choice) {
-	case 1:
-		AddCourse(head);
-		break;
-
-	}
-
-}
 
 void deallocateSY(Schoolyear*& phead) {
 	if (phead == nullptr) return;
@@ -737,50 +710,52 @@ void deallocateScore(Score*& phead) {
 	}
 }
 
-void updateScore(Courses*& noC) {
-	if (noC == nullptr) return;
+void updateScore(Courses*& noC, int NoSem, wstring NoYear) {
+	if (noC == nullptr) { std::cout << "NULL"; return; }
 	std::cout << "Student ID: ";
 	std::wstring sID;
 	std::wcin >> sID;
 	Student* s = noC->Stu;
-	while (s && s->ID != sID) {
+	if (noC->Stu == NULL) cout << "NULL";
+	while (s && s->ID.compare(sID) != 0)
 		s = s->next;
-		if (s) {
-			Score* so = s->score;
-			std::cout << "1. mid score: " << so->mid << std::endl;
-			std::cout << "2. final score: " << so->final << std::endl;
-			std::cout << "3. other score: " << so->other << std::endl;
-			std::cout << "4. total: " << so->gpa << std::endl;
-			std::cout << endl << "update? : ";
-			int choice;
-			float temp;
-			std::cin >> choice;
-			switch (choice) {
-			case 1:
-				std::cout << "New mid score: ";
-				std::cin >> temp;
-				so->mid = temp;
-				std::wcout << "New mid score changed to: " << so->mid << std::endl;
-				break;
-			case 2:
-				std::cout << "New final score: ";
-				std::wcin >> temp;
-				so->final = temp;
-				std::cout << "New final score changed to: " << so->final << std::endl;
-				break;
-			case 3:
-				std::cout << "New other score: ";
-				std::wcin >> temp;
-				so->other = temp;
-				std::cout << "New final score changed to: " << so->other << std::endl;
-				break;
-			case 4:
-				std::cout << "New total score: ";
-				std::wcin >> temp;
-				so->gpa = temp;
-				std::cout << "New total score changed to: " << so->gpa << std::endl;
-				break;
-			}
+
+	if (s) {
+		Score* so = s->score;
+		wcout << endl << "Student ID: " << s->ID << std::endl;
+		std::cout << "1. Mid score: " << so->mid << std::endl;
+		std::cout << "2. Final score: " << so->final << std::endl;
+		std::cout << "3. Total: " << so->gpa << std::endl;
+		std::cout << endl << "Update? : ";
+		int choice;
+		float temp;
+		std::cin >> choice;
+		switch (choice) {
+		case 1:
+			std::cout << "New mid score: ";
+			std::cin >> temp;
+			so->mid = temp;
+			std::wcout << "New mid score changed to: " << so->mid << std::endl;
+			break;
+		case 2:
+			std::cout << "New final score: ";
+			std::wcin >> temp;
+			so->final = temp;
+			std::cout << "New final score changed to: " << so->final << std::endl;
+			break;
+		case 3:
+			std::cout << "New other score: ";
+			std::wcin >> temp;
+			so->other = temp;
+			std::cout << "New other score changed to: " << so->other << std::endl;
+			break;
+		case 4:
+			std::cout << "New total score: ";
+			std::wcin >> temp;
+			so->gpa = temp;
+			std::cout << "New total score changed to: " << so->gpa << std::endl;
+			break;
+
 		}
 	}
 }
@@ -798,17 +773,33 @@ float getCredit(Courses* cou, std::string Code) {
 	return cre;
 }
 
-float GPAsem(Student* stu,Semester* sem, Schoolyear* year) {
-	if (stu == nullptr || sem == nullptr || year == nullptr) return 0;
-	Courses* cou;
+float GPAsem(Student* stu, Courses* cour, Semester* sem, Schoolyear* year) {
+	if (stu == nullptr || sem == nullptr || year == nullptr || cour == nullptr) return 0;
 	Score* sco = stu->score;
 	if (sco == nullptr) return 0;
 	float t = 0;
 	float m = 0;
 	while (sco) {
-		t += sco->gpa * getCredit(cou, sco->courseCode);
-		m += getCredit(cou, sco->courseCode);
+		t += sco->gpa * getCredit(cour, sco->courseCode);
+		m += getCredit(cour, sco->courseCode);
 		sco = sco->next;
 	}
 	return t / m;
+}
+
+void Print(Student* pHead)
+{
+	while (pHead != nullptr)
+	{
+		std::cout << pHead->Num << " ";
+		std::wcout << pHead->ID;
+		/*Score* pCur = pHead->score;
+		while (pCur != nullptr)
+		{
+			std::cout << " " << pCur->courseCode;
+			pCur = pCur->next;
+		}*/
+		std::cout << std::endl;
+		pHead = pHead->next;
+	}
 }
