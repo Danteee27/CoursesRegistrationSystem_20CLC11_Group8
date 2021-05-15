@@ -522,7 +522,7 @@ void printSameSession(Courses*& pHead) {
 	}
 }
 
-void Deallocate(Courses* pHead)
+void DeallocateCourse(Courses*& pHead)
 {
 	Courses* pCur = pHead;
 	while (pCur != nullptr)
