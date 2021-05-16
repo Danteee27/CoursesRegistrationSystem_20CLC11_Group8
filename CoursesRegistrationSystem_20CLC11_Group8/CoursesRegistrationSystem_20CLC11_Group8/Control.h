@@ -54,6 +54,7 @@ void deallocateSem(Semester*& phead);
 void deallocateScore(Score*& phead);
 void changeLocationFile(std::string k, std::string a);
 bool checkCourse(Courses* pHead, string CourseID);
+void deleteCoursesbyID(Courses*& pHead, std::string cID);
 void Print(Student* pHead);
 
 #endif // !_ControlFunc

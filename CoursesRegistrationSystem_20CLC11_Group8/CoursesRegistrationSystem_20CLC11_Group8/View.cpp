@@ -220,7 +220,21 @@ LABEL:
 		EditCourses(head->sem->Course);
 		break;
 	case 3:
+	{
+		std::string cID;
+		std::cout << "Input CourseID:";
+		std::cin >> cID;
+		if (checkCourse(head->sem->Course, cID))
+		{
+			deleteCoursesbyID(head->sem->Course, cID);
+			CoursesSaveFile(WstringToString(head->year) + "\\Semester " + NumToString(head->sem->No) + "\\" + "course.csv", head->sem->Course);
+		}
+		else
+		{
+			std::cout << "ID not founded";
+		}
 		break;
+	}
 	case 4:
 		finishFile(head->year,head->sem->Course,head->sem->No);
 		break;

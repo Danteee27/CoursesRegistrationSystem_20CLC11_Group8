@@ -470,6 +470,7 @@ void deleteCoursesbyID(Courses*& pHead, std::string cID) {
 	if (pHead == nullptr) return;
 	while (pCur && pCur->courseCode != cID) {
 		pCur = pCur->next;
+	}
 		if (pCur != nullptr)
 		{
 			Courses* pTemp = pCur;
@@ -487,7 +488,6 @@ void deleteCoursesbyID(Courses*& pHead, std::string cID) {
 			}
 			delete pTemp;
 		}
-	}
 }
 
 void deleteCurrCourses(Courses*& pHead, Courses*& pCur) {
