@@ -220,11 +220,14 @@ wstring getpass()
 
 int CountCourses(Student* stu) {
 	int count = 0;
-	while (stu->score->prev != nullptr) stu->score = stu->score->prev;
-	while (stu->score != nullptr) {
-		stu = stu->next;
+	//while (stu->score->prev != nullptr) stu->score = stu->score->prev;
+	Score* temp = stu->score;
+	while (temp != nullptr) 
+	{
+		temp = temp->next;
 		count++;
-	}	return count;
+	}	
+	return count;
 }
 
 void FixConsoleWindow()

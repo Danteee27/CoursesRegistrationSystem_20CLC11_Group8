@@ -50,7 +50,7 @@ struct User {
 
 struct Class{
 	std::string classCode;
-	Student* Stu;
+	Student* Stu=nullptr;
 	Class* next=nullptr, * prev=nullptr;
 };
 
@@ -62,7 +62,7 @@ struct Courses {
 	std::string courseCode;
 	int MaxStudent;
 	int credit;
-	Student* Stu;
+	Student* Stu=nullptr;
 	Courses* next=nullptr, * prev=nullptr;
 };
 
@@ -100,7 +100,7 @@ void LoadRegisDate(Semester*& head, wstring NoYear);
 
 void RegisDate(Semester*& head, wstring NoYear);
 
-Courses* ouputCoursesbyID(Courses* pHead, std::string cID);
+Courses* outputCoursesbyID(Courses* pHead, std::string cID);
 
 void LoadClass(Schoolyear*& head);
 

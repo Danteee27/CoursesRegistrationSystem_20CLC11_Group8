@@ -120,17 +120,19 @@ void PrintToChoose(Courses* pHead)
 void InputList(std::string k, Student*& pHead)
 {
 	Student* pCur = nullptr;
-	std::fstream AllStudentList(k, std::ios_base::in);
-	int t;
-	std::string x;
-	AllStudentList.seekg(-2, std::ios_base::end);
-	int end = AllStudentList.tellg();
-	AllStudentList.seekg(0, std::ios_base::beg);
+	std::ifstream AllStudentList(k, std::ios_base::in);
 	if (AllStudentList.fail())
 	{
 		std::cout << "File is not existed";
 		return;
 	}
+
+	int t;
+	std::string x;
+	AllStudentList.seekg(-2, std::ios_base::end);
+	int end = AllStudentList.tellg();
+	AllStudentList.seekg(0, std::ios_base::beg);
+
 	while (AllStudentList.tellg() < end)
 	{
 		if (pHead == nullptr)
@@ -148,10 +150,10 @@ void InputList(std::string k, Student*& pHead)
 		AllStudentList >> x;
 		pCur->ID = StringToWString(x);
 		AllStudentList >> t;
-		Score* Temp = pCur->score;
+		Score* Temp = nullptr;
 		for (int i = 0; i < t; i++)
 		{
-			if (Temp == nullptr)
+			if (pCur->score == nullptr)
 			{
 				pCur->score = new Score;
 				Temp = pCur->score;
@@ -163,6 +165,7 @@ void InputList(std::string k, Student*& pHead)
 				Temp = Temp->next;
 			}
 			AllStudentList >> Temp->courseCode;
+			std::cout << Temp->courseCode;
 		}
 		AllStudentList.ignore(1000, '\n');
 	}
@@ -170,12 +173,15 @@ void InputList(std::string k, Student*& pHead)
 }
 
 
-
 void SaveList(std::string k, Student*& pHead)
 {
 	Student* pCur = pHead;
 	int t = 0;
 	std::fstream AllStudentList(k, std::ios_base::out);
+	if (AllStudentList.fail())
+	{
+		return;
+	}
 	while (pCur != nullptr)
 	{
 		AllStudentList << pCur->Num << " ";
@@ -185,6 +191,7 @@ void SaveList(std::string k, Student*& pHead)
 		Score* Temp = pCur->score;
 		for (int i = 0; i < t; i++)
 		{
+			//std::cout << Temp->courseCode;
 			AllStudentList << Temp->courseCode << " ";
 			Temp = Temp->next;
 		}
@@ -197,7 +204,7 @@ void SaveList(std::string k, Student*& pHead)
 void OpenCourseFile(std::string k, Student*& pHead)
 {
 	pHead = nullptr;
-	std::wfstream CourseStudentList(k + ".csv", std::ios_base::in);
+	std::wfstream CourseStudentList(k, std::ios_base::in);
 	CourseStudentList.imbue(std::locale(CourseStudentList.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 	//CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = nullptr;
@@ -243,7 +250,7 @@ void OpenCourseFile(std::string k, Student*& pHead)
 
 void SaveCourseFile(std::string k, Student*& pHead)
 {
-	std::wfstream CourseStudentList(k + ".csv", std::ios_base::out);
+	std::wfstream CourseStudentList(k, std::ios_base::out);
 	CourseStudentList.imbue(std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
 	CourseStudentList << wchar_t(0xfeff);
 	Student* pCur = pHead;
@@ -271,6 +278,8 @@ void SaveCourseFile(std::string k, Student*& pHead)
 
 void DeleteInList(std::string k, std::wstring a)
 {
+	std::cout << k;
+	_getwch();
 	Student* pHead = nullptr;
 	OpenCourseFile(k, pHead);
 	Student* pCur = pHead;
@@ -405,11 +414,11 @@ void DeallocateStudentCourse(Student*& pHead)
 		delete pCur;
 	}
 }
-
-void TakeList(std::wstring a, Student*& Temp)
+// Sua duong truyen o day
+void TakeList(std::wstring a, Student*& Temp, std::string k)
 {
 	Student* pHead = nullptr;
-	InputList("All.txt", pHead);
+	InputList(k, pHead);
 	Student* pCur = pHead;
 	while (pCur != nullptr && pCur->ID.compare(a) != 0)
 	{
@@ -432,7 +441,7 @@ void TakeList(std::wstring a, Student*& Temp)
 		}
 	}
 	std::cout << "done";
-	SaveList("All.txt", pHead);
+	SaveList(k, pHead);
 	DeallocateStudentCourse(pHead);
 }
 
@@ -492,7 +501,7 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 	Courses** add = new Courses * [5]{ nullptr };
 
 	Student* Temp = nullptr;
-	TakeList(stu->ID, Temp);
+	TakeList(stu->ID, Temp, WstringToString(pHead->year) + "\\Semester " + NumToString(NoSem) + "\\All Courses.txt");
 	GotoXY(0, 15);
 	a = _getwch();
 	if (Temp != nullptr)
@@ -512,7 +521,7 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 		SuccessAttend(add, t);
 	}
 	if (Temp != nullptr) delete Temp;
-
+	pCur = sem->Course;
 	while (a != 'e')
 	{
 		while (a != 13 && a != 8 && a != 'e')
@@ -546,7 +555,7 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 			{
 				if (add[i] != nullptr && add[i]->courseCode.compare(pCur->courseCode) == 0)
 				{
-					DeleteInList(add[i]->courseCode, stu->ID);
+					DeleteInList(WstringToString(pHead->year) + "\\Semester " + NumToString(NoSem) + "\\" + add[i]->courseCode + ".csv", stu->ID);
 					add[i] = add[t - 1];
 					t -= 1;
 					SuccessAttend(add, t);
@@ -556,7 +565,7 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 		}
 		if (a == 13 && pCur != nullptr && CheckDup2(add, pCur, t) && CheckSession(add, pCur, t) && t < 5)
 		{
-			int p = StudentLimit(pCur->courseCode + ".csv");
+			int p = StudentLimit(WstringToString(pHead->year) + "\\Semester " + NumToString(NoSem) + "\\" + pCur->courseCode + ".csv");
 			if (p < pCur->MaxStudent)
 			{
 				if (add == nullptr)
@@ -579,10 +588,10 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 		a = _getwch();
 	}
 
-	Score* Run = nullptr;
+	Score* Run = stu->score;
 	for (int i = 0; i < t; i++)
 	{
-		if (Run == nullptr)
+		if (stu->score == nullptr)
 		{
 			stu->score = new Score;
 			Run = stu->score;
@@ -595,13 +604,13 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 		}
 		Run->courseCode = add[i]->courseCode;
 	}
-
-	AddOneIntoList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//All Courses.txt", stu);
+	
+	AddOneIntoList(WstringToString(pHead->year) + "\\Semester " + NumToString(NoSem) + "\\All Courses.txt", stu);
 	for (int i = 0; i < t; i++)
 	{
-		if (CheckInList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode, stu->ID) == 0)
+		if (CheckInList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode + ".csv", stu->ID) == 0)
 		{
-			AddOneIntoCourseList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode, stu);
+			AddOneIntoCourseList(WstringToString(pHead->year) + "//Semester " + NumToString(NoSem) + "//" + add[i]->courseCode + ".csv", stu);
 		}
 	}
 }
@@ -609,8 +618,8 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 void InsertIntoSortedList(Student* stu, Student*& pHead)
 {
 	Student* This = new Student{ *stu };
-	This->score = new Score{ *stu->score };
-	//chuyen stu thanh This
+	//This->score = new Score{ *stu->score };
+	//chuyen stu thanh This 
 	Student* DummyNode = new Student;
 	DummyNode->next = pHead;
 	Student* Temp = DummyNode;

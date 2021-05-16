@@ -74,7 +74,7 @@ LABEL23:
 
 void ViewScore(Courses*& cou, wstring ID, wstring NoYear, int NoSem) {
 	system("cls");
-	cou = ouputCoursesbyID(cou, WstringToString(ID));
+	cou = outputCoursesbyID(cou, WstringToString(ID));
 	GotoXY(0, 0); cout << "Num";
 	GotoXY(5, 0); cout << "ID";
 	GotoXY(16, 0);	cout << "Name";

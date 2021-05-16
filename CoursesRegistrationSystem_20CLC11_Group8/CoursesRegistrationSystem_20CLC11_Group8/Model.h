@@ -31,7 +31,7 @@ bool CheckSession(Courses** check, Courses* source, int n);
 
 void DeallocateStudentCourse(Student*& pHead);
 
-void TakeList(std::wstring a, Student*& Temp);
+void TakeList(std::wstring a, Student*& Temp, std::string k);
 
 void AddOneIntoList(std::string k, Student* stu);
 

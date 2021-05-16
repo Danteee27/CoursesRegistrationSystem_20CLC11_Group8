@@ -35,44 +35,41 @@ void LoadClass(Schoolyear*& head) {
 void LoadSchoolYear(Schoolyear*& head) {
 	wifstream yRead("Schoolyear.txt");
 	wstring name;
+	Schoolyear* cur = nullptr;
 	while (!yRead.eof()) {
 		yRead >> name;
 		if (head == nullptr) {
 			head = new Schoolyear;
-			head->year = name;
-			cout << "1";
-			head->year_Student = ReadStudent("StudentTest.csv");
-			cout << "2";
-			head->sem = new Semester;
-			head->sem->next = new Semester;
-			head->sem->next = head->sem->next;
-			head->sem->next->prev = head->sem;
-			head->sem->next->next = new Semester;
-			head->sem->next->next = head->sem->next->next;
-			head->sem->next->next->prev = head->sem->next;
-			head->sem->No = 1;
-			head->sem->next->No = 2;
-			head->sem->next->next->No = 3;
-			head->sem->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 1//course.csv");
-			cout << "3";
-			head->sem->next->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 2//course.csv");
-			cout << "4";
-			head->sem->next->next->Course = InputCoursesCSV(WstringToString(head->year) + "//Semester 3//course.csv");
-			cout << "5";
-			LoadRegisDate(head->sem, head->year);
-			cout << "6";
-			LoadClass(head);
-			cout << "7";
-			head->next = nullptr;
-			head->prev = nullptr;
-
+			cur = head;
 		}
-
+		else {
+			cur->next = new Schoolyear;
+			cur = cur->next;
+		}
+		cur->year = name;
+		cur->year_Student = ReadStudent("StudentTest.csv");
+		cur->sem = new Semester;
+		cur->sem->next = new Semester;
+		cur->sem->next = cur->sem->next;
+		cur->sem->next->prev = cur->sem;
+		cur->sem->next->next = new Semester;
+		cur->sem->next->next = cur->sem->next->next;
+		cur->sem->next->next->prev = cur->sem->next;
+		cur->sem->No = 1;
+		cur->sem->next->No = 2;
+		cur->sem->next->next->No = 3;
+		cur->sem->Course = InputCoursesCSV(WstringToString(cur->year) + "//Semester 1//course.csv");
+		cur->sem->next->Course = InputCoursesCSV(WstringToString(cur->year) + "//Semester 2//course.csv");
+		cur->sem->next->next->Course = InputCoursesCSV(WstringToString(cur->year) + "//Semester 3//course.csv");
+		LoadRegisDate(cur->sem, cur->year);
+		LoadClass(cur);
+		cur->next = nullptr;
+		cur->prev = nullptr;
 	}
 }
 
 
-Courses* ouputCoursesbyID(Courses* pHead, std::string cID) {
+Courses* outputCoursesbyID(Courses* pHead, std::string cID) {
 	while (pHead != nullptr)
 	{
 		if (pHead->courseCode.compare(cID) == 0) {

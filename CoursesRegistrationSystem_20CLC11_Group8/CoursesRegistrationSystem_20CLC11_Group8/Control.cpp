@@ -333,12 +333,16 @@ Courses* InputCoursesCSV(std::string k)
 	CoursesCSV.seekg(0, std::ios_base::end); //kiem thang ky tu cuoi cung cua file csv, vi no du 1 hang trong nen dich sang trai 1 buoc cho no dung ke thang SI cuoi cung
 	int end = CoursesCSV.tellg();
 	CoursesCSV.seekg(0, std::ios_base::beg);
+	if (CoursesCSV.tellg() >= end)
+	{
+		return nullptr;
+	}
 	CoursesCSV.ignore(1i64, wchar_t(0xfeff)); //bo qua thang ky tu dau tien do dinh dang BOM UTF8
 	std::wstring x;
 	Vietlanguage();
-
-	while (CoursesCSV.tellg() < end -2)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
+	while (CoursesCSV.tellg() != end)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
 	{
+
 		if (pCur == nullptr) {
 			pCur = new Courses;
 			pCur->prev = nullptr;
@@ -376,7 +380,6 @@ Courses* InputCoursesCSV(std::string k)
 			else getline(CoursesCSV, x);
 			WstringToString(x).copy(pCur->Session[i][0], 2, 0);
 		}
-		
 	}
 	ASCIIlanguage();
 	while (pCur->prev != nullptr) pCur = pCur->prev;
@@ -554,7 +557,7 @@ void EditCourses(Courses*& pHead)
 	std::cout << "Give me the course ID to update: ";
 	std::string Id;
 	std::cin >> Id;
-	Courses* pTemp = ouputCoursesbyID(pHead, Id);
+	Courses* pTemp = outputCoursesbyID(pHead, Id);
 	int t = -1;
 	std::cout << "1.Course ID" << std::endl << "2.Course Name" << std::endl << "3.Teacher Name" << std::endl << "4.Session" << std::endl << "5.Credits" << std::endl << "6.Start date" << std::endl << "7.End date\n" << "0.End\n";
 	while (t != 0)
@@ -654,7 +657,7 @@ void OutputCoursesByStudentID(Courses*& CHead, Student*& SHead) {
 			std::cout << std::endl <<  "Courses: " << t << std::endl;
 			for (int i = 0; i < t; i++) {
 				m = Cur->score->courseCode;
-				ouputCoursesbyID(CHead, m);
+				outputCoursesbyID(CHead, m);
 				std::cout << std::endl;
 			}
 		}

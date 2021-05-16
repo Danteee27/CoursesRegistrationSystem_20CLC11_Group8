@@ -39,7 +39,7 @@ void DeallocateCourse(Courses*& pHead);
 
 
 void AddCourse(Schoolyear*& head);
-Class* StuClass(Schoolyear* year, wstring ID);
+Class* StuClass(Schoolyear* year, wstring ID); //ham nay sai
 
 void CreateSchoolYear(Schoolyear*& head);
 
