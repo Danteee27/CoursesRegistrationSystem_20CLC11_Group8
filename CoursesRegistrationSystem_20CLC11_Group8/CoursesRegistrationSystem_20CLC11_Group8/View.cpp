@@ -56,7 +56,7 @@ LABEL23:
 		cout << "The course code is not existed" << endl; goto LABEL23;
 	}
 	
-	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//course", pHead->Stu);
+	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//course.csv", pHead->Stu);
 	Student* pCurS = pHead->Stu;
 	while (pCurS) {
 		Vietlanguage();
@@ -84,7 +84,7 @@ void ViewScore(Courses*& cou, wstring ID, wstring NoYear, int NoSem) {
 
 
 
-	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + WstringToString(ID), cou->Stu);
+	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + WstringToString(ID)+".csv", cou->Stu);
 	int i = 1;
 	Student* last = cou->Stu;
 	while (cou->Stu != nullptr) {
@@ -102,7 +102,7 @@ void ViewScore(Courses*& cou, wstring ID, wstring NoYear, int NoSem) {
 		i++;
 	}
 	cou->Stu = last;
-	while (cou->Stu->prev != NULL) cou->Stu = cou->Stu->prev;
+	//while (cou->Stu->prev != NULL) cou->Stu = cou->Stu->prev;
 	GotoXY(0, ++i);
 }
 
@@ -202,10 +202,12 @@ LABEL:
 	cout << endl << "1. Add a course" << endl;
 	cout << "2. Update a course" << endl;
 	cout << "3. Delete a course" << endl;
-	cout << "4. View score of the course" << endl;
-	cout << "5. View all student of a course" << endl;
-	cout << "6. Create a registration of the semester" << endl;
-	cout << "7. Back" << endl;
+	cout << "4. Export all courses's student list into csv file" << endl;
+	cout << "5. View score of the course" << endl;
+	cout << "6. View all student of a course" << endl;
+	cout << "7. Create a registration of the semester" << endl;
+	cout << "8. Update a course's scoreboard" << endl;
+	cout << "9. Back" << endl;
 	cout << "Choose: ";
 	int a;
 	cin >> a;
@@ -220,6 +222,9 @@ LABEL:
 	case 3:
 		break;
 	case 4:
+		finishFile(head->year,head->sem->Course,head->sem->No);
+		break;
+	case 5:
 		cout << "Give me the course ID: ";
 		wcin >> cc;
 		ViewScore(head->sem->Course, cc, head->year, head->sem->No);
@@ -237,13 +242,31 @@ LABEL:
 			break;
 		}
 		break;
-	case 5:
+	case 6:
 		viewAllStuIn1Course(head->sem->Course, head->year, head->sem->No);
 		break;
-	case 6:
+	case 7:
 		RegisDate(head->sem, head->year);
 		break;
-	case 7:
+	case 8:
+	{
+		std::string k;
+		std::string CourseID;
+		std::cout << "Which course do you want to input:";
+		std::cin >> CourseID;
+		if (checkCourse(head->sem->Course, CourseID))
+		{
+			std::cout << "Input file:";
+			std::cin >> k;
+			changeLocationFile(k, WstringToString(head->year) + "\\Semester " + NumToString(head->sem->No)+"\\"+CourseID+".csv");
+		}
+		else
+		{
+			std::cout << "CourseID not founded";
+		}
+		break;
+	}
+	case 9:
 		ViewSchoolyear(head);
 		break;
 	}
@@ -345,4 +368,77 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 	GotoXY(0, ++y);
 	DeallocateCourse(pStart);
 	DeallocateStudentCourse(pHead);
+}
+
+Score* takeScoreFromFile(Student* pHead, Student* stu)
+{
+	if (pHead == nullptr)
+	{
+		return nullptr;
+	}
+	Student* pCur = pHead;
+	while (pCur != nullptr && pCur->ID.compare(stu->ID) != 0)
+	{
+		pCur = pCur->next;
+	}
+	return pCur->score;
+}
+
+void viewMyScore(std::string k, wstring YearNo, int NoSem, Student* stu)
+{
+	int x = 0;
+	int y = 0;
+	GotoXY(x, y);
+	Student* pHead = nullptr;
+	InputList(k, pHead);
+	Score* test = pHead->score;
+	while (test != nullptr)
+	{
+		std::cout << test->courseCode;
+		test = test->next;
+	}
+	if (pHead == nullptr) return;
+	Student* pCur = pHead;
+	std::wcout << pCur->ID;
+	y++;
+	GotoXY(x, y);
+	Vietlanguage();
+	std::wcout << stu->Firstname << " " << stu->Lastname;
+	ASCIIlanguage();
+	y++;
+	GotoXY(x, y);
+	if (pCur != nullptr)
+	{
+		Score* Run = pCur->score;
+		if (pCur->score == nullptr)
+		{
+			std::cout << "You havent attend any course";
+			return;
+		}
+		while (Run != nullptr)
+		{
+			GotoXY(x, y);
+			std::cout << Run->courseCode;
+			x += 10;
+			Student* head = nullptr;
+			OpenCourseFile(WstringToString(YearNo) + "\\Semester " + NumToString(NoSem) + "\\" + Run->courseCode + ".csv", head);
+			Score*temp = takeScoreFromFile(head, stu);
+			Run->final = temp->final;
+			Run->gpa = temp->gpa;
+			Run->mid = temp->mid;
+			GotoXY(x, y);
+			std::cout << Run->mid;
+			x += 5;
+			GotoXY(x, y);
+			std::cout << Run->final;
+			x += 5;
+			GotoXY(x, y);
+			std::cout << Run->gpa << "\n";
+			x += 5;
+			Run = Run->next;
+			DeallocateStudentCourse(head);
+			x = 0;
+			y += 2;
+		}
+	}
 }

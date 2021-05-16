@@ -93,8 +93,8 @@ void GotoXY(int x, int y)
 
 void Vietlanguage()
 {
-	_setmode(_fileno(stdin), _O_U8TEXT);
-	_setmode(_fileno(stdout), _O_U8TEXT);
+	_setmode(_fileno(stdin), _O_U16TEXT);
+	_setmode(_fileno(stdout), _O_U16TEXT);
 }
 
 void ASCIIlanguage()

@@ -8,5 +8,7 @@ void viewAllStuIn1Course(Courses* pHead, wstring, int);
 void ViewScore(Courses*& cou, wstring ID, wstring NoYear, int NoSem);
 void ViewSchoolyear(Schoolyear*& head);
 void ViewAttendedCourse(std::string k, std::string a, Student* stu);
+Score* takeScoreFromFile(Student* pHead, Student* stu);
+void viewMyScore(std::string k, wstring YearNo, int NoSem, Student* stu);
 //=======
 #endif

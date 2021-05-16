@@ -321,7 +321,6 @@ void CoursesSaveFile(std::string k, Courses* pHead)
 }
 Courses* InputCoursesCSV(std::string k)
 {
-
 	Courses* pCur = nullptr;
 	std::wfstream CoursesCSV(k, std::wfstream::in);
 	CoursesCSV.imbue(std::locale(CoursesCSV.getloc(), new std::codecvt_utf8<wchar_t>));
@@ -330,19 +329,18 @@ Courses* InputCoursesCSV(std::string k)
 		std::cout << "File is not existed";
 		return nullptr;
 	}
-	CoursesCSV.seekg(0, std::ios_base::end); //kiem thang ky tu cuoi cung cua file csv, vi no du 1 hang trong nen dich sang trai 1 buoc cho no dung ke thang SI cuoi cung
+	CoursesCSV.seekg(-2, std::ios_base::end); //kiem thang ky tu cuoi cung cua file csv, vi no du 1 hang trong nen dich sang trai 1 buoc cho no dung ke thang SI cuoi cung
 	int end = CoursesCSV.tellg();
 	CoursesCSV.seekg(0, std::ios_base::beg);
 	if (CoursesCSV.tellg() >= end)
 	{
 		return nullptr;
 	}
-	CoursesCSV.ignore(1i64, wchar_t(0xfeff)); //bo qua thang ky tu dau tien do dinh dang BOM UTF8
+	CoursesCSV.ignore(1000, wchar_t(0xfeff)); //bo qua thang ky tu dau tien do dinh dang BOM UTF8
 	std::wstring x;
 	Vietlanguage();
-	while (CoursesCSV.tellg() != end)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
+	while (CoursesCSV.tellg() < end && CoursesCSV.tellg()!=-1)//no se dung lai vi vi tri no be hon thang ke ben thang ky tu cuoi cung
 	{
-
 		if (pCur == nullptr) {
 			pCur = new Courses;
 			pCur->prev = nullptr;
@@ -382,7 +380,7 @@ Courses* InputCoursesCSV(std::string k)
 		}
 	}
 	ASCIIlanguage();
-	while (pCur->prev != nullptr) pCur = pCur->prev;
+	if(pCur != nullptr )while (pCur->prev != nullptr) pCur = pCur->prev;
 	return pCur;
 }
 
@@ -617,21 +615,19 @@ void EditCourses(Courses*& pHead)
 
 
 
-void finishFile(Courses* pHead)
+void finishFile(wstring YearNo,Courses*&cou, int NoSem)
 {
-	std::string path;
-	Courses* pCur = pHead;
-	if (pHead == nullptr)
+	Courses* pCur = cou;
+	if (cou == nullptr)
 	{
 		return;
 	}
 	while (pCur != nullptr)
 	{
-		path = pCur->courseCode;
-		Student* pHead = nullptr;
-		OpenCourseFile(path, pHead);
-		CheckNumber(pHead);
-		SaveCourseFile(path, pHead);
+		Student* head = nullptr;
+		OpenCourseFile(WstringToString(YearNo) + "\\Semester " + NumToString(NoSem) + "\\" +pCur->courseCode+".csv", head);
+		CheckNumber(head);
+		SaveCourseFile(WstringToString(YearNo) + "\\Semester " + NumToString(NoSem) + "\\" + pCur->courseCode + ".csv", head);
 		pCur = pCur->next;
 	}
 
@@ -768,7 +764,7 @@ void updateScore(Courses*& noC, int NoSem, wstring NoYear) {
 
 		}
 	}
-	SaveCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + noC->courseCode, noC->Stu);
+	SaveCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + noC->courseCode+".csv", noC->Stu);
 }
 
 float getCredit(Courses* cou, std::string Code) {
@@ -784,8 +780,8 @@ float getCredit(Courses* cou, std::string Code) {
 	return cre;
 }
 
-float GPAsem(Student* stu, Courses* cour, Semester* sem, Schoolyear* year) {
-	if (stu == nullptr || sem == nullptr || year == nullptr || cour == nullptr) return 0;
+float GPAsem(Student* stu, Courses* cour) {
+	if (stu == nullptr || cour == nullptr) return 0;
 	Score* sco = stu->score;
 	if (sco == nullptr) return 0;
 	float t = 0;
@@ -796,6 +792,35 @@ float GPAsem(Student* stu, Courses* cour, Semester* sem, Schoolyear* year) {
 		sco = sco->next;
 	}
 	return t / m;
+}
+
+void changeLocationFile(std::string k, std::string a)
+{
+	std::fstream cop, pas;
+	cop.open(k, std::fstream::in | std::fstream::binary);
+	pas.open(a, std::fstream::out | std::fstream::binary);
+	cop.seekg(0, std::fstream::end);
+	int n = cop.tellg();
+	cop.seekg(0, std::fstream::beg);
+	char* temp = new char[n + 1];
+	cop.read(temp, n);
+	pas.write(temp, n);
+	cop.close();
+	pas.close();
+	delete [] temp;
+}
+
+bool checkCourse(Courses* pHead, string CourseID)
+{
+	while (pHead != nullptr && pHead->courseCode.compare(CourseID) != 0)
+	{
+		pHead = pHead->next;
+	}
+	if (pHead == nullptr)
+	{
+		return false;
+	}
+	else return true;
 }
 
 void Print(Student* pHead)

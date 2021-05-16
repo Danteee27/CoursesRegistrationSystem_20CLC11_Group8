@@ -33,7 +33,7 @@ void UpdateCourses(Courses*& pHead);
 
 void CheckNumber(Student* pHead);
 
-void finishFile(Courses* pHead);
+void finishFile(wstring YearNo, Courses*& cou, int NoSem);
 
 void DeallocateCourse(Courses*& pHead);
 
@@ -52,6 +52,8 @@ void deallocateCkass(Class*& phead);
 void deallocateStudent(Student*& phead);
 void deallocateSem(Semester*& phead);
 void deallocateScore(Score*& phead);
+void changeLocationFile(std::string k, std::string a);
+bool checkCourse(Courses* pHead, string CourseID);
 void Print(Student* pHead);
 
 #endif // !_ControlFunc

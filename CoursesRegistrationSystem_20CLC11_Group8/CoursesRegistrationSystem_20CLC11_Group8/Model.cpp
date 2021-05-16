@@ -24,9 +24,10 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 	cout << "Class: " << StuClass(s_year, head->ID)->classCode << endl;
 	cout << "--------MENU-----------" << endl;
 	cout << "1. View attended courses" << endl;
-	cout << "2. Enroll courses." << endl;
-	cout << "3. View class." << endl;
-	cout << "4. Exit." << endl;
+	cout << "2. View my score" << endl;
+	cout << "3. Enroll courses." << endl;
+	cout << "4. View class." << endl;
+	cout << "5. Exit." << endl;
 	int choice;
 	cout << "Choose: ";
 	cin >> choice;
@@ -37,6 +38,10 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 		break;
 	case 2:
 		system("cls");
+		viewMyScore(WstringToString(s_year->year) + "//Semester " + NumToString(SemNo) + "//All Courses.txt", s_year->year, SemNo, head);
+		break;
+	case 3:
+		system("cls");
 		if (checkRegis(s_year->sem, SemNo)) {
 			AttendCoursesMenu(s_year, head, SemNo);
 		}
@@ -44,10 +49,10 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 		Sleep(2000);
 		StudentMenu(s_year, head);
 		break;
-	case 3:
+	case 4:
 		PrintHello(StuClass(s_year, head->ID)->Stu);
 		break;
-	case 4:
+	case 5:
 		exit(0);
 		break;
 	}
@@ -165,7 +170,6 @@ void InputList(std::string k, Student*& pHead)
 				Temp = Temp->next;
 			}
 			AllStudentList >> Temp->courseCode;
-			std::cout << Temp->courseCode;
 		}
 		AllStudentList.ignore(1000, '\n');
 	}
@@ -278,8 +282,6 @@ void SaveCourseFile(std::string k, Student*& pHead)
 
 void DeleteInList(std::string k, std::wstring a)
 {
-	std::cout << k;
-	_getwch();
 	Student* pHead = nullptr;
 	OpenCourseFile(k, pHead);
 	Student* pCur = pHead;
