@@ -43,7 +43,12 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 		break;
 	case 2:
 		system("cls");
-		viewMyScore(WstringToString(s_year->year) + "//Semester " + NumToString(SemNo) + "//All Courses.txt", s_year->year, SemNo, head);
+		if (!checkRegis(s_year->sem, SemNo)) {
+			viewMyScore(WstringToString(s_year->year) + "//Semester " + NumToString(SemNo) + "//All Courses.txt", s_year->year, SemNo, head);
+		}
+		else cout << "VIEWING SCORE IS NOT AVAILABLE, VIEW AFTER REGISTRATION TIME" << endl;
+		Sleep(1000);
+		StudentMenu(s_year, head);
 		break;
 	case 3:
 		system("cls");
@@ -51,7 +56,7 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 			AttendCoursesMenu(s_year, head, SemNo);
 		}
 		else cout << "REGISTRATION IS NOT AVAILABLE" << endl;
-		Sleep(2000);
+		Sleep(1000);
 		StudentMenu(s_year, head);
 		break;
 	case 4:
@@ -398,7 +403,7 @@ void SuccessAttend(Courses* a[5], int t)
 	for (int i = 0; i < t; i++)
 	{
 		GotoXY(0, y);
-		std::cout << a[i]->courseCode << "Accepted";
+		std::cout << a[i]->courseCode << " is Accepted/Enrolled";
 		y++;
 	}
 }
@@ -447,7 +452,6 @@ void TakeList(std::wstring a, Student*& Temp, std::string k)
 			pHead = pHead->next;
 		}
 	}
-	std::cout << "done";
 	SaveList(k, pHead);
 	DeallocateStudentCourse(pHead);
 }
