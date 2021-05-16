@@ -86,26 +86,22 @@ LABEL:
 
 
 	const wstring staff_password = L"staff";
-
-	cout << "hello 2";
 	if (ID == L"staff" && password == staff_password) {
-		cout << "aaa";
 		StaffMenu(s_year);
 	}
-	const wstring correct_password = FindStudent(s_year->year_Student, ID)->password;
+	Student*check=FindStudent(s_year->year_Student, ID);
+	if (check == nullptr)goto LABEL;
+	const wstring correct_password = check->password;
 	if (FindStudent(s_year->year_Student, ID) == nullptr && ID != L"staff") {
-		cout << "aaa1";
 		cout << "The ID is not existed" << endl;
 		goto LABEL;
 	}
 
 	else if (password != correct_password) {
-		cout << "aaa2";
 		cout << "The password is incorrect!" << endl;
 		goto LABEL;
 	}
 	else if (password == correct_password) {
-		cout << "aaa3";
 		StudentMenu(s_year, FindStudent(s_year->year_Student, ID));
 	}
 }

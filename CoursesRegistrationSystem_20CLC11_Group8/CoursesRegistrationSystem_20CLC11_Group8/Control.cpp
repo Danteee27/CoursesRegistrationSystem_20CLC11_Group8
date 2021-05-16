@@ -94,18 +94,16 @@ void OutputStudentFile(Student* head, std::string name) {
 }
 
 Class* StuClass(Schoolyear* year, wstring ID) {
-	Class* result = nullptr;
-	while (year->all_Class != nullptr) {
-		while (year->all_Class->Stu != nullptr) {
-			if (year->all_Class->Stu->ID == ID) break;
-			year->all_Class->Stu = year->all_Class->Stu->next;
+	Class* result = year->all_Class;
+	while (result != nullptr) {
+		Student* temp = result->Stu;
+		while (temp != nullptr) {
+			if (temp->ID == ID) return result;
+			temp = temp->next;
 		}
-		if (year->all_Class->Stu->ID == ID) break;
-		year->all_Class = year->all_Class->next;
+		result = result->next;
 	}
-	if (year->all_Class)
-		result = year->all_Class;
-	return result;
+	return nullptr;
 }
 
 void CreateSchoolYear(Schoolyear*& head) {
