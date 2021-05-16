@@ -27,7 +27,8 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 	cout << "2. View my score" << endl;
 	cout << "3. Enroll courses." << endl;
 	cout << "4. View class." << endl;
-	cout << "5. Exit." << endl;
+	cout << "5. View class scoreboard" << endl;
+	cout << "6. Exit." << endl;
 	int choice;
 	cout << "Choose: ";
 	cin >> choice;
@@ -53,6 +54,9 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 		PrintHello(StuClass(s_year, head->ID)->Stu);
 		break;
 	case 5:
+		viewScoreboardClass(s_year, SemNo);
+		break;
+	case 6:
 		exit(0);
 		break;
 	}
@@ -205,7 +209,7 @@ void SaveList(std::string k, Student*& pHead)
 	AllStudentList.close();
 }
 
-void OpenCourseFile(std::string k, Student*& pHead)
+void OpenCourseFile(std::string k, Student*& pHead,std::string coursename)
 {
 	pHead = nullptr;
 	std::wfstream CourseStudentList(k, std::ios_base::in);
@@ -247,6 +251,7 @@ void OpenCourseFile(std::string k, Student*& pHead)
 		pCur->score->final = WStringtoFloat(x);
 		getline(CourseStudentList, x);
 		pCur->score->gpa = WStringtoFloat(x);
+		pCur->score->courseCode = coursename;
 	}
 	CourseStudentList.close();
 }

@@ -13,7 +13,7 @@ void StudentMenu(Schoolyear*& s_year, Student* head);
 
 void SaveList(std::string k, Student*& pHead);
 
-void OpenCourseFile(std::string k, Student*& pHead);
+void OpenCourseFile(std::string k, Student*& pHead,std::string coursename="");
 
 void SaveCourseFile(std::string k, Student*& pHead);
 

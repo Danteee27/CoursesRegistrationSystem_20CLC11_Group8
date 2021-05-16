@@ -456,3 +456,185 @@ void viewMyScore(std::string k, wstring YearNo, int NoSem, Student* stu)
 		}
 	}
 }
+
+void findSchoolYear(Schoolyear* source, Schoolyear*& destination, wstring compare) {
+	while (source != nullptr && source->year != compare)
+		source = source->next;
+	if (source != nullptr) destination = source;
+	else destination = nullptr;
+}
+void findClass(Class* source, Class*& destination, string compare) {
+	while (source != nullptr && source->prev) source = source->prev;
+	while (source != nullptr && source->classCode.compare(compare) != 0) {
+		cout << 1;
+		source = source->next;
+	}
+
+	if (source != nullptr) { destination = source; cout << destination->classCode << endl; }
+	else destination = nullptr;
+}
+void viewSchoolYear(Schoolyear* pHead) {
+	while (pHead != nullptr && pHead->prev != nullptr) pHead = pHead->prev;
+	while (pHead != nullptr) {
+		wcout << pHead->year << endl;
+		pHead = pHead->next;
+	}
+}
+void viewClassList(Class* pHead) {
+	while (pHead != nullptr && pHead->prev != nullptr) pHead = pHead->prev;
+	while (pHead != nullptr) {
+		cout << pHead->classCode << endl;
+		pHead = pHead->next;
+	}
+}
+
+void viewScoreboardClass(Schoolyear* pHeadYear, int semNo) {
+	string temp;
+	wstring chooseYear;
+	string chooseClass;
+	//display available school year and choose school year
+	Schoolyear* pCurYear = pHeadYear;
+	/*cout << "School year list:\n";
+	viewSchoolYear(pHeadYear);
+	cout << "Choose: ";
+	cin.ignore(1000, '\n');
+	getline(wcin, chooseYear, L'\n');
+	findSchoolYear(pHeadYear, pCurYear, chooseYear);
+	if (pCurYear == nullptr) {
+		cout << "Can't find\n";
+		return;
+	}*/
+
+	//choose sem
+	while (pCurYear->sem != nullptr && pCurYear->sem->prev != nullptr) pCurYear->sem = pCurYear->sem->prev;
+	Semester* pCurSem = pCurYear->sem;
+	for (int i = 0; i < semNo - 1; i++)
+		pCurSem = pCurSem->next;
+
+	//display class list and choose class list
+	Class* pCurClass = nullptr;
+	cout << "Class list:\n";
+	viewClassList(pHeadYear->all_Class);
+	cout << "Choose: ";
+	cin.ignore(1000, '\n');
+	getline(cin, chooseClass, '\n');
+	findClass(pCurYear->all_Class, pCurClass, chooseClass);
+	if (pCurClass == nullptr) {
+		cout << "Can't find\n";
+		return;
+	} 
+	{
+		Courses* pRunCourse = pCurSem->Course;
+		while (pRunCourse != nullptr) {
+			pRunCourse->Stu = nullptr;
+			OpenCourseFile(WstringToString(pHeadYear->year) + "\\Semester " + NumToString(semNo) + "\\" + pRunCourse->courseCode + ".csv", pRunCourse->Stu,pRunCourse->courseCode);
+			//cout << endl << pRunCourse->Stu->score->final << endl;
+			pRunCourse = pRunCourse->next;
+			
+		}
+	}
+	system("cls");
+	int x = 0;
+	int y = 0;
+	//loop stu in class
+	{
+		Student* pTemp = pCurClass->Stu;
+		while (pTemp != nullptr && pTemp->prev != nullptr) {
+			pTemp = pTemp->prev;
+		}
+	}
+	{
+		Courses* pTemp = pCurSem->Course;
+		while (pTemp != nullptr && pTemp->prev != nullptr) {
+			pTemp = pTemp->prev;
+		}
+	}
+
+	Student* pRunStu = pCurClass->Stu;
+	while (pRunStu->prev!=nullptr){
+		pRunStu = pRunStu->prev;
+	}
+	while (pRunStu != nullptr) {
+		//xuat info student
+		GotoXY(x, y);
+		x += 3;
+		cout << pRunStu->Num;
+		GotoXY(x, y);
+		x += 10;
+		wcout << pRunStu->ID;
+		Vietlanguage();
+		GotoXY(x, y);
+		x += 15;
+		wcout << pRunStu->Firstname;
+		GotoXY(x, y);
+		x += 30;
+		wcout << pRunStu->Lastname;
+		ASCIIlanguage();
+
+		Courses* pRunCourse = pCurSem->Course;
+		float GPA = 0;
+		int noOfAttendCourse = 0;
+		while (pRunCourse != nullptr) {
+			Student* pRunAttend = pRunCourse->Stu;
+
+			while (pRunAttend != nullptr && pRunAttend->ID != pRunStu->ID)
+				pRunAttend = pRunAttend->next;
+
+			if (pRunAttend != nullptr) { //co attend course nay
+				Score* pRunScore = pRunAttend->score;
+				while (pRunScore != nullptr && pRunScore->courseCode != pRunCourse->courseCode)
+					pRunScore = pRunScore->next;
+
+				if (pRunScore != nullptr) {
+					GPA += pRunScore->gpa;
+					noOfAttendCourse++;
+					//xuat final va gpa
+					GotoXY(x, y);
+					x += 7;
+					cout << fixed << setprecision(2) << pRunScore->final;
+					GotoXY(x, y);
+					x += 7;
+					cout << fixed << setprecision(2) << pRunScore->gpa;
+				}
+			}
+			else { //khong attend course nay
+				//xuat X X vo final va GPA
+				GotoXY(x, y);
+				x += 7;
+				cout << "X";
+				GotoXY(x, y);
+				x += 7;
+				cout << "X";
+			}
+			pRunCourse = pRunCourse->next;
+		}
+		if (noOfAttendCourse != 0) {
+			//xuat overall GPA
+			GotoXY(x, y);
+			x += 7;
+			cout << fixed << setprecision(2) << GPA / float(noOfAttendCourse);
+		}
+		else {
+			//xuat X X vo overall GPA
+			GotoXY(x, y);
+			x += 7;
+			cout << "X"; 
+		}
+		pRunStu = pRunStu->next;
+		x = 0;
+		y++;
+	}
+	{
+		Courses* pRunCourse = pCurSem->Course;
+		while (pRunCourse != nullptr) {
+			while (pRunCourse->Stu != nullptr) {
+				Student* pTemp = pRunCourse->Stu;
+				pRunCourse->Stu = pRunCourse->Stu->next;
+				delete pTemp;
+			}
+			pRunCourse->Stu = nullptr;
+			pRunCourse = pRunCourse->next;
+		}
+	}
+	std::cout << endl;
+}
