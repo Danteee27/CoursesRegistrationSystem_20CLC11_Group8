@@ -516,9 +516,12 @@ void AttendCoursesMenu(Schoolyear*& pHead, Student*& stu, int NoSem)
 			{
 				pCur = pCur->next;
 			}
-			add[t] = pCur;
-			t++;
-			pCur = pHead->sem->Course;
+			if (pCur != nullptr)
+			{
+				add[t] = pCur;
+				t++;
+			}
+			pCur = sem->Course;
 			pAdd = pAdd->next;
 		}
 		SuccessAttend(add, t);

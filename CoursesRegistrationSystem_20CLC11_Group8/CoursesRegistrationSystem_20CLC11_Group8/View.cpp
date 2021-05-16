@@ -330,8 +330,9 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 	if (pHead == nullptr) return;
 	Student* pCur = pHead;
 	Courses* pStart = nullptr;
-	Courses* check = pStart;
+	Courses* check = nullptr;
 	check = InputCoursesCSV(a);
+	pStart = check;
 	while (pCur != nullptr && pCur->ID.compare(stu->ID) != 0)
 	{
 		pCur = pCur->next;

@@ -584,6 +584,7 @@ void EditCourses(Courses*& pHead)
 				std::cout << "Learn date?(Mon,Tue,Wed,Thu,Fri,Sat,Sun):";
 				std::cin >> pTemp->Session[i][1];
 				std::cout << "Session?(S1,S2,S3,S4):";
+				std::cin >> pTemp->Session[i][0];
 				pTemp->Session[i][0][2] = '\0';
 				pTemp->Session[i][1][3] = '\0';
 			}
