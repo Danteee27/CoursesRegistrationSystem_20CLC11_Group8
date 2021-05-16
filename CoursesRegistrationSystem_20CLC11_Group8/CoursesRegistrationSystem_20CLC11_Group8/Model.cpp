@@ -16,7 +16,7 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 
 		cout << "AVAILABLE" << endl;
 	}
-	else { cout << s_year->sem->No; cout << "UNAVAILABLE" << endl; }
+	else { cout << "UNAVAILABLE" << endl; }
 	Semester* timeCheck;
 	timeCheck = s_year->sem;
 	for (int i = 0; i < SemNo - 1; i++) timeCheck = timeCheck->next;
