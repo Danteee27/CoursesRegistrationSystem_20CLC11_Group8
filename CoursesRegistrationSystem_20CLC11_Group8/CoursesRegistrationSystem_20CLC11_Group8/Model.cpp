@@ -17,6 +17,10 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 		cout << "AVAILABLE" << endl;
 	}
 	else { cout << s_year->sem->No; cout << "UNAVAILABLE" << endl; }
+	Semester* timeCheck;
+	timeCheck = s_year->sem;
+	for (int i = 0; i < SemNo - 1; i++) timeCheck = timeCheck->next;
+	cout << "Registration time: " << timeCheck->startDate.day << "/" << timeCheck->startDate.month << "/" << timeCheck->startDate.year << " to " << timeCheck->endDate.day << "/" << timeCheck->endDate.month << "/" << timeCheck->endDate.year << endl;
 	wcout << "Student ID: " << head->ID << endl;
 	Vietlanguage();
 	wcout << "Student name: " << head->Firstname << " " << head->Lastname << endl;
@@ -77,7 +81,7 @@ void StudentMenu(Schoolyear*& s_year, Student* head) {
 void Login(Schoolyear*& s_year) {
 
 	wstring ID, password;
-LABEL:
+LABELLogin:
 	cout << "ID: ";
 	wcin >> ID;
 	cout << "Password: ";
@@ -90,16 +94,16 @@ LABEL:
 		StaffMenu(s_year);
 	}
 	Student*check=FindStudent(s_year->year_Student, ID);
-	if (check == nullptr)goto LABEL;
+	if (check == nullptr)goto LABELLogin;
 	const wstring correct_password = check->password;
 	if (FindStudent(s_year->year_Student, ID) == nullptr && ID != L"staff") {
 		cout << "The ID is not existed" << endl;
-		goto LABEL;
+		goto LABELLogin;
 	}
 
 	else if (password != correct_password) {
 		cout << "The password is incorrect!" << endl;
-		goto LABEL;
+		goto LABELLogin;
 	}
 	else if (password == correct_password) {
 		StudentMenu(s_year, FindStudent(s_year->year_Student, ID));

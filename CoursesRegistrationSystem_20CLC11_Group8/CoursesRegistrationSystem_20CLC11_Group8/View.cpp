@@ -43,7 +43,8 @@ LABEL22:
 void viewAllStuIn1Course(Courses* pHead, wstring NoYear, int NoSem) {
 	std::string Code;
 	if (pHead == nullptr) {
-		return; cout << "No course";
+		cout << "No course";
+		return;
 	}
 LABEL23:
 	while (pHead->prev != nullptr) pHead = pHead->prev;
@@ -56,7 +57,7 @@ LABEL23:
 		cout << "The course code is not existed" << endl; goto LABEL23;
 	}
 	
-	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//course.csv", pHead->Stu);
+	OpenCourseFile(WstringToString(NoYear) + "//Semester " + NumToString(NoSem) + "//" + Code +".csv", pHead->Stu);
 	Student* pCurS = pHead->Stu;
 	while (pCurS) {
 		Vietlanguage();
@@ -64,12 +65,10 @@ LABEL23:
 		std::wcout << pCurS->ID << "  ";
 		std::wcout << pCurS->Lastname << "  ";
 		std::wcout << pCurS->Firstname << "  ";
-		std::wcout << pCurS->Gender << "  ";
 		ASCIIlanguage();
-		std::wcout << pCurS->Birthday.day << "/" << pCurS->Birthday.month << "/" << pCurS->Birthday.year << "  ";
-		std::wcout << pCurS->SocialID << std::endl;
 		pCurS = pCurS->next;
 	}
+	std::cout << endl;
 }
 
 void ViewScore(Courses*& cou, wstring ID, wstring NoYear, int NoSem) {
@@ -174,8 +173,13 @@ void ViewSchoolyear(Schoolyear*& head) {
 			viewAllStuIn1Class(head->all_Class);
 			break;
 		case 3:
-
+		{
+			int Sem;
+			std::cout << "Sem?(1,2,3)";
+			std::cin >> Sem;
+			viewScoreboardClass(head, Sem);
 			break;
+		}
 		case 4:
 			ViewSchoolyear(head);
 			break;
@@ -276,7 +280,7 @@ LABEL:
 		}
 		else
 		{
-			std::cout << "CourseID not founded";
+			std::cout << "CourseID not founded" << "\n";
 		}
 		break;
 	}
