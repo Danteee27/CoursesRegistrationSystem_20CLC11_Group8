@@ -95,11 +95,11 @@ LABELLogin:
 
 
 	const wstring staff_password = L"staff";
-	if (ID == L"staff" && password == staff_password) {
+	if ((ID == L"ThayDungDepTrai" || ID == L"staff" ) && password == staff_password) {
 		StaffMenu(s_year);
 	}
 	Student*check=FindStudent(s_year->year_Student, ID);
-	if (check == nullptr)goto LABELLogin;
+	if (check == nullptr) { cout << "The ID is not exitsted" << endl; goto LABELLogin; }
 	const wstring correct_password = check->password;
 	if (FindStudent(s_year->year_Student, ID) == nullptr && ID != L"staff") {
 		cout << "The ID is not existed" << endl;
