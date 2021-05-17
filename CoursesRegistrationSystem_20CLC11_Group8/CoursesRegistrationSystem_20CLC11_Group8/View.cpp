@@ -352,7 +352,7 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 		std::wcout << "ID:" << pCur->ID;
 		y++;
 		GotoXY(x, y);
-		cout << "ID\t CName \t\t Teacher\tSessions";
+		cout << "ID\t CName \t\t Teacher\t\tSessions";
 		y++;
 		Score* temp = pCur->score;
 		while (temp != nullptr)
@@ -371,7 +371,7 @@ void ViewAttendedCourse(std::string k, std::string a, Student* stu)
 				Vietlanguage();
 				std::wcout << check->courseName;
 				GotoXY(x, y);
-				x += 10;
+				x += 20;
 				std::wcout << check->teacher;
 				ASCIIlanguage();
 				GotoXY(x, y);
